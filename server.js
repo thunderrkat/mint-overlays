@@ -22,6 +22,8 @@ function getSession(id) {
       theme: 'blossom',
       clients: new Set(),
       likerMap: new Map(),
+      gifterMap: new Map(),
+      followerList: [],
       totalLikes: 0,
       likeMeterGoal: 100,
       seenJoins: new Set(),
@@ -43,7 +45,7 @@ app.get('/events/:sessionId', (req, res) => {
   const send = (msg) => res.write(msg);
   session.clients.add(send);
   // Send current state
-  send(`data: ${JSON.stringify({ type:'state', likers: getTopLikers(session) })}\n\n`);
+  send(`data: ${JSON.stringify({ type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) })}\n\n`);
   send(`data: ${JSON.stringify({ type:'status', status: session.connected ? 'connected' : 'disconnected', username: session.username })}\n\n`);
   send(`data: ${JSON.stringify({ type:'likeMeter', total: session.totalLikes, goal: session.likeMeterGoal })}\n\n`);
   send(`data: ${JSON.stringify({ type:'theme', theme: session.theme })}\n\n`);
@@ -66,11 +68,24 @@ function getTopLikers(session, n = 5) {
     .slice(0, n);
 }
 
+function getTopGifters(session, n = 5) {
+  return [...session.gifterMap.entries()]
+    .map(([id, d]) => ({ id, ...d }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, n);
+}
+
+function getTopFollowers(session, n = 5) {
+  return session.followerList.slice(-n).reverse();
+}
+
 // ── TikTok connect ────────────────────────────────────────────
 function connect(session, username) {
   if (session.connection) { try { session.connection.disconnect(); } catch(_) {} }
   session.username = username;
   session.likerMap.clear();
+  session.gifterMap.clear();
+  session.followerList = [];
   session.totalLikes = 0;
   session.likeMeterGoal = 100;
   session.seenJoins.clear();
@@ -99,8 +114,26 @@ function connect(session, username) {
   conn.on('like', data => {
     const updated = upsert(session.likerMap, data, data.likeCount || 1);
     session.totalLikes += (data.likeCount || 1);
-    broadcast(session, { type:'state', likers: getTopLikers(session) });
+    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
     broadcast(session, { type:'likeMeter', total: session.totalLikes, goal: session.likeMeterGoal });
+  });
+
+  // Gifts
+  conn.on('gift', data => {
+    if (data.giftType === 1 && !data.repeatEnd) return;
+    const diamonds = (data.diamondCount || 0) * (data.repeatCount || 1);
+    if (diamonds === 0) return;
+    upsert(session.gifterMap, data, diamonds);
+    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
+  });
+
+  // Follows
+  conn.on('follow', data => {
+    const key = data.uniqueId || data.userId;
+    if (session.followerList.find(f => f.id === key)) return;
+    session.followerList.push({ id: key, nickname: data.nickname || key, profilePicture: data.profilePictureUrl || '', count: 1 });
+    if (session.followerList.length > 100) session.followerList.shift();
+    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
   });
 
   // Joins
@@ -147,6 +180,8 @@ app.post('/api/:sessionId/theme', (req, res) => {
 app.post('/api/:sessionId/reset', (req, res) => {
   const session = getSession(req.params.sessionId);
   session.likerMap.clear();
+  session.gifterMap.clear();
+  session.followerList = [];
   session.totalLikes = 0;
   session.likeMeterGoal = 100;
   session.seenJoins.clear();
