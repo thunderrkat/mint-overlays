@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mint Overlays — Top Likers</title>
+<link rel="stylesheet" href="/overlay-base.css">
+<script src="/theme.js"></script>
+</head>
+<body>
+<div class="panel" id="panel">
+  <div class="glow-tl"></div>
+  <div class="glow-br"></div>
+  <div class="header">
+    <span class="lightning">⚡</span>
+    <span class="title" id="titleText">Top Likers</span>
+    <div class="status-dot" id="statusDot"></div>
+  </div>
+  <div class="divider"></div>
+  <div id="likerList"><div class="empty"><span>⚡</span><p>Waiting for live...</p></div></div>
+  <div class="dots">
+    <div class="dot active" id="dot0"></div>
+    <div class="dot" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+  </div>
+</div>
+<script>
+  const SESSION = new URLSearchParams(location.search).get('s') || 'default';
+  const BOARDS = [
+    { key:'likers',    title:'Top Likers',    label:'LIKES'    },
+    { key:'gifters',   title:'Top Gifters',   label:'DIAMONDS' },
+    { key:'followers', title:'New Followers', label:'FOLLOWS'  },
+  ];
+  let state = { likers:[], gifters:[], followers:[] };
+  let currentBoard = 0;
+  let prevTops = {};
+
+  const listEl   = document.getElementById('likerList');
+  const titleEl  = document.getElementById('titleText');
+  const dotEl    = document.getElementById('statusDot');
+
+  const medals = ['🥇','🥈','🥉','4','5'];
+  const rankCls = ['rank-1','rank-2','rank-3','rank-4','rank-5'];
+  const cntCls  = ['c1','c2','c3','c4','c5'];
+  const bdgCls  = ['b1','b2','b3','b4','b5'];
+
+  function initials(n){ return (n||'?').slice(0,2).toUpperCase(); }
+
+  function renderBoard(items, key) {
+    if (!items || items.length === 0) {
+      listEl.innerHTML = `<div class="empty"><span>⚡</span><p>No ${key} yet</p></div>`;
+      return;
+    }
+    listEl.innerHTML = items.map((item,i) => {
+      const av = item.profilePicture
+        ? `<img src="${item.profilePicture}" onerror="this.parentElement.textContent='${initials(item.nickname)}'" alt="">`
+        : initials(item.nickname);
+      return `<div class="liker-row ${rankCls[i]||''}">
+        <span class="badge ${bdgCls[i]||''}">${medals[i]||i+1}</span>
+        <div class="avatar-wrap">${av}</div>
+        <div class="name-col">
+          <div class="username">@${item.nickname||item.id}</div>
+          <div class="sublabel">${BOARDS[currentBoard].label}</div>
+        </div>
+        <div class="count-col">
+          <span class="count ${cntCls[i]||''}">${item.count.toLocaleString()}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function showBoard(idx) {
+    currentBoard = idx;
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+    titleEl.textContent = BOARDS[idx].title;
+    renderBoard(state[BOARDS[idx].key], BOARDS[idx].key);
+  }
+
+  setInterval(() => showBoard((currentBoard + 1) % BOARDS.length), 6000);
+
+  function setStatus(s) {
+    dotEl.className = 'status-dot';
+    if (s==='connected') dotEl.classList.add('live');
+    else if (s==='connecting') dotEl.classList.add('connecting');
+  }
+
+  const sse = new EventSource(`/events/${SESSION}`);
+  sse.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type==='state') { state={ likers:msg.likers||[], gifters:msg.gifters||[], followers:msg.followers||[] }; renderBoard(state[BOARDS[currentBoard].key], BOARDS[currentBoard].key); }
+    if (msg.type==='status') setStatus(msg.status);
+    if (msg.type==='theme') applyTheme(msg.theme);
+  };
+  sse.onerror = () => setStatus('disconnected');
+
+  fetch(`/api/${SESSION}/status`).then(r=>r.json()).then(d=>{
+    if (d.theme) applyTheme(d.theme);
+    setStatus(d.connected?'connected':'disconnected');
+  });
+</script>
+</body>
+</html>

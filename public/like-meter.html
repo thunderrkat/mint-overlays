@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mint Overlays — Like Meter</title>
+<link rel="stylesheet" href="/overlay-base.css">
+<style>body{width:540px;}</style>
+<script src="/theme.js"></script>
+</head>
+<body>
+<div class="meter-panel">
+  <div class="glow-tl"></div>
+  <div class="glow-br"></div>
+  <div class="meter-header">
+    <div>
+      <div class="meter-brand">⚡ Like-O-Meter</div>
+      <div class="meter-sub">Session Likes</div>
+    </div>
+    <div class="meter-tally">
+      <div class="meter-num" id="curNum">0</div>
+      <div class="meter-goal-lbl" id="tallyGoal">/ 100 like goal</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="bar-outer">
+    <div class="bar-fill" id="barFill" style="width:0%">
+      <div class="crackle"></div>
+      <div class="shimmer"></div>
+      <svg class="wave-svg" viewBox="0 0 880 44" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,22 C55,10 110,34 165,22 C220,10 275,34 330,22 C385,10 440,34 495,22 C550,10 605,34 660,22 C715,10 770,34 825,22 L880,22 L880,44 L0,44 Z" fill="white"/>
+      </svg>
+      <div class="bolt-parts" id="boltParts"></div>
+    </div>
+    <div class="edge-spark" id="edgeSpark"></div>
+    <div class="bar-pct" id="barPct">0%</div>
+    <div class="goal-smash" id="goalSmash"><div class="smash-text" id="smashText">GOAL SMASHED! 🎉</div></div>
+  </div>
+  <div class="meter-footer">
+    <div class="remaining" id="remaining"><strong>100</strong> likes to go</div>
+    <div class="live-badge"><div class="live-dot"></div><span class="live-txt">Live</span></div>
+  </div>
+</div>
+<script>
+  const SESSION = new URLSearchParams(location.search).get('s') || 'default';
+  let totalLikes = 0, currentGoal = 100, lastGoalSmashed = 0;
+  let smashTimer = null;
+
+  const curNumEl  = document.getElementById('curNum');
+  const barFill   = document.getElementById('barFill');
+  const barPct    = document.getElementById('barPct');
+  const remainEl  = document.getElementById('remaining');
+  const sparkEl   = document.getElementById('edgeSpark');
+  const goalSmash = document.getElementById('goalSmash');
+  const smashText = document.getElementById('smashText');
+  const tallyGoal = document.getElementById('tallyGoal');
+  const boltParts = document.getElementById('boltParts');
+
+  function spawnBolt() {
+    const fw = barFill.offsetWidth;
+    if (fw < 15) return;
+    const b = document.createElement('div');
+    b.className = 'bolt-p';
+    b.textContent = '⚡';
+    b.style.left = (Math.random() * Math.max(fw-14,8)) + 'px';
+    b.style.animationDuration = (0.65 + Math.random()*0.75) + 's';
+    b.style.fontSize = (9 + Math.random()*7) + 'px';
+    boltParts.appendChild(b);
+    setTimeout(() => b.remove(), 1500);
+  }
+  setInterval(spawnBolt, 500);
+
+  function bumpCounter() {
+    curNumEl.classList.remove('bump');
+    void curNumEl.offsetWidth;
+    curNumEl.classList.add('bump');
+    setTimeout(() => curNumEl.classList.remove('bump'), 300);
+  }
+
+  function update(likes, goal) {
+    if (goal) currentGoal = goal;
+    totalLikes = likes;
+    const within = totalLikes % currentGoal;
+    const pct = Math.round((within / currentGoal) * 100);
+    curNumEl.textContent = totalLikes.toLocaleString();
+    barFill.style.width = within > 0 ? Math.max(pct,2)+'%' : '0%';
+    barPct.textContent = pct+'%';
+    remainEl.innerHTML = '<strong>'+(currentGoal-within).toLocaleString()+'</strong> likes to go';
+    tallyGoal.textContent = '/ '+currentGoal.toLocaleString()+' like goal';
+    sparkEl.style.display = within > 0 ? 'block' : 'none';
+    if (within > 0) sparkEl.style.left = 'calc('+Math.max(pct,2)+'% - 2px)';
+    const goalsHit = Math.floor(totalLikes / currentGoal);
+    if (goalsHit > lastGoalSmashed && totalLikes > 0) {
+      lastGoalSmashed = goalsHit;
+      smashText.textContent = '⚡ '+currentGoal.toLocaleString()+' LIKES SMASHED! 🎉';
+      goalSmash.classList.add('show');
+      clearTimeout(smashTimer);
+      smashTimer = setTimeout(() => {
+        goalSmash.classList.remove('show');
+        setTimeout(() => { currentGoal += 200; update(totalLikes, currentGoal); }, 400);
+      }, 3000);
+    }
+  }
+
+  const sse = new EventSource(`/events/${SESSION}`);
+  sse.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type==='likeMeter') { if(msg.total>totalLikes) bumpCounter(); update(msg.total, msg.goal); }
+    if (msg.type==='theme') applyTheme(msg.theme);
+  };
+
+  fetch(`/api/${SESSION}/status`).then(r=>r.json()).then(d=>{
+    if (d.theme) applyTheme(d.theme);
+    if (d.totalLikes !== undefined) update(d.totalLikes, d.likeMeterGoal);
+  });
+</script>
+</body>
+</html>

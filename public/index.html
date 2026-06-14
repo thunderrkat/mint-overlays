@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mint Overlays — TikTok Live Overlay System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#080a0e;color:#f0f0f5;font-family:'Inter',sans-serif;min-height:100vh;padding:0}
+
+  .hero{background:linear-gradient(135deg,#080a0e 0%,#0d1220 50%,#080a0e 100%);padding:48px 24px 40px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .logo{font-size:44px;margin-bottom:12px}
+  .brand{font-family:'Rajdhani',sans-serif;font-size:38px;font-weight:700;letter-spacing:0.1em;background:linear-gradient(135deg,#4ade80,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+  .tagline{font-size:14px;color:rgba(240,240,245,0.45);letter-spacing:0.06em;max-width:420px;margin:0 auto}
+
+  .main{max-width:680px;margin:0 auto;padding:32px 20px}
+
+  .section-title{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,240,245,0.3);margin-bottom:12px}
+
+  .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:22px;margin-bottom:20px}
+
+  /* Theme picker */
+  .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:0}
+  .theme-card{border:2px solid transparent;border-radius:10px;padding:12px 10px;cursor:pointer;transition:all 0.2s;text-align:center;background:rgba(255,255,255,0.03)}
+  .theme-card:hover{transform:translateY(-2px)}
+  .theme-card.selected{border-color:var(--tc);background:rgba(255,255,255,0.07)}
+  .theme-emoji{font-size:22px;display:block;margin-bottom:5px}
+  .theme-name{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.06em;color:#f0f0f5;margin-bottom:2px}
+  .theme-desc{font-size:10px;color:rgba(240,240,245,0.35);line-height:1.4}
+
+  /* Connect */
+  .input-row{display:flex;gap:10px;margin-bottom:12px}
+  .input-wrap{flex:1;position:relative}
+  .at-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;color:rgba(240,240,245,0.4);pointer-events:none;font-weight:600}
+  input[type=text]{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:11px 12px 11px 28px;font-size:14px;font-family:'Inter',sans-serif;color:#f0f0f5;outline:none;transition:border-color 0.2s}
+  input[type=text]:focus{border-color:#4ade80}
+  input[type=text]::placeholder{color:rgba(240,240,245,0.2)}
+
+  .btn{padding:11px 22px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,#4ade80,#22d3ee);color:#080a0e}
+  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+  .status-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px}
+  .sdot{width:8px;height:8px;border-radius:50%;background:#333;flex-shrink:0;transition:background 0.3s}
+  .sdot.live{background:#ff3b3b;box-shadow:0 0 6px rgba(255,59,59,0.8)}
+  .sdot.connecting{background:#4ade80;animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .stext{font-size:13px;color:rgba(240,240,245,0.45);flex:1}
+  .stext strong{color:#4ade80}
+
+  /* Overlay list */
+  .overlay-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;margin-bottom:8px}
+  .overlay-item:last-child{margin-bottom:0}
+  .ov-icon{font-size:18px;flex-shrink:0}
+  .ov-name{font-size:13px;font-weight:600;color:#f0f0f5;flex:1}
+  .ov-size{font-size:11px;color:rgba(240,240,245,0.28);margin-right:6px;white-space:nowrap}
+  .copy-btn{padding:5px 12px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;cursor:pointer;border:1px solid rgba(74,222,128,0.3);background:rgba(74,222,128,0.08);color:#4ade80;transition:all 0.2s;white-space:nowrap}
+  .copy-btn:hover{background:rgba(74,222,128,0.16)}
+  .copy-btn.copied{border-color:rgba(74,222,128,0.6);background:rgba(74,222,128,0.15);color:#4ade80}
+
+  /* How to */
+  .steps{font-size:13px;color:rgba(240,240,245,0.4);line-height:1.9}
+  .steps strong{color:#f0f0f5}
+
+  .footer{text-align:center;padding:20px;font-size:11px;color:rgba(240,240,245,0.18)}
+
+  .divider{height:1px;background:rgba(255,255,255,0.06);margin:16px 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="logo">🌿</div>
+  <div class="brand">MINT OVERLAYS</div>
+  <div class="tagline">Professional TikTok Live overlays with beautiful themes — free for all streamers</div>
+</div>
+
+<div class="main">
+
+  <!-- Step 1: Pick Theme -->
+  <div class="section-title">① Pick Your Theme</div>
+  <div class="card">
+    <div class="theme-grid" id="themeGrid"></div>
+  </div>
+
+  <!-- Step 2: Connect -->
+  <div class="section-title">② Connect Your TikTok Live</div>
+  <div class="card">
+    <div class="input-row">
+      <div class="input-wrap">
+        <span class="at-prefix">@</span>
+        <input type="text" id="usernameInput" placeholder="your_tiktok_username" autocomplete="off"/>
+      </div>
+      <button class="btn btn-primary" id="connectBtn" onclick="connectLive()">Go Live</button>
+    </div>
+    <div class="status-bar">
+      <div class="sdot" id="sdot"></div>
+      <div class="stext" id="stext">Enter your username and hit Go Live</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Overlays -->
+  <div class="section-title">③ Copy Your Overlay URLs</div>
+  <div class="card">
+    <div id="overlayList"></div>
+    <div class="divider"></div>
+    <div class="steps">
+      In Streamlabs/OBS → Add Source → <strong>Browser Source</strong><br>
+      Paste the URL → set the width &amp; height → <strong>transparent background</strong><br>
+      You must be <strong>LIVE on TikTok</strong> for data to appear
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Mint Overlays — Built for TikTok streamers 🌿</div>
+
+<script>
+  // Generate a session ID for this user
+  let SESSION = localStorage.getItem('mint-session');
+  if (!SESSION) {
+    SESSION = Math.random().toString(36).slice(2,10);
+    localStorage.setItem('mint-session', SESSION);
+  }
+
+  const OVERLAYS = [
+    { icon:'⚡', name:'Top Likers / Gifters / Followers', path:'/top-likers.html', size:'340 × 220' },
+    { icon:'👋', name:'Join Alert',                        path:'/join-alert.html', size:'340 × 80'  },
+    { icon:'❤️', name:'Like-O-Meter',                     path:'/like-meter.html', size:'540 × 120' },
+  ];
+
+  const THEME_COLORS = {
+    blossom:'#E8A0BF', violet:'#9B59B6', noir:'#B8860B',
+    warzone:'#4A5C2A', storm:'#00D4FF', raiders:'#8B3A2A'
+  };
+
+  let selectedTheme = localStorage.getItem('mint-theme') || 'blossom';
+
+  function buildThemeGrid(themes) {
+    const grid = document.getElementById('themeGrid');
+    grid.innerHTML = themes.map(t => `
+      <div class="theme-card ${t.id===selectedTheme?'selected':''}" id="tc-${t.id}"
+        style="--tc:${THEME_COLORS[t.id]||'#4ade80'};${t.id===selectedTheme?'border-color:'+THEME_COLORS[t.id]+';background:rgba(255,255,255,0.06)':''}"
+        onclick="selectTheme('${t.id}')">
+        <span class="theme-emoji">${t.emoji}</span>
+        <div class="theme-name">${t.name}</div>
+        <div class="theme-desc">${t.desc}</div>
+      </div>
+    `).join('');
+  }
+
+  function selectTheme(id) {
+    selectedTheme = id;
+    localStorage.setItem('mint-theme', id);
+    document.querySelectorAll('.theme-card').forEach(el => {
+      const tid = el.id.replace('tc-','');
+      const col = THEME_COLORS[tid] || '#4ade80';
+      el.classList.toggle('selected', tid===id);
+      el.style.borderColor = tid===id ? col : 'transparent';
+      el.style.background = tid===id ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)';
+    });
+    fetch(`/api/${SESSION}/theme`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ theme:id }) });
+  }
+
+  function buildOverlayList() {
+    const el = document.getElementById('overlayList');
+    el.innerHTML = OVERLAYS.map((o,i) => `
+      <div class="overlay-item">
+        <span class="ov-icon">${o.icon}</span>
+        <div class="ov-name">${o.name}</div>
+        <span class="ov-size">${o.size}</span>
+        <button class="copy-btn" id="cb${i}" onclick="copyURL('${window.location.origin}${o.path}?s=${SESSION}',${i})">Copy URL</button>
+      </div>
+    `).join('');
+  }
+
+  function copyURL(url, i) {
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById('cb'+i);
+      btn.textContent='Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent='Copy URL'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function setStatus(status, username) {
+    const dot = document.getElementById('sdot');
+    const txt = document.getElementById('stext');
+    const btn = document.getElementById('connectBtn');
+    dot.className='sdot';
+    if (status==='connected') {
+      dot.classList.add('live');
+      txt.innerHTML=`Connected to <strong>@${username}</strong> — overlays are live!`;
+      btn.textContent='Reconnect'; btn.disabled=false;
+    } else if (status==='connecting') {
+      dot.classList.add('connecting');
+      txt.innerHTML=`Connecting to <strong>@${username||'...'}</strong>`;
+      btn.disabled=true;
+    } else if (status==='error') {
+      txt.innerHTML=`<span style="color:#ff6060">Failed — are you live on TikTok?</span>`;
+      btn.textContent='Try Again'; btn.disabled=false;
+    } else {
+      txt.textContent='Enter your username and hit Go Live';
+      btn.textContent='Go Live'; btn.disabled=false;
+    }
+  }
+
+  function connectLive() {
+    const username = document.getElementById('usernameInput').value.trim().replace('@','');
+    if (!username) { document.getElementById('usernameInput').focus(); return; }
+    setStatus('connecting', username);
+    fetch(`/api/${SESSION}/connect`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ username }) });
+  }
+
+  document.getElementById('usernameInput').addEventListener('keydown', e => { if(e.key==='Enter') connectLive(); });
+
+  // SSE
+  const sse = new EventSource(`/events/${SESSION}`);
+  sse.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type==='status') setStatus(msg.status, msg.username);
+  };
+
+  // Load themes + status
+  Promise.all([
+    fetch('/api/themes').then(r=>r.json()),
+    fetch(`/api/${SESSION}/status`).then(r=>r.json())
+  ]).then(([themes, status]) => {
+    buildThemeGrid(themes);
+    buildOverlayList();
+    setStatus(status.connected?'connected':'disconnected', status.username);
+    if (status.username) document.getElementById('usernameInput').value = status.username;
+    // Apply saved theme to server
+    fetch(`/api/${SESSION}/theme`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ theme:selectedTheme }) });
+  });
+</script>
+</body>
+</html>

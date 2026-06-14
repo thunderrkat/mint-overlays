@@ -1,0 +1,16 @@
+{
+  "name": "mint-overlays",
+  "version": "1.0.0",
+  "description": "TikTok Live overlay system with multiple themes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "tiktok-live-connector": "^2.1.1-beta1"
+  }
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mint Overlays — Join Alert</title>
+<link rel="stylesheet" href="/overlay-base.css">
+<style>body{width:340px;}</style>
+<script src="/theme.js"></script>
+</head>
+<body>
+<div class="join-panel" id="joinPanel">
+  <div class="glow-tl"></div>
+  <div style="position:relative;flex-shrink:0">
+    <div class="join-avatar" id="avatar">⚡</div>
+    <div class="join-badge">👋</div>
+  </div>
+  <div class="join-text">
+    <div class="join-label">Just Joined</div>
+    <div class="join-name" id="joinName"><span style="font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:0.07em">Waiting for viewers...</span></div>
+    <div class="join-sub" id="joinSub"></div>
+  </div>
+  <div class="join-zap">⚡</div>
+</div>
+<script>
+  const SESSION = new URLSearchParams(location.search).get('s') || 'default';
+  const panelEl  = document.getElementById('joinPanel');
+  const nameEl   = document.getElementById('joinName');
+  const avatarEl = document.getElementById('avatar');
+  const subEl    = document.getElementById('joinSub');
+
+  function initials(n){ return (n||'?').slice(0,2).toUpperCase(); }
+
+  function updateJoin(nickname, profilePicture) {
+    nameEl.classList.add('swap');
+    setTimeout(() => {
+      nameEl.innerHTML = `<span class="at">@</span>${nickname}`;
+      avatarEl.innerHTML = profilePicture
+        ? `<img src="${profilePicture}" onerror="this.parentElement.textContent='${initials(nickname)}'" alt="">`
+        : initials(nickname);
+      subEl.textContent = 'Welcome to the stream! 🎉';
+      nameEl.classList.remove('swap');
+    }, 200);
+    panelEl.classList.remove('flash');
+    void panelEl.offsetWidth;
+    panelEl.classList.add('flash');
+  }
+
+  const sse = new EventSource(`/events/${SESSION}`);
+  sse.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'join') updateJoin(msg.nickname, msg.profilePicture);
+    if (msg.type === 'theme') applyTheme(msg.theme);
+  };
+
+  fetch(`/api/${SESSION}/status`).then(r=>r.json()).then(d=>{ if(d.theme) applyTheme(d.theme); });
+</script>
+</body>
+</html>
