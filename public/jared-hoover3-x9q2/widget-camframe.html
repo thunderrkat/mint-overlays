@@ -1,100 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { 
-    width: 380px; height: 290px;
-    background: transparent; overflow: hidden;
-    font-family: 'Arial Black', sans-serif;
-  }
+:root {
+  --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C;
+  --tiktok-pink:#FE2C55; --ink-2:#0d0322;
+  --text:#F5F2FF; --font-display:'Anton',sans-serif; --font-body:'Outfit',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:392px; height:292px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
-  .cam-wrap {
-    width: 100%; height: 100%;
-    position: relative;
-  }
+.facecam { width:392px; height:292px; animation:float 6s ease-in-out infinite; position:relative; }
+.facecam-frame {
+  position:absolute; inset:0; border-radius:22px; padding:4px;
+  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 40%, var(--gold) 100%);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), 0 0 30px rgba(155,91,255,.45);
+  animation:border-hue 6s linear infinite;
+}
+@keyframes border-hue { to { filter:hue-rotate(30deg); } }
 
-  /* The border frame - conic gradient rotates */
-  .cam-border {
-    position: absolute; inset: 0;
-    border-radius: 16px;
-    padding: 4px;
-    background: conic-gradient(from 0deg, #9b30ff, #FFD700, #ff2d78, #9b30ff);
-    box-shadow: 0 0 30px rgba(155,48,255,0.7), 0 0 60px rgba(255,215,0,0.3);
-    animation: border-spin 4s linear infinite;
-  }
-  @keyframes border-spin {
-    to { filter: hue-rotate(360deg); }
-  }
+.facecam-inner {
+  position:relative; width:100%; height:100%; border-radius:18px; overflow:hidden;
+  background:var(--ink-2); display:flex; align-items:center; justify-content:center;
+}
+.placeholder {
+  color:#5a4a7a; font-weight:600; font-size:18px; letter-spacing:1px; text-align:center;
+}
+.facecam-scrim {
+  position:absolute; left:0; right:0; bottom:0; height:46%;
+  background:linear-gradient(180deg, transparent, rgba(6,1,15,.85)); pointer-events:none;
+}
+.facecam-name {
+  position:absolute; left:14px; bottom:13px; display:flex; align-items:center; gap:9px;
+}
+.facecam-name span:first-child {
+  font-family:var(--font-display); font-size:24px; color:var(--text);
+  transform:skewX(-5deg); text-shadow:0 2px 6px rgba(0,0,0,.7);
+}
+.facecam-tag {
+  position:absolute; right:12px; top:12px; display:flex; align-items:center; gap:6px;
+  background:rgba(254,44,85,.92); padding:5px 11px; border-radius:8px;
+  font-weight:800; font-size:14px; letter-spacing:1.5px; color:#fff;
+}
+.facecam-tag .dot { width:8px; height:8px; border-radius:50%; background:#fff; animation:livedot 1.1s infinite; }
 
-  /* Inner video area */
-  .cam-inner {
-    width: 100%; height: 100%; border-radius: 13px;
-    background: rgba(5,0,15,0.7);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    position: relative;
-  }
-  .cam-placeholder {
-    color: rgba(155,48,255,0.5); font-size: 48px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-  }
-  .cam-placeholder span { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
-
-  /* Corner lightning accents */
-  .corner {
-    position: absolute; width: 28px; height: 28px;
-    border-color: #FFD700; border-style: solid;
-    z-index: 10;
-  }
-  .corner-tl { top: 6px; left: 6px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-  .corner-tr { top: 6px; right: 6px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
-  .corner-bl { bottom: 46px; left: 6px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
-  .corner-br { bottom: 46px; right: 6px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
-
-  /* Name bar */
-  .cam-bar {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 38px; border-radius: 0 0 13px 13px;
-    background: linear-gradient(90deg, rgba(80,0,120,0.95), rgba(155,48,255,0.8));
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 12px;
-    z-index: 5;
-  }
-  .cam-name {
-    color: #FFD700; font-size: 16px; font-weight: 900;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px rgba(255,215,0,0.7);
-  }
-  .cam-badge {
-    background: #9b30ff; color: white;
-    font-size: 10px; font-weight: 900;
-    padding: 2px 8px; border-radius: 4px;
-    letter-spacing: 2px;
-    box-shadow: 0 0 8px rgba(155,48,255,0.8);
-  }
+@keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);} }
+@keyframes livedot { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.7);} }
 </style>
 </head>
 <body>
-<div class="cam-wrap">
-  <div class="cam-border">
-    <div class="cam-inner">
-      <div class="cam-placeholder">
-        📸
-        <span>CAM SOURCE</span>
-      </div>
+<div class="facecam">
+  <div class="facecam-frame">
+    <div class="facecam-inner">
+      <div class="placeholder">📸<br>CAM SOURCE</div>
+      <div class="facecam-scrim"></div>
+      <div class="facecam-name"><span>JARED</span><span>🎮</span></div>
+      <div class="facecam-tag"><span class="dot"></span>CAM</div>
     </div>
-  </div>
-  
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
-
-  <div class="cam-bar">
-    <div class="cam-name">JARED.HOOVER3</div>
-    <div class="cam-badge">CAM</div>
   </div>
 </div>
 </body>

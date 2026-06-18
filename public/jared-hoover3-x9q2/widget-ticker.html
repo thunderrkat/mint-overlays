@@ -1,95 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { 
-    width: 1080px; height: 52px;
-    background: transparent; overflow: hidden;
-    font-family: 'Arial Black', sans-serif;
-  }
+:root {
+  --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C;
+  --tiktok-pink:#FE2C55; --tiktok-cyan:#25F4EE;
+  --ink-2:#0d0322; --ink-3:#1a0742; --text:#F5F2FF;
+  --panel-line:rgba(155,91,255,.4);
+  --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1080px; height:64px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
-  .ticker-wrap {
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, rgba(60,0,100,0.9) 0%, rgba(20,0,50,0.85) 100%);
-    border-top: 2px solid #9b30ff;
-    border-bottom: 2px solid #9b30ff;
-    box-shadow: 0 0 20px rgba(155,48,255,0.5);
-    overflow: hidden; position: relative;
-    display: flex; align-items: center;
-  }
+.ticker {
+  width:1080px; height:64px;
+  display:flex; align-items:center; overflow:hidden;
+  background:linear-gradient(90deg, rgba(13,3,34,.94), rgba(26,7,66,.9));
+  border-top:1.5px solid var(--panel-line);
+  border-bottom:1.5px solid var(--panel-line);
+}
+.ticker-label {
+  flex:none; display:flex; align-items:center; gap:9px; height:100%; padding:0 22px; z-index:2;
+  background:linear-gradient(90deg, var(--purple-deep), var(--purple));
+  font-family:var(--font-cond); font-weight:800; font-size:21px; letter-spacing:2px; color:#fff;
+  box-shadow:6px 0 18px rgba(0,0,0,.4); white-space:nowrap;
+}
+.ticker-window { flex:1; overflow:hidden; position:relative; }
+.ticker-track { display:flex; width:max-content; animation:marquee 30s linear infinite; }
+.ticker-run { display:flex; align-items:center; }
+.ticker-item {
+  display:flex; align-items:center; gap:9px; padding:0 26px;
+  font-size:20px; font-weight:600; color:#E9DEFF; white-space:nowrap;
+  border-right:1px solid rgba(155,91,255,.2);
+}
+.ticker-item .who { font-weight:800; }
 
-  .ticker-label {
-    background: #ff2d78; color: #fff;
-    font-size: 13px; font-weight: 900;
-    padding: 0 16px; height: 100%;
-    display: flex; align-items: center;
-    letter-spacing: 2px;
-    white-space: nowrap; flex-shrink: 0;
-    box-shadow: 4px 0 15px rgba(255,45,120,0.6);
-    z-index: 2;
-  }
-
-  .ticker-track {
-    display: flex; align-items: center;
-    white-space: nowrap;
-    animation: scroll 25s linear infinite;
-  }
-
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .tick-item {
-    display: inline-flex; align-items: center; gap: 6px;
-    color: #fff; font-size: 16px; font-weight: bold;
-    padding: 0 24px;
-    border-right: 1px solid rgba(155,48,255,0.3);
-  }
-  .tick-item .evt-icon { font-size: 18px; }
-  .tick-item .evt-user { color: #FFD700; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
-  .tick-item .evt-msg { color: rgba(255,255,255,0.8); }
-  .tick-item.gift .evt-msg { color: #ff2d78; }
-
-  .ticker-wrap::after {
-    content: '';
-    position: absolute; right: 0; top: 0;
-    width: 60px; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(20,0,50,0.9));
-    pointer-events: none; z-index: 3;
-  }
+@keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 </style>
 </head>
 <body>
-<div class="ticker-wrap">
-  <div class="ticker-label">⚡ LIVE EVENTS</div>
-  <div class="ticker-track" id="track"></div>
+<div class="ticker">
+  <div class="ticker-label"><span>⚡</span>RECENT</div>
+  <div class="ticker-window">
+    <div class="ticker-track">
+      <div class="ticker-run" id="run1"></div>
+      <div class="ticker-run" id="run2" aria-hidden="true"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 const events = [
-  { icon: '❤️', user: 'nightowl_tx', msg: 'followed!', cls: '' },
-  { icon: '🎁', user: 'dragon_king_99', msg: 'sent 50 Dragon Balls!', cls: 'gift' },
-  { icon: '⭐', user: 'purplelightning7', msg: 'subscribed!', cls: '' },
-  { icon: '🎁', user: 'vegeta_fan_xx', msg: 'sent 30 Universes!', cls: 'gift' },
-  { icon: '❤️', user: 'fortnite_god07', msg: 'followed!', cls: '' },
-  { icon: '🎁', user: 'goku_super', msg: 'sent 100 Roses!', cls: 'gift' },
-  { icon: '👍', user: 'nightwatcher99', msg: 'liked the stream!', cls: '' },
-  { icon: '🎁', user: 'zfighter44', msg: 'sent 15 Dragon Balls!', cls: 'gift' },
+  { icon:'🌹', who:'@kayla_x', whoColor:'#FE2C55', msg:'sent 99 Roses' },
+  { icon:'➕', who:'@mike_jones', whoColor:'#25F4EE', msg:'followed' },
+  { icon:'🌌', who:'@bigfan_2025', whoColor:'#C97BFF', msg:'dropped a Galaxy ×3' },
+  { icon:'🦁', who:'@hypebeast', whoColor:'#F4B63C', msg:'sent a Lion' },
+  { icon:'💜', who:'@sara_v', whoColor:'#C97BFF', msg:'gifted 5 Galaxies' },
+  { icon:'➕', who:'@dbz_andy', whoColor:'#25F4EE', msg:'followed' },
+  { icon:'🐉', who:'@superfan', whoColor:'#FE2C55', msg:'sent a Drama Queen' },
 ];
 
-// Duplicate for seamless loop
-const track = document.getElementById('track');
-const allEvents = [...events, ...events];
-track.innerHTML = allEvents.map(e => `
-  <div class="tick-item ${e.cls}">
-    <span class="evt-icon">${e.icon}</span>
-    <span class="evt-user">${e.user}</span>
-    <span class="evt-msg">${e.msg}</span>
-  </div>
+const html = events.map(e => `
+  <span class="ticker-item">
+    <span>${e.icon}</span>
+    <span class="who" style="color:${e.whoColor}">${e.who}</span>
+    <span>${e.msg}</span>
+  </span>
 `).join('');
+
+document.getElementById('run1').innerHTML = html;
+document.getElementById('run2').innerHTML = html;
 </script>
 </body>
 </html>

@@ -1,103 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { 
-    width: 360px; height: 320px;
-    background: transparent; overflow: hidden;
-    font-family: 'Arial Black', sans-serif;
-  }
+:root {
+  --purple:#9B5BFF; --gold:#F4B63C; --orange:#F0760F; --tiktok-pink:#FE2C55;
+  --ink-2:#0d0322; --text:#F5F2FF; --text-muted:#8f7bbf;
+  --panel:rgba(16,5,38,.85); --panel-line:rgba(155,91,255,.42);
+  --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:344px; height:260px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
-  .leaderboard {
-    width: 100%; height: 100%;
-    background: rgba(10,0,25,0.88);
-    border: 1px solid rgba(155,48,255,0.5);
-    border-radius: 14px;
-    padding: 14px 16px;
-    box-shadow: 0 0 25px rgba(155,48,255,0.35), inset 0 0 15px rgba(50,0,80,0.5);
-  }
-
-  .lb-title {
-    font-size: 15px; font-weight: 900; letter-spacing: 2px;
-    color: #FFD700; text-transform: uppercase; margin-bottom: 12px;
-    text-shadow: 0 0 10px rgba(255,215,0,0.6);
-    border-bottom: 1px solid rgba(155,48,255,0.4);
-    padding-bottom: 8px;
-  }
-
-  .row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 4px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    transition: background 0.3s;
-  }
-  .row:last-child { border-bottom: none; }
-  .row:hover { background: rgba(155,48,255,0.1); border-radius: 6px; }
-
-  .rank {
-    width: 26px; height: 26px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 900; flex-shrink: 0;
-  }
-  .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; box-shadow: 0 0 10px rgba(255,215,0,0.8); }
-  .rank-2 { background: linear-gradient(135deg, #C0C0C0, #888); color: #000; }
-  .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
-  .rank-other { background: rgba(155,48,255,0.3); color: #ccc; font-size: 11px; }
-
-  .gifter-name {
-    flex: 1; color: #fff; font-size: 15px; font-weight: bold;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
-  .gift-count {
-    color: #ff2d78; font-size: 15px; font-weight: 900;
-    text-shadow: 0 0 8px rgba(255,45,120,0.6);
-    white-space: nowrap;
-  }
-  .gift-icon { font-size: 14px; margin-right: 2px; }
+.leaderboard {
+  width:344px; height:260px;
+  background:var(--panel); border:1.5px solid var(--panel-line); border-radius:18px;
+  padding:16px 16px 14px; backdrop-filter:blur(10px); box-shadow:0 12px 34px rgba(0,0,0,.45);
+}
+.lb-head {
+  display:flex; align-items:center; gap:9px; margin-bottom:14px; padding-bottom:12px;
+  border-bottom:1px solid rgba(155,91,255,.22);
+}
+.lb-head .t {
+  font-family:var(--font-cond); font-weight:800; font-size:23px; letter-spacing:2px;
+  color:var(--gold); text-transform:uppercase;
+}
+.lb-list { display:flex; flex-direction:column; gap:11px; }
+.lb-row { display:flex; align-items:center; gap:13px; }
+.lb-rank { font-family:'Anton',sans-serif; font-size:22px; width:26px; text-align:center; }
+.lb-av {
+  width:42px; height:42px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:17px; color:var(--ink-2);
+}
+.lb-name { flex:1; min-width:0; }
+.lb-name .n { font-weight:700; font-size:19px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-name .c { font-weight:600; font-size:15px; color:#9d86c9; }
+.lb-icon { font-size:18px; }
 </style>
 </head>
 <body>
 <div class="leaderboard">
-  <div class="lb-title">🏆 Top Gifters</div>
-  <div id="rows"></div>
+  <div class="lb-head"><span>🏆</span><span class="t">Top Gifters</span></div>
+  <div class="lb-list" id="list"></div>
 </div>
-
 <script>
-const gifters = [
-  { name: 'dragon_king_99', gifts: 124 },
-  { name: 'vegeta_fan_xx', gifts: 87 },
-  { name: 'fortnite_god07', gifts: 53 },
-  { name: 'NightOwl_TX', gifts: 31 },
-  { name: 'purple_lightning', gifts: 18 },
+const defaults = [
+  { name:'@xClipsKing',   coins:'48.2K', color:'linear-gradient(135deg,#F4B63C,#E8821F)', border:'#F4B63C', rankColor:'#F4B63C', icon:'👑', initial:'X' },
+  { name:'@valleygirl',   coins:'31.7K', color:'linear-gradient(135deg,#C9CBD6,#8E90A0)', border:'#C9CBD6', rankColor:'#C9CBD6', icon:'💎', initial:'V' },
+  { name:'@noscope_ned',  coins:'22.9K', color:'linear-gradient(135deg,#E0823C,#A8521C)', border:'#E0823C', rankColor:'#E0823C', icon:'🌹', initial:'N' },
+  { name:'@sara_v',       coins:'11.2K', color:'linear-gradient(135deg,#9B5BFF,#6C28D9)', border:'#9B5BFF', rankColor:'#9B5BFF', icon:'💜', initial:'S' },
+  { name:'@dbz_andy',     coins:'8.4K',  color:'linear-gradient(135deg,#FE2C55,#a01535)', border:'#FE2C55', rankColor:'#FE2C55', icon:'🐉', initial:'D' },
 ];
 
-const rankClass = ['rank-1','rank-2','rank-3','rank-other','rank-other'];
-const rankLabel = ['1st','2nd','3rd','4','5'];
-
-function render() {
-  document.getElementById('rows').innerHTML = gifters.map((g, i) => `
-    <div class="row">
-      <div class="rank ${rankClass[i]}">${rankLabel[i]}</div>
-      <div class="gifter-name">${g.name}</div>
-      <div class="gift-count"><span class="gift-icon">🎁</span>${g.gifts}</div>
-    </div>
-  `).join('');
-}
-render();
-
-// URL param: ?g1=name:count&g2=name:count etc
 const p = new URLSearchParams(location.search);
-for (let i = 0; i < 5; i++) {
+const gifters = defaults.map((d, i) => {
   const v = p.get('g' + (i+1));
-  if (v) {
-    const [name, count] = v.split(':');
-    if (gifters[i]) { gifters[i].name = name; gifters[i].gifts = parseInt(count)||0; }
-  }
-}
-render();
+  if (v) { const [name, coins] = v.split(':'); return { ...d, name: '@'+name, coins: coins||d.coins }; }
+  return d;
+});
+
+const ranks = ['1','2','3','4','5'];
+document.getElementById('list').innerHTML = gifters.slice(0,5).map((g,i) => `
+  <div class="lb-row">
+    <span class="lb-rank" style="color:${g.rankColor}">${ranks[i]}</span>
+    <div class="lb-av" style="background:${g.color}; border:2px solid ${g.border};">${g.initial}</div>
+    <div class="lb-name"><div class="n">${g.name}</div><div class="c">${g.coins} coins</div></div>
+    <span class="lb-icon">${g.icon}</span>
+  </div>
+`).join('');
 </script>
 </body>
 </html>
