@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    width: 520px; height: 130px;
+    background: transparent; overflow: hidden;
+    font-family: 'Arial Black', sans-serif;
+  }
+
+  .alert-box {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 20px;
+    background: linear-gradient(135deg, rgba(80,0,120,0.95), rgba(20,0,50,0.95));
+    border: 2px solid #FFD700;
+    border-radius: 14px;
+    box-shadow: 0 0 30px rgba(255,215,0,0.5), 0 0 60px rgba(155,48,255,0.4), inset 0 0 20px rgba(80,0,120,0.5);
+    opacity: 0;
+    transform: scale(0.85) translateY(10px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .alert-box.show {
+    opacity: 1; transform: scale(1) translateY(0);
+  }
+  .alert-box.hide {
+    opacity: 0; transform: scale(0.85) translateY(-10px);
+    transition: all 0.3s ease-in;
+  }
+
+  .alert-icon {
+    font-size: 56px; flex-shrink: 0;
+    animation: bounce 0.6s ease infinite alternate;
+    filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+  }
+  @keyframes bounce {
+    from { transform: scale(1) rotate(-5deg); }
+    to { transform: scale(1.15) rotate(5deg); }
+  }
+
+  .alert-content { flex: 1; }
+  .alert-type {
+    font-size: 12px; letter-spacing: 3px; color: #ff2d78;
+    text-transform: uppercase; font-weight: 900;
+    text-shadow: 0 0 8px rgba(255,45,120,0.7);
+    margin-bottom: 2px;
+  }
+  .alert-main {
+    font-size: 28px; font-weight: 900; color: #fff;
+    line-height: 1;
+    text-shadow: 0 0 15px rgba(255,255,255,0.5);
+  }
+  .alert-main .highlight {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 6px rgba(255,215,0,0.6));
+  }
+  .alert-sub {
+    font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 2px;
+  }
+
+  /* Lightning bolt accents */
+  .alert-box::before, .alert-box::after {
+    content: '⚡';
+    position: absolute;
+    font-size: 30px;
+    opacity: 0.4;
+    animation: lightning 1s ease-in-out infinite alternate;
+  }
+  .alert-box::before { top: 8px; right: 16px; }
+  .alert-box::after { bottom: 8px; left: 16px; animation-delay: 0.5s; }
+  @keyframes lightning {
+    from { opacity: 0.2; transform: scale(0.9); }
+    to { opacity: 0.6; transform: scale(1.1); }
+  }
+</style>
+</head>
+<body>
+<div class="alert-box" id="alert">
+  <div class="alert-icon" id="icon">🎁</div>
+  <div class="alert-content">
+    <div class="alert-type" id="type">NEW TOP GIFT</div>
+    <div class="alert-main"><span class="highlight" id="user">dragon_king_99</span> sent</div>
+    <div class="alert-sub" id="sub">x50 Dragon Balls! 🐉</div>
+  </div>
+</div>
+
+<script>
+const alerts = [
+  { icon: '🎁', type: 'NEW TOP GIFT', user: 'dragon_king_99', sub: 'x50 Dragon Balls! 🐉' },
+  { icon: '❤️', type: 'NEW FOLLOWER', user: 'purple_lightning7', sub: 'just followed!' },
+  { icon: '⭐', type: 'NEW SUBSCRIBER', user: 'fortnite_legend', sub: 'subscribed for 1 month!' },
+  { icon: '🏆', type: 'GIFT COMBO', user: 'vegeta_fan_xx', sub: 'x100 Universe! 🌌' },
+];
+
+let current = 0;
+const box = document.getElementById('alert');
+
+function showAlert(data) {
+  document.getElementById('icon').textContent = data.icon;
+  document.getElementById('type').textContent = data.type;
+  document.getElementById('user').textContent = data.user;
+  document.getElementById('sub').textContent = data.sub;
+  
+  box.classList.remove('hide');
+  box.classList.add('show');
+  
+  setTimeout(() => {
+    box.classList.remove('show');
+    box.classList.add('hide');
+  }, 4000);
+}
+
+// Auto-cycle alerts every 7s for demo
+setTimeout(() => showAlert(alerts[0]), 500);
+setInterval(() => {
+  current = (current + 1) % alerts.length;
+  showAlert(alerts[current]);
+}, 7000);
+</script>
+</body>
+</html>

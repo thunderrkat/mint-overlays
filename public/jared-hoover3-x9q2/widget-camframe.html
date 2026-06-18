@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    width: 380px; height: 290px;
+    background: transparent; overflow: hidden;
+    font-family: 'Arial Black', sans-serif;
+  }
+
+  .cam-wrap {
+    width: 100%; height: 100%;
+    position: relative;
+  }
+
+  /* The border frame - conic gradient rotates */
+  .cam-border {
+    position: absolute; inset: 0;
+    border-radius: 16px;
+    padding: 4px;
+    background: conic-gradient(from 0deg, #9b30ff, #FFD700, #ff2d78, #9b30ff);
+    box-shadow: 0 0 30px rgba(155,48,255,0.7), 0 0 60px rgba(255,215,0,0.3);
+    animation: border-spin 4s linear infinite;
+  }
+  @keyframes border-spin {
+    to { filter: hue-rotate(360deg); }
+  }
+
+  /* Inner video area */
+  .cam-inner {
+    width: 100%; height: 100%; border-radius: 13px;
+    background: rgba(5,0,15,0.7);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .cam-placeholder {
+    color: rgba(155,48,255,0.5); font-size: 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .cam-placeholder span { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
+
+  /* Corner lightning accents */
+  .corner {
+    position: absolute; width: 28px; height: 28px;
+    border-color: #FFD700; border-style: solid;
+    z-index: 10;
+  }
+  .corner-tl { top: 6px; left: 6px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  .corner-tr { top: 6px; right: 6px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+  .corner-bl { bottom: 46px; left: 6px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+  .corner-br { bottom: 46px; right: 6px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+  /* Name bar */
+  .cam-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 38px; border-radius: 0 0 13px 13px;
+    background: linear-gradient(90deg, rgba(80,0,120,0.95), rgba(155,48,255,0.8));
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px;
+    z-index: 5;
+  }
+  .cam-name {
+    color: #FFD700; font-size: 16px; font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255,215,0,0.7);
+  }
+  .cam-badge {
+    background: #9b30ff; color: white;
+    font-size: 10px; font-weight: 900;
+    padding: 2px 8px; border-radius: 4px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 8px rgba(155,48,255,0.8);
+  }
+</style>
+</head>
+<body>
+<div class="cam-wrap">
+  <div class="cam-border">
+    <div class="cam-inner">
+      <div class="cam-placeholder">
+        📸
+        <span>CAM SOURCE</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="cam-bar">
+    <div class="cam-name">JARED.HOOVER3</div>
+    <div class="cam-badge">CAM</div>
+  </div>
+</div>
+</body>
+</html>

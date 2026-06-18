@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    width: 360px; height: 320px;
+    background: transparent; overflow: hidden;
+    font-family: 'Arial Black', sans-serif;
+  }
+
+  .leaderboard {
+    width: 100%; height: 100%;
+    background: rgba(10,0,25,0.88);
+    border: 1px solid rgba(155,48,255,0.5);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 0 25px rgba(155,48,255,0.35), inset 0 0 15px rgba(50,0,80,0.5);
+  }
+
+  .lb-title {
+    font-size: 15px; font-weight: 900; letter-spacing: 2px;
+    color: #FFD700; text-transform: uppercase; margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.6);
+    border-bottom: 1px solid rgba(155,48,255,0.4);
+    padding-bottom: 8px;
+  }
+
+  .row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.3s;
+  }
+  .row:last-child { border-bottom: none; }
+  .row:hover { background: rgba(155,48,255,0.1); border-radius: 6px; }
+
+  .rank {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; flex-shrink: 0;
+  }
+  .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; box-shadow: 0 0 10px rgba(255,215,0,0.8); }
+  .rank-2 { background: linear-gradient(135deg, #C0C0C0, #888); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
+  .rank-other { background: rgba(155,48,255,0.3); color: #ccc; font-size: 11px; }
+
+  .gifter-name {
+    flex: 1; color: #fff; font-size: 15px; font-weight: bold;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .gift-count {
+    color: #ff2d78; font-size: 15px; font-weight: 900;
+    text-shadow: 0 0 8px rgba(255,45,120,0.6);
+    white-space: nowrap;
+  }
+  .gift-icon { font-size: 14px; margin-right: 2px; }
+</style>
+</head>
+<body>
+<div class="leaderboard">
+  <div class="lb-title">🏆 Top Gifters</div>
+  <div id="rows"></div>
+</div>
+
+<script>
+const gifters = [
+  { name: 'dragon_king_99', gifts: 124 },
+  { name: 'vegeta_fan_xx', gifts: 87 },
+  { name: 'fortnite_god07', gifts: 53 },
+  { name: 'NightOwl_TX', gifts: 31 },
+  { name: 'purple_lightning', gifts: 18 },
+];
+
+const rankClass = ['rank-1','rank-2','rank-3','rank-other','rank-other'];
+const rankLabel = ['1st','2nd','3rd','4','5'];
+
+function render() {
+  document.getElementById('rows').innerHTML = gifters.map((g, i) => `
+    <div class="row">
+      <div class="rank ${rankClass[i]}">${rankLabel[i]}</div>
+      <div class="gifter-name">${g.name}</div>
+      <div class="gift-count"><span class="gift-icon">🎁</span>${g.gifts}</div>
+    </div>
+  `).join('');
+}
+render();
+
+// URL param: ?g1=name:count&g2=name:count etc
+const p = new URLSearchParams(location.search);
+for (let i = 0; i < 5; i++) {
+  const v = p.get('g' + (i+1));
+  if (v) {
+    const [name, count] = v.split(':');
+    if (gifters[i]) { gifters[i].name = name; gifters[i].gifts = parseInt(count)||0; }
+  }
+}
+render();
+</script>
+</body>
+</html>
