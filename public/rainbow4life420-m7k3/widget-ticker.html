@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon-purple:#9B00FF;--ink-2:#0d0020;--text:#FFFFFF;
+  --panel-line:rgba(153,0,255,.45);
+  --rainbow:linear-gradient(90deg,#FF2D2D,#FF7F00,#FFD700,#00CC44,#00AAFF,#CC00FF);
+  --font-cond:'Saira Condensed',sans-serif;--font-body:'Outfit',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1080px;height:64px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+.ticker{width:1080px;height:64px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(10,0,32,.95),rgba(20,0,50,.9));position:relative;}
+.ticker::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rainbow);animation:shift 2s linear infinite;background-size:200% 100%;}
+.ticker::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--rainbow);animation:shift 2s linear infinite;background-size:200% 100%;}
+@keyframes shift{to{background-position:200% 0;}}
+.ticker-label{flex:none;display:flex;align-items:center;gap:8px;height:100%;padding:0 20px;z-index:2;background:linear-gradient(90deg,#9B00FF,#CC00FF);font-family:var(--font-cond);font-weight:800;font-size:20px;letter-spacing:2px;color:#fff;box-shadow:6px 0 18px rgba(0,0,0,.5);white-space:nowrap;}
+.ticker-window{flex:1;overflow:hidden;position:relative;}
+.ticker-track{display:flex;align-items:center;white-space:nowrap;}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 26px;font-size:18px;font-weight:600;color:#E0CCFF;border-right:1px solid rgba(153,0,255,.25);}
+.ticker-item .who{font-weight:800;}
+</style>
+</head>
+<body>
+<div class="ticker">
+  <div class="ticker-label">🌈 LIVE</div>
+  <div class="ticker-window"><div class="ticker-track" id="track"></div></div>
+</div>
+<script>
+const SESSION='rainbow4life420-m7k3';
+const COLORS=['#FF2D2D','#FF7F00','#FFD700','#00CC44','#00AAFF','#CC00FF'];
+let events=[
+  {icon:'🔥',who:'@420queen',whoColor:'#FF7F00',msg:'sent Rainbow Rose ×5'},
+  {icon:'➕',who:'@weedlover99',whoColor:'#00CC44',msg:'followed'},
+  {icon:'🌈',who:'@fortnite_fan',whoColor:'#00AAFF',msg:'dropped a Galaxy ×3'},
+  {icon:'🍃',who:'@highlife420',whoColor:'#CC00FF',msg:'joined the stream'},
+  {icon:'🔥',who:'@vibes_only',whoColor:'#FF2D2D',msg:'sent 50 Roses'},
+];
+const track=document.getElementById('track');
+let offset=0,animId;
+function build(){
+  const doubled=[...events,...events];
+  track.innerHTML=doubled.map((e,i)=>`<span class="ticker-item"><span>${e.icon}</span><span class="who" style="color:${e.whoColor}">${e.who}</span><span>${e.msg}</span></span>`).join('');
+  offset=0;cancelAnimationFrame(animId);scroll();
+}
+function scroll(){
+  const hw=track.scrollWidth/2;
+  function step(){offset+=1.2;if(offset>=hw)offset=0;track.style.transform=`translateX(-${offset}px)`;animId=requestAnimationFrame(step);}
+  animId=requestAnimationFrame(step);
+}
+function add(evt){events.unshift(evt);if(events.length>20)events.pop();build();}
+const es=new EventSource('/events/'+SESSION);
+es.onmessage=e=>{
+  const d=JSON.parse(e.data);
+  const c=COLORS[Math.floor(Math.random()*6)];
+  if(d.type==='gift')add({icon:'🔥',who:'@'+(d.nickname||'viewer'),whoColor:c,msg:'sent '+(d.giftName||'a gift')});
+  if(d.type==='follow')add({icon:'➕',who:'@'+(d.nickname||'viewer'),whoColor:'#00CC44',msg:'followed'});
+  if(d.type==='join')add({icon:'🌈',who:'@'+(d.nickname||'viewer'),whoColor:c,msg:'joined'});
+};
+build();
+</script>
+</body>
+</html>

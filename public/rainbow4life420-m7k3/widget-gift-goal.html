@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-purple:#9B00FF;--neon-pink:#FF00FF;--weed-green:#44CC44;
+  --tiktok-pink:#FE2C55;--ink-2:#0d0020;--text:#FFFFFF;
+  --panel:rgba(10,0,20,.88);--panel-line:rgba(153,0,255,.45);
+  --rainbow:linear-gradient(90deg,#FF2D2D,#FF7F00,#FFD700,#00CC44,#00AAFF,#CC00FF);
+  --font-cond:'Saira Condensed',sans-serif;--font-body:'Outfit',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:560px;height:100px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+
+.goal{
+  width:560px;height:100px;
+  background:var(--panel);border:1.5px solid var(--panel-line);border-radius:16px;
+  padding:15px 20px 17px;backdrop-filter:blur(10px);
+  box-shadow:0 8px 30px rgba(0,0,0,.5),0 0 20px rgba(153,0,255,.2);
+  position:relative;overflow:hidden;
+}
+.goal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rainbow);animation:shift 3s linear infinite;background-size:200% 100%;}
+@keyframes shift{to{background-position:200% 0;}}
+
+.goal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.goal-title{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-cond);font-weight:800;font-size:21px;letter-spacing:2px;
+  background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shift 3s linear infinite;background-size:200% 100%;
+  text-transform:uppercase;
+}
+.goal-count{font-family:var(--font-cond);font-weight:800;font-size:21px;color:var(--text);}
+.goal-count .have{color:#FFD700;}
+.goal-count .need{color:rgba(153,0,255,.7);}
+
+.bar-bg{position:relative;height:20px;border-radius:10px;background:rgba(5,0,15,.9);overflow:hidden;border:1px solid rgba(153,0,255,.3);}
+.bar-fill{
+  position:absolute;inset:0;border-radius:10px;
+  background:var(--rainbow);background-size:200% 100%;
+  animation:shift 2s linear infinite;
+  box-shadow:0 0 20px rgba(153,0,255,.5);
+  transition:width 1s ease;
+}
+.bar-fill::after{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  animation:shimmer 1.8s ease-in-out infinite;
+}
+.bar-gloss{position:absolute;inset:0;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.35),transparent 55%);pointer-events:none;}
+@keyframes shimmer{to{left:200%;}}
+</style>
+</head>
+<body>
+<div class="goal">
+  <div class="goal-top">
+    <div class="goal-title"><span>🎁</span>Gift Goal</div>
+    <div class="goal-count"><span class="have" id="current">0</span><span class="need"> / <span id="target">500</span></span></div>
+  </div>
+  <div class="bar-bg">
+    <div class="bar-fill" id="bar" style="width:0%"></div>
+    <div class="bar-gloss"></div>
+  </div>
+</div>
+<script>
+const SESSION='rainbow4life420-m7k3';
+const p=new URLSearchParams(location.search);
+let target=parseInt(p.get('target'))||500;
+document.getElementById('target').textContent=target;
+function update(cur){document.getElementById('current').textContent=cur.toLocaleString();document.getElementById('bar').style.width=Math.min((cur/target)*100,100)+'%';}
+const es=new EventSource('/events/'+SESSION);
+es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='state'&&d.gifters){update(d.gifters.reduce((s,g)=>s+(g.count||0),0));}};
+if(p.get('current'))update(parseInt(p.get('current')));
+</script>
+</body>
+</html>
