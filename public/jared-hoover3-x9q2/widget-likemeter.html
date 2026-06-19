@@ -138,3 +138,11 @@ window.addEventListener('message', e => { if (e.data && e.data.likes !== undefin
 </script>
 </body>
 </html>
+<script>
+// SSE live connection for like count
+const _es = new EventSource('/events/jared-hoover3-x9q2');
+_es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'likeMeter') update(d.total || 0);
+};
+</script>

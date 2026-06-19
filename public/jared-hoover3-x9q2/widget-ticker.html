@@ -6,20 +6,17 @@
 <style>
 :root {
   --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C;
-  --tiktok-pink:#FE2C55; --tiktok-cyan:#25F4EE;
-  --ink-2:#0d0322; --ink-3:#1a0742; --text:#F5F2FF;
-  --panel-line:rgba(155,91,255,.4);
+  --tiktok-pink:#FE2C55; --tiktok-cyan:#25F4EE; --ink-2:#0d0322; --ink-3:#1a0742;
+  --text:#F5F2FF; --panel-line:rgba(155,91,255,.4);
   --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { width:1080px; height:64px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
 .ticker {
-  width:1080px; height:64px;
-  display:flex; align-items:center; overflow:hidden;
+  width:1080px; height:64px; display:flex; align-items:center; overflow:hidden;
   background:linear-gradient(90deg, rgba(13,3,34,.94), rgba(26,7,66,.9));
-  border-top:1.5px solid var(--panel-line);
-  border-bottom:1.5px solid var(--panel-line);
+  border-top:1.5px solid var(--panel-line); border-bottom:1.5px solid var(--panel-line);
 }
 .ticker-label {
   flex:none; display:flex; align-items:center; gap:9px; height:100%; padding:0 22px; z-index:2;
@@ -28,50 +25,86 @@ body { width:1080px; height:64px; background:transparent; overflow:hidden; font-
   box-shadow:6px 0 18px rgba(0,0,0,.4); white-space:nowrap;
 }
 .ticker-window { flex:1; overflow:hidden; position:relative; }
-.ticker-track { display:flex; width:max-content; animation:marquee 30s linear infinite; }
-.ticker-run { display:flex; align-items:center; }
+.ticker-track { display:flex; align-items:center; white-space:nowrap; }
 .ticker-item {
-  display:flex; align-items:center; gap:9px; padding:0 26px;
-  font-size:20px; font-weight:600; color:#E9DEFF; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:9px; padding:0 28px;
+  font-size:19px; font-weight:600; color:#E9DEFF;
   border-right:1px solid rgba(155,91,255,.2);
 }
 .ticker-item .who { font-weight:800; }
-
-@keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 </style>
 </head>
 <body>
 <div class="ticker">
   <div class="ticker-label"><span>⚡</span>RECENT</div>
   <div class="ticker-window">
-    <div class="ticker-track">
-      <div class="ticker-run" id="run1"></div>
-      <div class="ticker-run" id="run2" aria-hidden="true"></div>
-    </div>
+    <div class="ticker-track" id="track"></div>
   </div>
 </div>
 
 <script>
-const events = [
-  { icon:'🌹', who:'@kayla_x', whoColor:'#FE2C55', msg:'sent 99 Roses' },
-  { icon:'➕', who:'@mike_jones', whoColor:'#25F4EE', msg:'followed' },
-  { icon:'🌌', who:'@bigfan_2025', whoColor:'#C97BFF', msg:'dropped a Galaxy ×3' },
-  { icon:'🦁', who:'@hypebeast', whoColor:'#F4B63C', msg:'sent a Lion' },
-  { icon:'💜', who:'@sara_v', whoColor:'#C97BFF', msg:'gifted 5 Galaxies' },
-  { icon:'➕', who:'@dbz_andy', whoColor:'#25F4EE', msg:'followed' },
-  { icon:'🐉', who:'@superfan', whoColor:'#FE2C55', msg:'sent a Drama Queen' },
+const SESSION = 'jared-hoover3-x9q2';
+const track = document.getElementById('track');
+const MAX_EVENTS = 20;
+let events = [
+  { icon:'🌹', who:'@kayla_x',      whoColor:'#FE2C55', msg:'sent 99 Roses' },
+  { icon:'➕', who:'@mike_jones',   whoColor:'#25F4EE', msg:'followed' },
+  { icon:'🔥', who:'@bigfan_2025',  whoColor:'#C97BFF', msg:'sent a Galaxy ×3' },
+  { icon:'🦁', who:'@hypebeast',    whoColor:'#F4B63C', msg:'sent a Lion' },
+  { icon:'➕', who:'@dbz_andy',     whoColor:'#25F4EE', msg:'followed' },
 ];
+let animOffset = 0;
+let animId;
 
-const html = events.map(e => `
-  <span class="ticker-item">
-    <span>${e.icon}</span>
-    <span class="who" style="color:${e.whoColor}">${e.who}</span>
-    <span>${e.msg}</span>
-  </span>
-`).join('');
+function buildTrack() {
+  // Duplicate for seamless loop
+  const doubled = [...events, ...events];
+  track.innerHTML = doubled.map(e =>
+    `<span class="ticker-item">
+      <span>${e.icon}</span>
+      <span class="who" style="color:${e.whoColor}">${e.who}</span>
+      <span>${e.msg}</span>
+    </span>`
+  ).join('');
+  animOffset = 0;
+  cancelAnimationFrame(animId);
+  startScroll();
+}
 
-document.getElementById('run1').innerHTML = html;
-document.getElementById('run2').innerHTML = html;
+function startScroll() {
+  const totalW = track.scrollWidth / 2;
+  const speed = 1.2; // px per frame
+  function step() {
+    animOffset += speed;
+    if (animOffset >= totalW) animOffset = 0;
+    track.style.transform = `translateX(-${animOffset}px)`;
+    animId = requestAnimationFrame(step);
+  }
+  animId = requestAnimationFrame(step);
+}
+
+function addEvent(evt) {
+  events.unshift(evt);
+  if (events.length > MAX_EVENTS) events.pop();
+  buildTrack();
+}
+
+// SSE
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'gift') {
+    addEvent({ icon:'🔥', who:'@'+(d.nickname||'viewer'), whoColor:'#F4B63C', msg:'sent '+(d.giftName||'a gift') });
+  }
+  if (d.type === 'follow') {
+    addEvent({ icon:'➕', who:'@'+(d.nickname||'viewer'), whoColor:'#25F4EE', msg:'followed' });
+  }
+  if (d.type === 'join') {
+    addEvent({ icon:'👋', who:'@'+(d.nickname||'viewer'), whoColor:'#C97BFF', msg:'joined the stream' });
+  }
+};
+
+buildTrack();
 </script>
 </body>
 </html>

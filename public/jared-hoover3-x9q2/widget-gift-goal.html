@@ -11,63 +11,65 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { width:560px; height:100px; background:transparent; overflow:hidden; font-family:var(--font-body); }
-
 .goal {
   width:560px; height:100px;
   background:var(--panel); border:1.5px solid rgba(155,91,255,.4); border-radius:16px;
   padding:16px 20px 18px; backdrop-filter:blur(10px); box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 .goal-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:11px; }
-.goal-title {
-  display:flex; align-items:center; gap:9px; font-family:var(--font-cond); font-weight:800;
-  font-size:22px; letter-spacing:2px; color:var(--gold); text-transform:uppercase;
-}
+.goal-title { display:flex; align-items:center; gap:9px; font-family:var(--font-cond); font-weight:800; font-size:22px; letter-spacing:2px; color:var(--gold); text-transform:uppercase; }
 .goal-count { font-family:var(--font-cond); font-weight:800; font-size:22px; color:var(--text); }
 .goal-count .have { color:var(--tiktok-pink); }
 .goal-count .need { color:#6b4a9e; }
-.goal-track {
-  position:relative; height:18px; border-radius:10px; background:rgba(7,1,18,.85);
-  overflow:hidden; border:1px solid rgba(155,91,255,.25);
-}
+.goal-track { position:relative; height:18px; border-radius:10px; background:rgba(7,1,18,.85); overflow:hidden; border:1px solid rgba(155,91,255,.25); }
 .goal-fill {
   position:absolute; inset:0; border-radius:10px;
   background:linear-gradient(90deg, var(--purple) 0%, #C97BFF 45%, var(--gold) 100%);
-  box-shadow:0 0 16px rgba(244,182,60,.6);
-  transition: width 1s ease;
+  box-shadow:0 0 16px rgba(244,182,60,.6); transition:width 1s ease;
 }
 .goal-fill::after {
   content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
   background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
   animation:shimmer 2s ease-in-out infinite;
 }
-.goal-gloss {
-  position:absolute; inset:0; border-radius:10px;
-  background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 55%);
-  pointer-events:none;
-}
+.goal-gloss { position:absolute; inset:0; border-radius:10px; background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 55%); pointer-events:none; }
 @keyframes shimmer { to { left:200%; } }
 </style>
 </head>
 <body>
 <div class="goal">
   <div class="goal-top">
-    <div class="goal-title"><span id="goal-emoji">🌌</span><span id="goal-name">Gift Goal</span></div>
-    <div class="goal-count"><span class="have" id="current">6,420</span> <span class="need">/ <span id="target">10,000</span></span></div>
+    <div class="goal-title"><span>🎁</span>Gift Goal</div>
+    <div class="goal-count"><span class="have" id="current">0</span> <span class="need">/ <span id="target">500</span></span></div>
   </div>
   <div class="goal-track">
-    <div class="goal-fill" id="bar" style="width:64%"></div>
+    <div class="goal-fill" id="bar" style="width:0%"></div>
     <div class="goal-gloss"></div>
   </div>
 </div>
 <script>
+const SESSION = 'jared-hoover3-x9q2';
 const p = new URLSearchParams(location.search);
-let cur = parseInt(p.get('current')) || 6420;
-let tgt = parseInt(p.get('target')) || 10000;
-if (p.get('emoji')) document.getElementById('goal-emoji').textContent = p.get('emoji');
-if (p.get('name')) document.getElementById('goal-name').textContent = p.get('name');
-document.getElementById('current').textContent = cur.toLocaleString();
-document.getElementById('target').textContent = tgt.toLocaleString();
-document.getElementById('bar').style.width = Math.min((cur/tgt)*100,100) + '%';
+let target = parseInt(p.get('target')) || 500;
+document.getElementById('target').textContent = target;
+
+function update(current) {
+  document.getElementById('current').textContent = current.toLocaleString();
+  document.getElementById('bar').style.width = Math.min((current/target)*100, 100) + '%';
+}
+
+// SSE — sum up all gifter diamonds
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'state' && d.gifters) {
+    const total = d.gifters.reduce((sum, g) => sum + (g.count || 0), 0);
+    update(total);
+  }
+};
+
+// Fallback: URL param
+if (p.get('current')) update(parseInt(p.get('current')));
 </script>
 </body>
 </html>

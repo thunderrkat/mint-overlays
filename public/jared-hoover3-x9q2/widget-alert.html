@@ -31,14 +31,8 @@ body { width:620px; height:130px; background:transparent; overflow:hidden; font-
   width:74px; height:74px; flex:none; border-radius:18px;
   display:flex; align-items:center; justify-content:center; font-size:44px;
 }
-.alert-icon.gift-style {
-  background:radial-gradient(circle at 38% 30%, #FFC25A, var(--orange) 70%);
-  box-shadow:0 0 24px rgba(240,118,15,.6);
-}
-.alert-icon.follow-style {
-  background:radial-gradient(circle at 38% 30%, #25F4EE, #0088aa 70%);
-  box-shadow:0 0 24px rgba(37,244,238,.5);
-}
+.alert-icon.gift-style { background:radial-gradient(circle at 38% 30%, #FFC25A, var(--orange) 70%); box-shadow:0 0 24px rgba(240,118,15,.6); }
+.alert-icon.follow-style { background:radial-gradient(circle at 38% 30%, #25F4EE, #0088aa 70%); box-shadow:0 0 24px rgba(37,244,238,.5); }
 .alert-text { flex:1; }
 .alert-title { font-family:var(--font-display); font-size:30px; letter-spacing:1px; transform:skewX(-4deg); display:block; }
 .alert-title .new { color:var(--tiktok-pink); }
@@ -46,10 +40,7 @@ body { width:620px; height:130px; background:transparent; overflow:hidden; font-
 .alert-sub { font-size:21px; font-weight:600; color:var(--text-dim); margin-top:4px; }
 .alert-sub .who { color:var(--gold); font-weight:800; }
 .alert-sub .gift { color:#fff; font-weight:800; }
-.alert-amt {
-  font-family:'Saira Condensed',sans-serif; font-weight:800; font-size:34px; color:var(--gold);
-  text-shadow:0 0 18px rgba(244,182,60,.6); white-space:nowrap;
-}
+.alert-amt { font-family:'Saira Condensed',sans-serif; font-weight:800; font-size:34px; color:var(--gold); text-shadow:0 0 18px rgba(244,182,60,.6); white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -59,42 +50,107 @@ body { width:620px; height:130px; background:transparent; overflow:hidden; font-
       <div class="alert-icon gift-style" id="icon">🔥</div>
       <div class="alert-text">
         <span class="alert-title"><span class="new" id="type-new">NEW</span> <span class="lbl" id="type-lbl">TOP GIFT!</span></span>
-        <div class="alert-sub"><span class="who" id="who">@bigfan_2025</span> sent <span class="gift" id="gift">Galaxy ×3</span></div>
+        <div class="alert-sub"><span class="who" id="who">@viewer</span> <span id="action">sent a gift</span></div>
       </div>
-      <div class="alert-amt" id="amt">+15K</div>
+      <div class="alert-amt" id="amt">🔥</div>
     </div>
   </div>
 </div>
 
 <script>
-const alerts = [
-  { icon:'🔥', iconClass:'gift-style',   typeNew:'NEW',  typeLbl:'TOP GIFT!',  who:'@bigfan_2025',   gift:'Galaxy ×3',    amt:'+15K' },
-  { icon:'➕', iconClass:'follow-style', typeNew:'NEW',  typeLbl:'FOLLOWER!',  who:'@mike_jones',    gift:'just followed', amt:'♥'    },
-  { icon:'🔥', iconClass:'gift-style',   typeNew:'GIFT', typeLbl:'ALERT!',     who:'@kayla_x',       gift:'99 Roses',      amt:'+9.9K'},
-  { icon:'🔥', iconClass:'gift-style',   typeNew:'NEW',  typeLbl:'TOP GIFT!',  who:'@hypebeast',     gift:'Lion ×1',       amt:'+29K' },
-  { icon:'➕', iconClass:'follow-style', typeNew:'NEW',  typeLbl:'FOLLOWER!',  who:'@dbz_andy',      gift:'just followed', amt:'♥'    },
-  { icon:'🔥', iconClass:'gift-style',   typeNew:'GIFT', typeLbl:'ALERT!',     who:'@superfan',      gift:'Drama Queen',   amt:'+52K' },
-];
-
+const SESSION = 'jared-hoover3-x9q2';
 const af = document.getElementById('af');
-let idx = 0;
+let alertQueue = [];
+let showing = false;
 
-function show(d) {
+function show(data) {
   const iconEl = document.getElementById('icon');
-  iconEl.textContent = d.icon;
-  iconEl.className = 'alert-icon ' + d.iconClass;
-  document.getElementById('type-new').textContent = d.typeNew;
-  document.getElementById('type-lbl').textContent = d.typeLbl;
-  document.getElementById('who').textContent = d.who;
-  document.getElementById('gift').textContent = d.gift;
-  document.getElementById('amt').textContent = d.amt;
+  iconEl.textContent = data.icon;
+  iconEl.className = 'alert-icon ' + data.iconClass;
+  document.getElementById('type-new').textContent = data.typeNew;
+  document.getElementById('type-lbl').textContent = data.typeLbl;
+  document.getElementById('who').textContent = data.who;
+  document.getElementById('action').textContent = data.action;
+  document.getElementById('amt').textContent = data.amt;
   af.classList.remove('hide');
   af.classList.add('show');
-  setTimeout(() => { af.classList.remove('show'); af.classList.add('hide'); }, 4500);
+  showing = true;
+  setTimeout(() => {
+    af.classList.remove('show');
+    af.classList.add('hide');
+    showing = false;
+    setTimeout(processQueue, 400);
+  }, 4500);
 }
 
-setTimeout(() => show(alerts[0]), 500);
-setInterval(() => { idx = (idx+1) % alerts.length; show(alerts[idx]); }, 7000);
+function processQueue() {
+  if (alertQueue.length > 0 && !showing) {
+    show(alertQueue.shift());
+  }
+}
+
+function queueAlert(data) {
+  alertQueue.push(data);
+  if (!showing) processQueue();
+}
+
+// SSE for real events
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+
+  if (d.type === 'gift') {
+    queueAlert({
+      icon:'🔥', iconClass:'gift-style',
+      typeNew:'NEW', typeLbl:'GIFT!',
+      who:'@' + (d.nickname || d.uniqueId || 'viewer'),
+      action: 'sent ' + (d.giftName || 'a gift') + (d.repeatCount > 1 ? ' ×' + d.repeatCount : ''),
+      amt: d.diamondCount ? '+' + (d.diamondCount * (d.repeatCount||1)).toLocaleString() : '🔥'
+    });
+  }
+
+  if (d.type === 'follow') {
+    queueAlert({
+      icon:'➕', iconClass:'follow-style',
+      typeNew:'NEW', typeLbl:'FOLLOWER!',
+      who:'@' + (d.nickname || d.uniqueId || 'viewer'),
+      action:'just followed',
+      amt:'♥'
+    });
+  }
+
+  if (d.type === 'state' && d.gifters && d.gifters.length > 0) {
+    // New top gifter alert when #1 changes
+    const top = d.gifters[0];
+    const name = '@' + (top.nickname || top.id);
+    if (top._isNew) {
+      queueAlert({
+        icon:'🔥', iconClass:'gift-style',
+        typeNew:'NEW', typeLbl:'TOP GIFTER!',
+        who:name, action:'is now #1',
+        amt:'👑'
+      });
+    }
+  }
+};
+
+// Demo fallback when no live session active
+setTimeout(() => {
+  if (alertQueue.length === 0 && !showing) {
+    const demos = [
+      { icon:'🔥', iconClass:'gift-style',   typeNew:'NEW',  typeLbl:'TOP GIFT!',  who:'@bigfan_2025',  action:'sent Galaxy ×3',    amt:'+15K' },
+      { icon:'➕', iconClass:'follow-style', typeNew:'NEW',  typeLbl:'FOLLOWER!',  who:'@mike_jones',   action:'just followed',      amt:'♥'   },
+      { icon:'🔥', iconClass:'gift-style',   typeNew:'GIFT', typeLbl:'ALERT!',     who:'@kayla_x',      action:'sent 99 Roses',      amt:'+9.9K'},
+    ];
+    let di = 0;
+    function nextDemo() {
+      queueAlert(demos[di % demos.length]);
+      di++;
+      setTimeout(nextDemo, 7000);
+    }
+    nextDemo();
+  }
+}, 3000);
 </script>
 </body>
 </html>

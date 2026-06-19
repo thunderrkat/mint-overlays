@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C;
-  --tiktok-pink:#FE2C55; --ink-2:#0d0322; --ink-3:#1a0742;
+  --tiktok-pink:#FE2C55; --ink-2:#0d0322;
   --text:#F5F2FF; --text-dim:#C9AEFF; --text-muted:#8f7bbf;
   --panel:rgba(16,5,38,.85); --panel-line:rgba(155,91,255,.42);
   --font-display:'Anton',sans-serif; --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
@@ -17,16 +15,14 @@
 body { width:1080px; height:160px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
 .header {
-  width:1080px; height:160px;
-  padding:22px 34px 18px;
+  width:1080px; height:160px; padding:22px 34px 18px;
   display:flex; align-items:center; gap:22px;
   background:linear-gradient(180deg, rgba(6,1,15,.92) 0%, rgba(13,3,34,.7) 100%);
   border-bottom:1.5px solid var(--panel-line);
   position:relative;
 }
 .header::after {
-  content:'';
-  position:absolute; bottom:0; left:0; right:0; height:1px;
+  content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
   background:linear-gradient(90deg, transparent, var(--purple), var(--gold), var(--tiktok-pink), transparent);
 }
 
@@ -38,16 +34,15 @@ body { width:1080px; height:160px; background:transparent; overflow:hidden; font
 }
 .avatar .badge {
   position:absolute; right:-2px; bottom:-2px; width:34px; height:34px; border-radius:50%;
-  background:radial-gradient(circle at 38% 32%, #FFC25A, var(--orange) 70%);
+  background:radial-gradient(circle at 38% 32%, #FFC25A, #F0760F 70%);
   border:3px solid var(--ink-2);
   display:flex; align-items:center; justify-content:center;
-  font-size:11px; color:#7a0e0e; letter-spacing:-1px;
-  font-family:var(--font-display);
+  font-size:11px; color:#7a0e0e; font-family:var(--font-display);
 }
 
 .id { flex:1; min-width:0; }
 .wordmark {
-  font-family:var(--font-display); font-size:48px; line-height:.96; letter-spacing:.5px;
+  font-family:var(--font-display); font-size:48px; line-height:.96;
   transform:skewX(-5deg); text-shadow:0 3px 0 rgba(0,0,0,.55), 0 0 22px rgba(155,91,255,.5);
 }
 .wordmark .a { color:var(--text); }
@@ -59,16 +54,23 @@ body { width:1080px; height:160px; background:transparent; overflow:hidden; font
 .submeta .game { font-size:18px; font-weight:600; color:var(--text-muted); }
 
 .header-right { display:flex; flex-direction:column; align-items:flex-end; gap:12px; flex:none; }
+
+/* LIVE pill - CSS animation only, no JS needed */
 .live-pill {
   display:flex; align-items:center; gap:9px; background:var(--tiktok-pink); color:#fff;
-  font-weight:800; font-size:21px; letter-spacing:2px; padding:9px 18px 9px 14px; border-radius:11px;
-  animation:livepulse 2.2s ease-out infinite; box-shadow:0 6px 18px rgba(254,44,85,.4);
-  font-family:var(--font-body);
+  font-family:var(--font-body); font-weight:800; font-size:21px; letter-spacing:2px;
+  padding:9px 18px 9px 14px; border-radius:11px;
+  box-shadow:0 6px 18px rgba(254,44,85,.4);
+  animation:livepulse 2.2s ease-out infinite;
 }
-.live-pill .dot { width:11px; height:11px; border-radius:50%; background:#fff; animation:livedot 1.1s infinite; }
+.live-dot {
+  width:11px; height:11px; border-radius:50%; background:#fff;
+  animation:livedot 1.1s infinite;
+}
+
 .viewers {
   display:flex; align-items:center; gap:9px; background:rgba(20,6,42,.72);
-  border:1.5px solid rgba(155,91,255,.45); backdrop-filter:blur(8px);
+  border:1.5px solid rgba(155,91,255,.45);
   color:var(--text); font-weight:700; font-size:20px; padding:8px 16px; border-radius:11px;
 }
 
@@ -87,18 +89,34 @@ body { width:1080px; height:160px; background:transparent; overflow:hidden; font
     <div class="submeta">
       <span class="handle">@jared.hoover3</span>
       <span class="sep"></span>
-      <span class="game" id="game-label">TikTok Live · Follow For More</span>
+      <span class="game">TikTok Live · Follow For More</span>
     </div>
   </div>
   <div class="header-right">
-    <div class="live-pill"><span class="dot"></span>LIVE</div>
-    <div class="viewers"><span>👁</span><span id="viewers">12.4K</span></div>
+    <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+    <div class="viewers">👁 <span id="viewers">--</span></div>
   </div>
 </div>
+
 <script>
-const p = new URLSearchParams(location.search);
-if (p.get('viewers')) document.getElementById('viewers').textContent = p.get('viewers');
-if (p.get('game')) document.getElementById('game-label').textContent = p.get('game');
+const SESSION = 'jared-hoover3-x9q2';
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'status' && d.viewerCount !== undefined) {
+    document.getElementById('viewers').textContent = d.viewerCount.toLocaleString();
+  }
+};
+// Fallback: poll status endpoint
+async function pollViewers() {
+  try {
+    const r = await fetch('/api/' + SESSION + '/status');
+    const d = await r.json();
+    if (d.viewerCount) document.getElementById('viewers').textContent = d.viewerCount.toLocaleString();
+  } catch(e) {}
+}
+pollViewers();
+setInterval(pollViewers, 10000);
 </script>
 </body>
 </html>

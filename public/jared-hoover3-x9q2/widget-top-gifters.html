@@ -12,49 +12,42 @@
   --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { width:344px; height:320px; background:transparent; overflow:hidden; font-family:var(--font-body); }
+body { width:344px; height:340px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
 .leaderboard {
-  width:344px; height:320px;
+  width:344px; height:340px;
   background:var(--panel); border:1.5px solid var(--panel-line); border-radius:18px;
-  padding:16px 16px 16px; backdrop-filter:blur(10px);
+  padding:14px 14px 12px; backdrop-filter:blur(10px);
   box-shadow:0 12px 34px rgba(0,0,0,.45);
   display:flex; flex-direction:column;
 }
-
-/* Tab row */
-.tabs { display:flex; gap:0; margin-bottom:12px; border-radius:10px; overflow:hidden; border:1px solid var(--panel-line); flex-shrink:0; }
+.tabs { display:flex; margin-bottom:10px; border-radius:8px; overflow:hidden; border:1px solid var(--panel-line); flex-shrink:0; }
 .tab {
-  flex:1; padding:7px 4px; font-family:var(--font-cond); font-size:13px; font-weight:800;
+  flex:1; padding:6px 4px; font-family:var(--font-cond); font-size:12px; font-weight:800;
   letter-spacing:1px; text-align:center; cursor:pointer; color:var(--text-muted);
   background:transparent; border:none; transition:all .2s; text-transform:uppercase;
 }
 .tab.active { background:rgba(155,91,255,.3); color:var(--text); }
-
 .lb-head {
-  display:flex; align-items:center; gap:9px; margin-bottom:10px; padding-bottom:8px;
+  display:flex; align-items:center; gap:9px; margin-bottom:8px; padding-bottom:8px;
   border-bottom:1px solid rgba(155,91,255,.22); flex-shrink:0;
 }
-.lb-head .t {
-  font-family:var(--font-cond); font-weight:800; font-size:21px; letter-spacing:2px;
-  color:var(--gold); text-transform:uppercase;
-}
-.lb-list { display:flex; flex-direction:column; gap:7px; flex:1; overflow:hidden; }
-.lb-row { display:flex; align-items:center; gap:12px; }
-.lb-rank { font-family:'Anton',sans-serif; font-size:20px; width:22px; text-align:center; flex-shrink:0; }
+.lb-head .t { font-family:var(--font-cond); font-weight:800; font-size:19px; letter-spacing:2px; color:var(--gold); text-transform:uppercase; }
+.lb-list { display:flex; flex-direction:column; gap:6px; flex:1; overflow:hidden; }
+.lb-row { display:flex; align-items:center; gap:10px; min-height:0; }
+.lb-rank { font-family:'Anton',sans-serif; font-size:18px; width:20px; text-align:center; flex-shrink:0; }
 .lb-av {
-  width:36px; height:36px; border-radius:50%; flex:none;
+  width:34px; height:34px; border-radius:50%; flex:none;
   display:flex; align-items:center; justify-content:center;
-  font-weight:800; font-size:15px; color:var(--ink-2);
+  font-weight:800; font-size:14px; color:var(--ink-2);
 }
 .lb-name { flex:1; min-width:0; }
-.lb-name .n { font-weight:700; font-size:16px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-name .n { font-weight:700; font-size:15px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .lb-name .c { font-weight:600; font-size:12px; color:#9d86c9; }
-.lb-icon { font-size:15px; flex-shrink:0; }
-
-/* Transition */
-.lb-list { transition:opacity .3s ease; }
+.lb-icon { font-size:14px; flex-shrink:0; }
+.lb-list { transition:opacity .25s; }
 .lb-list.fade { opacity:0; }
+.empty { color:var(--text-muted); font-size:14px; text-align:center; padding:20px 0; }
 </style>
 </head>
 <body>
@@ -72,72 +65,83 @@ body { width:344px; height:320px; background:transparent; overflow:hidden; font-
 </div>
 
 <script>
+const SESSION = 'jared-hoover3-x9q2';
+const RANK_COLORS = ['#F4B63C','#C9CBD6','#E0823C','#9B5BFF','#FE2C55'];
+const RANK_ICONS_GIFT   = ['👑','💎','🌹','💜','🐉'];
+const RANK_ICONS_LIKE   = ['🔥','💖','⚡','💜','🐉'];
+const RANK_ICONS_FOLLOW = ['🆕','🆕','🆕','🆕','🆕'];
+
+let liveData = { gifters:[], likers:[], followers:[] };
+let currentTab = 'gifters';
+
 const CONFIGS = {
-  gifters: {
-    icon:'🏆', title:'Top Gifters',
-    data:[
-      { name:'@xClipsKing',  sub:'48.2K coins', color:'linear-gradient(135deg,#F4B63C,#E8821F)', border:'#F4B63C', rank:'#F4B63C', icon:'👑', init:'X' },
-      { name:'@valleygirl',  sub:'31.7K coins', color:'linear-gradient(135deg,#C9CBD6,#8E90A0)', border:'#C9CBD6', rank:'#C9CBD6', icon:'💎', init:'V' },
-      { name:'@noscope_ned', sub:'22.9K coins', color:'linear-gradient(135deg,#E0823C,#A8521C)', border:'#E0823C', rank:'#E0823C', icon:'🌹', init:'N' },
-      { name:'@sara_v',      sub:'11.2K coins', color:'linear-gradient(135deg,#9B5BFF,#6C28D9)', border:'#9B5BFF', rank:'#9B5BFF', icon:'💜', init:'S' },
-      { name:'@dbz_andy',    sub:'8.4K coins',  color:'linear-gradient(135deg,#FE2C55,#a01535)', border:'#FE2C55', rank:'#FE2C55', icon:'🐉', init:'D' },
-    ]
-  },
-  likers: {
-    icon:'❤️', title:'Top Likers',
-    data:[
-      { name:'@hypebeast',   sub:'2,840 likes', color:'linear-gradient(135deg,#F4B63C,#E8821F)', border:'#F4B63C', rank:'#F4B63C', icon:'🔥', init:'H' },
-      { name:'@kayla_x',     sub:'1,920 likes', color:'linear-gradient(135deg,#C9CBD6,#8E90A0)', border:'#C9CBD6', rank:'#C9CBD6', icon:'💖', init:'K' },
-      { name:'@mike_jones',  sub:'1,540 likes', color:'linear-gradient(135deg,#E0823C,#A8521C)', border:'#E0823C', rank:'#E0823C', icon:'⚡', init:'M' },
-      { name:'@superfan',    sub:'990 likes',   color:'linear-gradient(135deg,#9B5BFF,#6C28D9)', border:'#9B5BFF', rank:'#9B5BFF', icon:'💜', init:'S' },
-      { name:'@goku_super',  sub:'770 likes',   color:'linear-gradient(135deg,#FE2C55,#a01535)', border:'#FE2C55', rank:'#FE2C55', icon:'🐉', init:'G' },
-    ]
-  },
-  followers: {
-    icon:'➕', title:'New Followers',
-    data:[
-      { name:'@nightowl_tx',    sub:'just followed', color:'linear-gradient(135deg,#25F4EE,#0aa)', border:'#25F4EE', rank:'#25F4EE', icon:'🆕', init:'N' },
-      { name:'@purple_light7',  sub:'just followed', color:'linear-gradient(135deg,#9B5BFF,#6C28D9)', border:'#9B5BFF', rank:'#9B5BFF', icon:'🆕', init:'P' },
-      { name:'@zfighter44',     sub:'just followed', color:'linear-gradient(135deg,#F4B63C,#E8821F)', border:'#F4B63C', rank:'#F4B63C', icon:'🆕', init:'Z' },
-      { name:'@dbz_lover99',    sub:'just followed', color:'linear-gradient(135deg,#FE2C55,#a01535)', border:'#FE2C55', rank:'#FE2C55', icon:'🆕', init:'D' },
-      { name:'@fortnite_queen', sub:'just followed', color:'linear-gradient(135deg,#C9CBD6,#8E90A0)', border:'#C9CBD6', rank:'#C9CBD6', icon:'🆕', init:'F' },
-    ]
-  }
+  gifters:   { icon:'🏆', title:'Top Gifters',    key:'gifters',   icons:RANK_ICONS_GIFT,   sub: r => r.count + ' coins' },
+  likers:    { icon:'❤️', title:'Top Likers',     key:'likers',    icons:RANK_ICONS_LIKE,   sub: r => r.count + ' likes' },
+  followers: { icon:'➕', title:'New Followers',  key:'followers', icons:RANK_ICONS_FOLLOW, sub: () => 'just followed' },
 };
 
-let currentTab = 'gifters';
+function getInitial(name) { return (name || '?').replace('@','').charAt(0).toUpperCase(); }
+
+function renderTab(tab) {
+  const cfg = CONFIGS[tab];
+  document.getElementById('head-icon').textContent = cfg.icon;
+  document.getElementById('head-title').textContent = cfg.title;
+  const rows = liveData[cfg.key] || [];
+  const list = document.getElementById('list');
+  list.classList.add('fade');
+  setTimeout(() => {
+    if (rows.length === 0) {
+      list.innerHTML = '<div class="empty">No data yet — go live! 🎵</div>';
+    } else {
+      list.innerHTML = rows.slice(0,5).map((r, i) => {
+        const name = '@' + (r.nickname || r.id || 'unknown');
+        const color = RANK_COLORS[i] || '#9B5BFF';
+        const bg = `linear-gradient(135deg,${color},${color}88)`;
+        return `<div class="lb-row">
+          <span class="lb-rank" style="color:${color}">${i+1}</span>
+          <div class="lb-av" style="background:${bg};border:2px solid ${color}">${getInitial(r.nickname)}</div>
+          <div class="lb-name">
+            <div class="n">${name}</div>
+            <div class="c">${cfg.sub(r)}</div>
+          </div>
+          <span class="lb-icon">${cfg.icons[i] || '⭐'}</span>
+        </div>`;
+      }).join('');
+    }
+    list.classList.remove('fade');
+  }, 150);
+}
 
 function setTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((t,i) => {
     t.classList.toggle('active', ['gifters','likers','followers'][i] === tab);
   });
-  const cfg = CONFIGS[tab];
-  document.getElementById('head-icon').textContent = cfg.icon;
-  document.getElementById('head-title').textContent = cfg.title;
-  const list = document.getElementById('list');
-  list.classList.add('fade');
-  setTimeout(() => {
-    list.innerHTML = cfg.data.map((r, i) => `
-      <div class="lb-row">
-        <span class="lb-rank" style="color:${r.rank}">${i+1}</span>
-        <div class="lb-av" style="background:${r.color};border:2px solid ${r.border}">${r.init}</div>
-        <div class="lb-name"><div class="n">${r.name}</div><div class="c">${r.sub}</div></div>
-        <span class="lb-icon">${r.icon}</span>
-      </div>`).join('');
-    list.classList.remove('fade');
-  }, 150);
+  renderTab(tab);
 }
 
-// Auto-cycle every 8 seconds
-const tabs = ['gifters','likers','followers'];
+// SSE connection for live data
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'state') {
+    if (d.gifters)   liveData.gifters   = d.gifters;
+    if (d.likers)    liveData.likers    = d.likers;
+    if (d.followers) liveData.followers = d.followers;
+    renderTab(currentTab);
+  }
+};
+
+// Auto-cycle tabs every 8s
 let autoIdx = 0;
+const tabOrder = ['gifters','likers','followers'];
 setInterval(() => {
   autoIdx = (autoIdx + 1) % 3;
-  setTab(tabs[autoIdx]);
+  setTab(tabOrder[autoIdx]);
 }, 8000);
 
-setTab('gifters');
+// Initial render
+renderTab('gifters');
 </script>
 </body>
 </html>
