@@ -12,86 +12,50 @@
   --font-display:'Anton',sans-serif; --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { width:400px; height:320px; background:transparent; overflow:hidden; font-family:var(--font-body); }
+body { width:460px; height:130px; background:transparent; overflow:hidden; font-family:var(--font-body); }
 
 .meter {
-  width:400px; height:320px;
+  width:460px; height:130px;
   background:var(--panel); border:1.5px solid var(--panel-line);
-  border-radius:20px; padding:20px 22px;
+  border-radius:16px; padding:14px 20px;
   backdrop-filter:blur(12px);
-  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 30px rgba(155,91,255,.2);
-  display:flex; flex-direction:column; gap:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.5), 0 0 20px rgba(155,91,255,.15);
+  display:flex; flex-direction:column; gap:10px;
   position:relative; overflow:hidden;
 }
-
-/* Dragon ball aura glow bg */
 .meter::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 110%, rgba(240,118,15,.18), transparent 65%);
+  background:radial-gradient(ellipse at 50% 150%, rgba(240,118,15,.12), transparent 60%);
   pointer-events:none;
 }
 
-/* Title */
-.title-row {
-  display:flex; align-items:center; justify-content:space-between;
-}
+/* Top row: label + count */
+.top-row { display:flex; align-items:center; justify-content:space-between; }
 .title {
-  font-family:var(--font-cond); font-weight:800; font-size:20px;
+  font-family:var(--font-cond); font-weight:800; font-size:18px;
   letter-spacing:2px; color:var(--gold); text-transform:uppercase;
-  display:flex; align-items:center; gap:8px;
+  display:flex; align-items:center; gap:7px;
 }
 .like-count {
-  font-family:var(--font-display); font-size:28px; color:var(--tiktok-pink);
-  text-shadow:0 0 15px rgba(254,44,85,.6);
+  font-family:var(--font-display); font-size:26px; color:var(--tiktok-pink);
+  text-shadow:0 0 12px rgba(254,44,85,.6);
   display:flex; align-items:center; gap:6px;
 }
-.like-count .heart { font-size:20px; animation:heartbeat 1s ease-in-out infinite; }
-@keyframes heartbeat { 0%,100%{transform:scale(1);}50%{transform:scale(1.25);} }
+.like-count .heart { font-size:18px; animation:heartbeat 1s ease-in-out infinite; }
+@keyframes heartbeat { 0%,100%{transform:scale(1);}50%{transform:scale(1.3);} }
 
-/* Dragon Ball row */
-.balls-row {
-  display:flex; align-items:center; justify-content:center; gap:10px;
-}
-.ball {
-  width:44px; height:44px; border-radius:50%; flex-shrink:0;
-  background:radial-gradient(circle at 35% 30%, #FFC25A, var(--orange) 55%, #8B3000 100%);
-  box-shadow:0 0 12px rgba(240,118,15,.5), inset 0 -4px 8px rgba(0,0,0,.3);
-  display:flex; align-items:center; justify-content:center;
-  position:relative; transition:all 0.4s ease;
-  filter:grayscale(1) brightness(0.4);
-}
-.ball.lit {
-  filter:grayscale(0) brightness(1);
-  box-shadow:0 0 20px rgba(240,118,15,.8), 0 0 40px rgba(255,165,0,.4), inset 0 -4px 8px rgba(0,0,0,.3);
-  animation:ball-pulse 2s ease-in-out infinite;
-}
-@keyframes ball-pulse {
-  0%,100%{box-shadow:0 0 20px rgba(240,118,15,.8),0 0 40px rgba(255,165,0,.4);}
-  50%{box-shadow:0 0 30px rgba(240,118,15,1),0 0 60px rgba(255,165,0,.6);}
-}
-.ball .stars {
-  font-size:9px; letter-spacing:-1.5px; color:#7a0e0e;
-  font-family:var(--font-display); text-shadow:0 1px 0 rgba(255,255,255,.3);
-  line-height:1;
-}
-
-/* Progress bar */
-.bar-wrap {
-  display:flex; flex-direction:column; gap:6px;
-}
-.bar-label {
-  display:flex; justify-content:space-between; align-items:center;
-  font-size:13px; color:var(--text-muted);
-}
-.bar-label .next-ball { color:var(--gold); font-weight:700; }
+/* Bar */
+.bar-wrap { display:flex; flex-direction:column; gap:5px; }
+.bar-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); }
+.bar-meta .power { color:var(--gold); font-weight:700; font-family:var(--font-cond); letter-spacing:1px; }
 .bar-bg {
-  height:20px; border-radius:10px; background:rgba(7,1,18,.85);
+  height:18px; border-radius:9px; background:rgba(7,1,18,.85);
   overflow:hidden; border:1px solid rgba(155,91,255,.25); position:relative;
 }
 .bar-fill {
-  height:100%; border-radius:10px;
+  height:100%; border-radius:9px;
   background:linear-gradient(90deg, var(--tiktok-pink) 0%, #FF6B35 50%, var(--gold) 100%);
-  box-shadow:0 0 14px rgba(254,44,85,.6);
+  box-shadow:0 0 14px rgba(254,44,85,.5);
   transition:width 0.8s cubic-bezier(.25,.46,.45,.94);
   position:relative; overflow:hidden;
 }
@@ -100,140 +64,77 @@ body { width:400px; height:320px; background:transparent; overflow:hidden; font-
   background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
   animation:shimmer 2s ease-in-out infinite;
 }
-@keyframes shimmer { to { left:200%; } }
 .bar-gloss {
-  position:absolute; inset:0; border-radius:10px;
-  background:linear-gradient(180deg,rgba(255,255,255,.35),transparent 55%);
+  position:absolute; inset:0; border-radius:9px;
+  background:linear-gradient(180deg,rgba(255,255,255,.3),transparent 55%);
   pointer-events:none;
 }
+@keyframes shimmer { to { left:200%; } }
 
-/* Power level */
-.power-row {
-  display:flex; align-items:center; justify-content:space-between;
-}
-.power-label {
-  font-family:var(--font-cond); font-size:14px; letter-spacing:2px;
-  color:var(--text-muted); text-transform:uppercase;
-}
-.power-level {
-  font-family:var(--font-display); font-size:22px;
-  background:linear-gradient(135deg, var(--gold), var(--orange));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 8px rgba(244,182,60,.5));
-}
-
-/* Milestone label */
+/* Milestone toast */
 .milestone {
-  text-align:center; font-size:13px; font-weight:700;
-  color:var(--tiktok-pink); letter-spacing:1px;
-  text-shadow:0 0 8px rgba(254,44,85,.5);
-  min-height:18px;
+  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+  font-size:12px; font-weight:700; color:var(--tiktok-pink); letter-spacing:1px;
+  white-space:nowrap; text-shadow:0 0 8px rgba(254,44,85,.6);
+  opacity:0; transition:opacity .4s;
 }
+.milestone.show { opacity:1; }
 </style>
 </head>
 <body>
 <div class="meter">
-  <div class="title-row">
-    <div class="title">🐉 Like-O-Meter</div>
+  <div class="top-row">
+    <div class="title">❤️ Like-O-Meter</div>
     <div class="like-count"><span class="heart">❤️</span><span id="like-num">0</span></div>
   </div>
-
-  <!-- 7 Dragon Balls -->
-  <div class="balls-row" id="balls">
-    <div class="ball" data-ball="1"><div class="stars">★</div></div>
-    <div class="ball" data-ball="2"><div class="stars">★★</div></div>
-    <div class="ball" data-ball="3"><div class="stars">★★★</div></div>
-    <div class="ball" data-ball="4"><div class="stars">★★★★</div></div>
-    <div class="ball" data-ball="5"><div class="stars">★★★★★</div></div>
-    <div class="ball" data-ball="6"><div class="stars">★★★★★★</div></div>
-    <div class="ball" data-ball="7"><div class="stars">★★★★★★★</div></div>
-  </div>
-
   <div class="bar-wrap">
-    <div class="bar-label">
-      <span>Progress to next Dragon Ball</span>
-      <span class="next-ball" id="next-label">1,000 to go</span>
+    <div class="bar-meta">
+      <span id="next-label">1,000 likes to next level</span>
+      <span class="power" id="power">WARMING UP...</span>
     </div>
     <div class="bar-bg">
       <div class="bar-fill" id="bar" style="width:0%"></div>
       <div class="bar-gloss"></div>
     </div>
   </div>
-
-  <div class="power-row">
-    <div class="power-label">⚡ Power Level</div>
-    <div class="power-level" id="power">OVER 9,000!</div>
-  </div>
-
   <div class="milestone" id="milestone"></div>
 </div>
 
 <script>
-const BALL_THRESHOLDS = [1000, 2500, 5000, 10000, 20000, 40000, 75000];
-const POWER_LABELS = [
-  'WARMING UP...', 'GETTING SERIOUS', 'SUPER SAIYAN!',
-  'SUPER SAIYAN 2!', 'SUPER SAIYAN 3!', 'SUPER SAIYAN GOD!',
-  'ULTRA INSTINCT!!', 'OVER 9,000!!'
-];
-const MILESTONES = [
-  '', 'First Dragon Ball! 🐉', '2 Balls! Keep going!',
-  '3 Balls! Halfway there!', '4 Balls! Almost there!',
-  '5 Balls! Dragon incoming!', '6 Balls! ONE MORE!!',
-  '🐉 ALL 7 DRAGON BALLS! YOUR WISH IS GRANTED! 🐉'
-];
+const THRESHOLDS = [1000, 2500, 5000, 10000, 20000, 40000, 75000];
+const POWER = ['WARMING UP...','GETTING SERIOUS','SUPER SAIYAN!','SUPER SAIYAN 2!','SUPER SAIYAN 3!','SUPER SAIYAN GOD!','ULTRA INSTINCT!!','OVER 9,000!!'];
+const MILESTONE_MSGS = ['','1K Likes! 🔥','2.5K Likes! Let\'s GO!','5K Likes! 🔥🔥','10K Likes! SUPER SAIYAN!','20K Likes! 🔥🔥🔥','40K Likes! UNSTOPPABLE!','75K LIKES!! ULTRA INSTINCT!!'];
 
 let likes = parseInt(new URLSearchParams(location.search).get('likes')) || 0;
-let lastMilestone = -1;
+let lastLevel = -1;
 
 function update(n) {
   likes = Math.max(0, n);
   document.getElementById('like-num').textContent = likes.toLocaleString();
 
-  // Figure out how many balls lit
-  let lit = 0;
-  for (let i = 0; i < 7; i++) {
-    if (likes >= BALL_THRESHOLDS[i]) lit = i + 1;
-  }
+  let level = 0;
+  for (let i = 0; i < 7; i++) { if (likes >= THRESHOLDS[i]) level = i + 1; }
 
-  // Light balls
-  document.querySelectorAll('.ball').forEach((b, i) => {
-    b.classList.toggle('lit', i < lit);
-  });
+  const prev = level === 0 ? 0 : THRESHOLDS[level-1];
+  const next = level < 7 ? THRESHOLDS[level] : THRESHOLDS[6];
+  const pct = level < 7 ? ((likes - prev) / (next - prev)) * 100 : 100;
+  document.getElementById('bar').style.width = Math.min(pct, 100) + '%';
 
-  // Progress bar within current segment
-  const prevThreshold = lit === 0 ? 0 : BALL_THRESHOLDS[lit - 1];
-  const nextThreshold = lit < 7 ? BALL_THRESHOLDS[lit] : BALL_THRESHOLDS[6];
-  const segProgress = lit < 7
-    ? ((likes - prevThreshold) / (nextThreshold - prevThreshold)) * 100
-    : 100;
-  document.getElementById('bar').style.width = Math.min(segProgress, 100) + '%';
+  const remaining = level < 7 ? (next - likes).toLocaleString() + ' to next level' : 'MAX POWER!! 🔥';
+  document.getElementById('next-label').textContent = remaining;
+  document.getElementById('power').textContent = POWER[level];
 
-  // Next ball label
-  if (lit < 7) {
-    const remaining = nextThreshold - likes;
-    document.getElementById('next-label').textContent = remaining.toLocaleString() + ' to go';
-  } else {
-    document.getElementById('next-label').textContent = 'ALL COLLECTED! 🐉';
-  }
-
-  // Power level
-  document.getElementById('power').textContent = POWER_LABELS[Math.min(lit, 7)];
-
-  // Milestone flash
-  if (lit > lastMilestone && lit > 0) {
-    lastMilestone = lit;
+  if (level > lastLevel && level > 0) {
+    lastLevel = level;
     const m = document.getElementById('milestone');
-    m.textContent = MILESTONES[lit];
-    setTimeout(() => { if (lastMilestone === lit) m.textContent = ''; }, 4000);
+    m.textContent = MILESTONE_MSGS[level];
+    m.classList.add('show');
+    setTimeout(() => m.classList.remove('show'), 3500);
   }
 }
 
 update(likes);
-
-// Listen for URL param updates (refresh-based) or postMessage from Railway app
-window.addEventListener('message', e => {
-  if (e.data && e.data.likes !== undefined) update(e.data.likes);
-});
+window.addEventListener('message', e => { if (e.data && e.data.likes !== undefined) update(e.data.likes); });
 </script>
 </body>
 </html>

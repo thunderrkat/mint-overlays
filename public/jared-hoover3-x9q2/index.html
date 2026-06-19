@@ -21,7 +21,73 @@ body {
 }
 .page { max-width:960px; margin:0 auto; padding:48px 24px 60px; }
 
-/* HERO */
+/* ── CONNECT BAR ── */
+.connect-bar {
+  background:var(--panel); border:1.5px solid var(--panel-line);
+  border-radius:16px; padding:20px 28px; margin-bottom:24px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  box-shadow:0 0 30px rgba(155,91,255,.15);
+  position:relative; overflow:hidden;
+}
+.connect-bar::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--tiktok-pink), var(--purple), var(--tiktok-cyan));
+}
+.connect-label {
+  font-family:var(--font-cond); font-size:15px; font-weight:800;
+  letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; white-space:nowrap;
+  display:flex; align-items:center; gap:8px;
+}
+.connect-label .tt-icon { font-size:20px; }
+
+.input-wrap { flex:1; min-width:200px; position:relative; }
+.input-wrap .at {
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  color:var(--purple); font-weight:800; font-size:18px; pointer-events:none;
+}
+.username-input {
+  width:100%; background:rgba(6,1,15,.7); border:1.5px solid rgba(155,91,255,.35);
+  border-radius:10px; padding:12px 14px 12px 32px;
+  color:var(--text); font-size:17px; font-weight:700; font-family:var(--font-body);
+  outline:none; transition:border-color .2s;
+}
+.username-input:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(155,91,255,.15); }
+.username-input::placeholder { color:var(--text-muted); font-weight:400; }
+.username-input:disabled { opacity:0.5; cursor:not-allowed; }
+
+.connect-btn {
+  padding:12px 28px; border-radius:10px; font-size:15px; font-weight:800;
+  letter-spacing:1px; cursor:pointer; border:none; font-family:var(--font-body);
+  transition:all .2s; white-space:nowrap;
+}
+.connect-btn.go {
+  background:linear-gradient(135deg, var(--tiktok-pink), #c0003a);
+  color:#fff; box-shadow:0 4px 20px rgba(254,44,85,.4);
+}
+.connect-btn.go:hover { transform:translateY(-1px); box-shadow:0 6px 25px rgba(254,44,85,.6); }
+.connect-btn.disconnect {
+  background:rgba(155,91,255,.2); border:1.5px solid rgba(155,91,255,.5);
+  color:var(--text-dim);
+}
+.connect-btn.disconnect:hover { background:rgba(155,91,255,.35); }
+
+.status-pill {
+  display:flex; align-items:center; gap:8px; padding:8px 16px;
+  border-radius:20px; font-size:14px; font-weight:700; letter-spacing:1px;
+  white-space:nowrap;
+}
+.status-pill.disconnected { background:rgba(255,255,255,.06); color:var(--text-muted); border:1px solid rgba(255,255,255,.1); }
+.status-pill.connecting   { background:rgba(244,182,60,.12); color:var(--gold); border:1px solid rgba(244,182,60,.3); }
+.status-pill.connected    { background:rgba(0,255,100,.1); color:#00ff88; border:1px solid rgba(0,255,100,.3); }
+.status-pill.error        { background:rgba(254,44,85,.12); color:var(--tiktok-pink); border:1px solid rgba(254,44,85,.3); }
+.status-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.disconnected .status-dot { background:#666; }
+.connecting   .status-dot { background:var(--gold); animation:pulse 1s infinite; }
+.connected    .status-dot { background:#00ff88; box-shadow:0 0 6px #00ff88; animation:pulse 2s infinite; }
+.error        .status-dot { background:var(--tiktok-pink); }
+@keyframes pulse { 0%,100%{opacity:1;}50%{opacity:.4;} }
+
+/* ── HERO ── */
 .hero {
   display:flex; align-items:center; gap:28px;
   background:var(--panel); border:1.5px solid var(--panel-line);
@@ -67,9 +133,8 @@ body {
 }
 .mint-badge:hover { border-color:var(--purple); color:var(--text-dim); }
 .mint-dot { width:8px; height:8px; background:#00ff88; border-radius:50%; box-shadow:0 0 6px #00ff88; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
-/* SECTION */
+/* ── SECTION ── */
 .section-title {
   font-family:var(--font-cond); font-size:14px; letter-spacing:3px; color:var(--purple);
   text-transform:uppercase; margin-bottom:18px;
@@ -77,7 +142,7 @@ body {
 }
 .section-title::after { content:''; flex:1; height:1px; background:var(--panel-line); }
 
-/* GRID */
+/* ── GRID ── */
 .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
 .card {
   background:var(--panel); border:1.5px solid var(--panel-line);
@@ -88,8 +153,7 @@ body {
 .card:hover { border-color:var(--purple); transform:translateY(-3px); box-shadow:0 12px 40px rgba(155,91,255,.3); }
 .card::before {
   content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg, var(--purple), var(--gold));
-  opacity:0; transition:opacity .25s;
+  background:linear-gradient(90deg, var(--purple), var(--gold)); opacity:0; transition:opacity .25s;
 }
 .card:hover::before { opacity:1; }
 .card-icon { font-size:34px; margin-bottom:12px; }
@@ -103,11 +167,7 @@ body {
   font-family:var(--font-cond);
 }
 .card-desc { font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:14px; }
-
-/* URL + copy row */
-.url-row {
-  display:flex; align-items:center; gap:6px; margin-bottom:12px;
-}
+.url-row { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
 .card-url {
   font-size:11px; color:rgba(155,91,255,.7); font-family:monospace;
   background:rgba(155,91,255,.08); padding:5px 8px; border-radius:5px;
@@ -116,13 +176,10 @@ body {
 .copy-btn {
   background:rgba(155,91,255,.2); border:1px solid rgba(155,91,255,.4);
   border-radius:6px; padding:5px 10px; font-size:11px; color:var(--text-dim);
-  cursor:pointer; white-space:nowrap; transition:all .2s; font-family:var(--font-body);
-  flex-shrink:0;
+  cursor:pointer; white-space:nowrap; transition:all .2s; font-family:var(--font-body); flex-shrink:0;
 }
 .copy-btn:hover { background:rgba(155,91,255,.4); color:#fff; }
 .copy-btn.copied { background:rgba(0,255,136,.2); border-color:#00ff88; color:#00ff88; }
-
-/* Buttons */
 .card-btns { display:flex; gap:8px; }
 .card-btn {
   flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
@@ -133,30 +190,20 @@ body {
 }
 .card-btn:hover { background:rgba(155,91,255,.45); border-color:var(--gold); color:var(--gold); }
 
-/* INSTRUCTIONS */
+/* ── INSTRUCTIONS ── */
 .instructions {
   background:var(--panel); border:1.5px solid rgba(244,182,60,.2);
   border-radius:18px; padding:28px 32px; margin-bottom:40px;
 }
-.instr-header {
-  display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;
-}
-.instr-header h3 {
-  font-family:var(--font-cond); font-size:20px; letter-spacing:2px;
-  color:var(--gold); text-transform:uppercase;
-}
-.toggle-wrap {
-  display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);
-}
+.instr-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.instr-header h3 { font-family:var(--font-cond); font-size:20px; letter-spacing:2px; color:var(--gold); text-transform:uppercase; }
 .toggle-btns { display:flex; border:1px solid var(--panel-line); border-radius:8px; overflow:hidden; }
 .toggle-btn {
-  padding:6px 14px; font-size:12px; font-weight:700; letter-spacing:1px;
-  cursor:pointer; transition:all .2s; border:none; font-family:var(--font-body);
-  background:transparent; color:var(--text-muted);
+  padding:7px 16px; font-size:12px; font-weight:700; letter-spacing:1px;
+  cursor:pointer; border:none; font-family:var(--font-body);
+  background:transparent; color:var(--text-muted); transition:all .2s;
 }
 .toggle-btn.active { background:rgba(155,91,255,.3); color:var(--text); }
-
-.steps { display:flex; flex-direction:column; }
 .step { display:flex; gap:16px; align-items:flex-start; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.05); }
 .step:last-child { border-bottom:none; }
 .step-num {
@@ -169,17 +216,28 @@ body {
 .step-text strong { color:var(--text-dim); }
 .step-text code { background:rgba(155,91,255,.15); padding:1px 7px; border-radius:4px; color:var(--tiktok-cyan); font-size:13px; }
 
-/* FOOTER */
-footer {
-  text-align:center; padding-top:20px;
-  font-family:var(--font-cond); font-size:13px; letter-spacing:2px; color:var(--text-muted);
-}
+/* ── FOOTER ── */
+footer { text-align:center; padding-top:20px; font-family:var(--font-cond); font-size:13px; letter-spacing:2px; color:var(--text-muted); }
 footer a { color:var(--purple); text-decoration:none; }
 footer a:hover { color:var(--gold); }
 </style>
 </head>
 <body>
 <div class="page">
+
+  <!-- CONNECT BAR -->
+  <div class="connect-bar">
+    <div class="connect-label"><span class="tt-icon">🎵</span> TikTok Live</div>
+    <div class="input-wrap">
+      <span class="at">@</span>
+      <input class="username-input" id="username-input" type="text" placeholder="your tiktok username" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="connect-btn go" id="connect-btn" onclick="handleConnect()">Go Live</button>
+    <div class="status-pill disconnected" id="status-pill">
+      <div class="status-dot"></div>
+      <span id="status-text">Not connected</span>
+    </div>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -207,9 +265,7 @@ footer a:hover { color:var(--gold); }
         <span class="card-url" id="url-header">/jared-hoover3-x9q2/widget-header.html</span>
         <button class="copy-btn" onclick="copyUrl('url-header',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-header.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-header.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
     <div class="card">
@@ -221,51 +277,43 @@ footer a:hover { color:var(--gold); }
         <span class="card-url" id="url-goal">/jared-hoover3-x9q2/widget-gift-goal.html</span>
         <button class="copy-btn" onclick="copyUrl('url-goal',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-gift-goal.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-gift-goal.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
     <div class="card">
       <div class="card-icon">🏆</div>
       <div class="card-name">Top Gifters</div>
       <div class="card-size">344 × 320 px</div>
-      <div class="card-desc">Gold/silver/bronze ranked board. Set via URL: <code>?g1=username:48.2K</code></div>
+      <div class="card-desc">Auto-cycles between Top Gifters, Top Likers, and New Followers every 8 seconds.</div>
       <div class="url-row">
         <span class="card-url" id="url-gifters">/jared-hoover3-x9q2/widget-top-gifters.html</span>
         <button class="copy-btn" onclick="copyUrl('url-gifters',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-top-gifters.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-top-gifters.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
     <div class="card">
-      <div class="card-icon">✨</div>
+      <div class="card-icon">🔥</div>
       <div class="card-name">Gift Alert</div>
       <div class="card-size">620 × 130 px</div>
-      <div class="card-desc">Spring-in popup for gifts, follows, subs. Gradient border, auto-cycles in demo.</div>
+      <div class="card-desc">Spring-in popup for gifts (🔥) and follows (➕). Gradient border frame.</div>
       <div class="url-row">
         <span class="card-url" id="url-alert">/jared-hoover3-x9q2/widget-alert.html</span>
         <button class="copy-btn" onclick="copyUrl('url-alert',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-alert.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-alert.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
     <div class="card">
-      <div class="card-icon">🐉</div>
+      <div class="card-icon">❤️</div>
       <div class="card-name">Like-O-Meter</div>
-      <div class="card-size">400 × 320 px</div>
-      <div class="card-desc">Dragon Ball themed like tracker. Balls light up as likes increase. Set via URL: <code>?likes=5000</code></div>
+      <div class="card-size">460 × 130 px</div>
+      <div class="card-desc">Live like tracker with power level bar. Levels up from Warming Up to Ultra Instinct!!</div>
       <div class="url-row">
         <span class="card-url" id="url-likemeter">/jared-hoover3-x9q2/widget-likemeter.html</span>
         <button class="copy-btn" onclick="copyUrl('url-likemeter',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-likemeter.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-likemeter.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
     <div class="card">
@@ -277,9 +325,7 @@ footer a:hover { color:var(--gold); }
         <span class="card-url" id="url-ticker">/jared-hoover3-x9q2/widget-ticker.html</span>
         <button class="copy-btn" onclick="copyUrl('url-ticker',this)">Copy</button>
       </div>
-      <div class="card-btns">
-        <a class="card-btn" href="widget-ticker.html" target="_blank">▶ Preview Widget</a>
-      </div>
+      <div class="card-btns"><a class="card-btn" href="widget-ticker.html" target="_blank">▶ Preview Widget</a></div>
     </div>
 
   </div>
@@ -288,30 +334,24 @@ footer a:hover { color:var(--gold); }
   <div class="instructions">
     <div class="instr-header">
       <h3>🎮 Setup Instructions</h3>
-      <div class="toggle-wrap">
-        <div class="toggle-btns">
-          <button class="toggle-btn active" id="btn-tiktok" onclick="showInstr('tiktok')">TikTok Live Studio</button>
-          <button class="toggle-btn" id="btn-obs" onclick="showInstr('obs')">OBS / Streamlabs</button>
-        </div>
+      <div class="toggle-btns">
+        <button class="toggle-btn active" id="btn-tiktok" onclick="showInstr('tiktok')">TikTok Live Studio</button>
+        <button class="toggle-btn" id="btn-obs" onclick="showInstr('obs')">OBS / Streamlabs</button>
       </div>
     </div>
-
-    <!-- TikTok Live Studio instructions (default) -->
-    <div class="steps" id="steps-tiktok">
+    <div id="steps-tiktok">
       <div class="step"><div class="step-num">1</div><div class="step-text">In TikTok Live Studio, click <strong>Add Source</strong> → choose <strong>Link</strong></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on a widget above, then paste the URL into the Link source field. Add <code>https://mintoverlays.com</code> before the path — e.g. <code>https://mintoverlays.com/jared-hoover3-x9q2/widget-header.html</code></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-text">Set the <strong>Width × Height</strong> to match each widget's size shown above</div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-text">Position the widget on your scene. Drag it to the right spot — header goes top, ticker goes bottom, alert goes center</div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-text">Resize by dragging the corners. Each widget has a transparent background so it overlays cleanly on your gameplay or camera</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget card above, then paste it into the Link URL field</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set the <strong>Width × Height</strong> to match the size shown on each card</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Position on your scene — Header top, Alert center, Ticker bottom. Each widget has a <strong>transparent background</strong></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Resize by dragging the corners to fit your layout</div></div>
     </div>
-
-    <!-- OBS / Streamlabs instructions (toggled) -->
-    <div class="steps" id="steps-obs" style="display:none">
+    <div id="steps-obs" style="display:none">
       <div class="step"><div class="step-num">1</div><div class="step-text">In OBS, click <strong>+</strong> in the Sources panel → choose <strong>Browser</strong></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on a widget above, paste the full URL into the URL field</div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size exactly (shown on each card)</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget card above and paste into the URL field</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size exactly</div></div>
       <div class="step"><div class="step-num">4</div><div class="step-text">Check <strong>"Shutdown source when not visible"</strong> and <strong>"Refresh browser when scene becomes active"</strong></div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-text">Layer widgets over your scenes. Header top → Alert center → Ticker bottom. Each widget is its own source layer.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Layer widgets over your scenes — Header top → Alert center → Ticker bottom</div></div>
     </div>
   </div>
 
@@ -320,26 +360,94 @@ footer a:hover { color:var(--gold); }
 
 <script>
 const BASE = 'https://mintoverlays.com';
+document.querySelectorAll('.card-url').forEach(el => { el.textContent = BASE + el.textContent; });
 
-// Prefix all URLs with full domain
-document.querySelectorAll('.card-url').forEach(el => {
-  el.textContent = BASE + el.textContent;
+// ── CONNECT LOGIC ──
+let connected = false;
+let sessionId = 'jared-hoover3-x9q2';
+
+function setStatus(state, msg) {
+  const pill = document.getElementById('status-pill');
+  pill.className = 'status-pill ' + state;
+  document.getElementById('status-text').textContent = msg;
+}
+
+function handleConnect() {
+  if (connected) {
+    disconnect();
+  } else {
+    connect();
+  }
+}
+
+async function connect() {
+  const username = document.getElementById('username-input').value.trim().replace('@','');
+  if (!username) {
+    document.getElementById('username-input').focus();
+    return;
+  }
+  setStatus('connecting', 'Connecting...');
+  document.getElementById('connect-btn').textContent = 'Connecting...';
+  document.getElementById('connect-btn').disabled = true;
+  document.getElementById('username-input').disabled = true;
+
+  try {
+    const res = await fetch('/api/' + sessionId + '/connect', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username })
+    });
+    if (res.ok) {
+      connected = true;
+      setStatus('connected', '@' + username + ' — LIVE');
+      const btn = document.getElementById('connect-btn');
+      btn.textContent = 'Disconnect';
+      btn.className = 'connect-btn disconnect';
+      btn.disabled = false;
+    } else {
+      throw new Error('Failed');
+    }
+  } catch(e) {
+    setStatus('error', 'Connection failed — try again');
+    document.getElementById('connect-btn').textContent = 'Go Live';
+    document.getElementById('connect-btn').disabled = false;
+    document.getElementById('username-input').disabled = false;
+  }
+}
+
+async function disconnect() {
+  try {
+    await fetch('/api/' + sessionId + '/reset', { method:'POST' });
+  } catch(e) {}
+  connected = false;
+  setStatus('disconnected', 'Not connected');
+  const btn = document.getElementById('connect-btn');
+  btn.textContent = 'Go Live';
+  btn.className = 'connect-btn go';
+  btn.disabled = false;
+  document.getElementById('username-input').disabled = false;
+  document.getElementById('username-input').value = '';
+}
+
+// Enter key to connect
+document.getElementById('username-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleConnect();
 });
 
+// ── COPY URLS ──
 function copyUrl(id, btn) {
-  const url = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(url).then(() => {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
+// ── INSTRUCTIONS TOGGLE ──
 function showInstr(type) {
   document.getElementById('steps-tiktok').style.display = type === 'tiktok' ? '' : 'none';
-  document.getElementById('steps-obs').style.display = type === 'obs' ? '' : 'none';
+  document.getElementById('steps-obs').style.display   = type === 'obs'    ? '' : 'none';
   document.getElementById('btn-tiktok').classList.toggle('active', type === 'tiktok');
-  document.getElementById('btn-obs').classList.toggle('active', type === 'obs');
+  document.getElementById('btn-obs').classList.toggle('active',    type === 'obs');
 }
 </script>
 </body>
