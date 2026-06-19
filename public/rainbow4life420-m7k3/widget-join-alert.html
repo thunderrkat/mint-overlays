@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon-purple:#9B00FF;--ink-2:#0d0020;--ink-3:#1a0035;
+  --text:#FFFFFF;--text-dim:#E0CCFF;--text-muted:#9966CC;
+  --panel:rgba(10,0,20,.9);--panel-line:rgba(153,0,255,.45);
+  --rainbow:linear-gradient(90deg,#FF2D2D,#FF7F00,#FFD700,#00CC44,#00AAFF,#CC00FF);
+  --font-display:'Anton',sans-serif;--font-cond:'Saira Condensed',sans-serif;--font-body:'Outfit',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:420px;height:100px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+
+.join-wrap{width:420px;height:100px;display:flex;align-items:center;}
+
+.join-frame{
+  position:relative;border-radius:16px;padding:3px;width:100%;
+  background:var(--rainbow);background-size:200% 100%;
+  animation:shift 2s linear infinite;
+  box-shadow:0 8px 30px rgba(153,0,255,.5),0 0 30px rgba(255,0,255,.2);
+  opacity:0;transform:translateX(-30px);
+  transition:opacity .35s ease,transform .35s cubic-bezier(.2,1,.3,1);
+}
+.join-frame.show{opacity:1;transform:translateX(0);}
+.join-frame.hide{opacity:0;transform:translateX(30px);transition:opacity .25s ease-in,transform .25s ease-in;}
+@keyframes shift{to{background-position:200% 0;}}
+
+.join-body{
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--ink-3),var(--ink-2));
+  padding:12px 18px;display:flex;align-items:center;gap:14px;height:100%;
+}
+
+/* Avatar */
+.join-av{
+  width:56px;height:56px;border-radius:50%;flex-shrink:0;
+  background:var(--rainbow);background-size:200% 100%;animation:shift 2s linear infinite;
+  padding:2.5px;box-shadow:0 0 14px rgba(153,0,255,.6);
+}
+.join-av-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:var(--ink-2);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:22px;color:var(--text);
+  overflow:hidden;
+}
+.join-av-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+/* Text */
+.join-text{flex:1;min-width:0;}
+.join-label{
+  font-family:var(--font-cond);font-size:13px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:200% 100%;animation:shift 2s linear infinite;
+  margin-bottom:3px;
+}
+.join-name{
+  font-family:var(--font-display);font-size:24px;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  text-shadow:0 0 10px rgba(153,0,255,.5);
+}
+.join-sub{font-size:14px;font-weight:600;color:var(--text-muted);margin-top:1px;}
+
+/* Wave emoji */
+.join-wave{font-size:32px;flex-shrink:0;animation:wave 1s ease-in-out infinite;}
+@keyframes wave{0%,100%{transform:rotate(0deg);}25%{transform:rotate(20deg);}75%{transform:rotate(-10deg);}}
+</style>
+</head>
+<body>
+<div class="join-wrap">
+  <div class="join-frame" id="jf">
+    <div class="join-body">
+      <div class="join-av">
+        <div class="join-av-inner" id="av-inner">
+          <img id="av-img" src="" alt="" style="display:none">
+          <span id="av-initial">?</span>
+        </div>
+      </div>
+      <div class="join-text">
+        <div class="join-label">🌈 Just Joined!</div>
+        <div class="join-name" id="join-name">@viewer</div>
+        <div class="join-sub">Welcome to the stream!</div>
+      </div>
+      <div class="join-wave">👋</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION = 'rainbow4life420-m7k3';
+const jf = document.getElementById('jf');
+let queue = [], showing = false;
+
+function getInitial(name) {
+  return (name || '?').replace('@','').charAt(0).toUpperCase();
+}
+
+function showJoin(d) {
+  const name = '@' + (d.nickname || d.uniqueId || 'viewer');
+  document.getElementById('join-name').textContent = name;
+  document.getElementById('av-initial').textContent = getInitial(d.nickname || d.uniqueId);
+
+  // Try to load profile picture if available
+  const img = document.getElementById('av-img');
+  const initial = document.getElementById('av-initial');
+  if (d.profilePicture && d.profilePicture !== '') {
+    img.src = d.profilePicture;
+    img.style.display = 'block';
+    initial.style.display = 'none';
+    img.onerror = () => { img.style.display = 'none'; initial.style.display = 'block'; };
+  } else {
+    img.style.display = 'none';
+    initial.style.display = 'block';
+  }
+
+  jf.classList.remove('hide');
+  jf.classList.add('show');
+  showing = true;
+  setTimeout(() => {
+    jf.classList.remove('show');
+    jf.classList.add('hide');
+    showing = false;
+    setTimeout(next, 350);
+  }, 3500);
+}
+
+function next() { if (queue.length > 0 && !showing) showJoin(queue.shift()); }
+function push(d) { queue.push(d); if (!showing) next(); }
+
+// SSE — only type:join, no demo data
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'join') push(d);
+};
+</script>
+</body>
+</html>

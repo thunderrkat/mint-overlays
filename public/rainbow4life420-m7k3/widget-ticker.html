@@ -12,21 +12,31 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{width:1080px;height:64px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+
 .ticker{width:1080px;height:64px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(10,0,32,.95),rgba(20,0,50,.9));position:relative;}
 .ticker::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rainbow);animation:shift 2s linear infinite;background-size:200% 100%;}
 .ticker::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--rainbow);animation:shift 2s linear infinite;background-size:200% 100%;}
 @keyframes shift{to{background-position:200% 0;}}
+
 .ticker-label{flex:none;display:flex;align-items:center;gap:8px;height:100%;padding:0 20px;z-index:2;background:linear-gradient(90deg,#9B00FF,#CC00FF);font-family:var(--font-cond);font-weight:800;font-size:20px;letter-spacing:2px;color:#fff;box-shadow:6px 0 18px rgba(0,0,0,.5);white-space:nowrap;}
+
 .ticker-window{flex:1;overflow:hidden;position:relative;}
 .ticker-track{display:flex;align-items:center;white-space:nowrap;}
 .ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 26px;font-size:18px;font-weight:600;color:#E0CCFF;border-right:1px solid rgba(153,0,255,.25);}
 .ticker-item .who{font-weight:800;}
+
+/* Waiting state shown when no events yet */
+.ticker-waiting{display:flex;align-items:center;gap:10px;padding:0 24px;font-size:17px;font-weight:600;color:rgba(153,0,255,.5);font-family:var(--font-cond);letter-spacing:1px;}
 </style>
 </head>
 <body>
 <div class="ticker">
   <div class="ticker-label">🌈 LIVE</div>
-  <div class="ticker-window"><div class="ticker-track" id="track"></div></div>
+  <div class="ticker-window">
+    <div class="ticker-track" id="track">
+      <div class="ticker-waiting">Waiting for stream events…</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -34,34 +44,36 @@ const SESSION = 'rainbow4life420-m7k3';
 const RAINBOW_COLORS = ['#FF2D2D','#FF7F00','#FFD700','#00CC44','#00AAFF','#CC00FF','#FF00FF'];
 const track = document.getElementById('track');
 
-let events = [
-  { icon:'🔥', who:'@420queen',    whoColor:'#FF7F00', msg:'sent Rainbow Rose ×5' },
-  { icon:'➕', who:'@weedlover99', whoColor:'#00CC44', msg:'followed' },
-  { icon:'🌈', who:'@fortnite_fan',whoColor:'#00AAFF', msg:'sent Galaxy ×3' },
-  { icon:'🍃', who:'@highlife420', whoColor:'#CC00FF', msg:'joined the stream' },
-  { icon:'🔥', who:'@vibes_only',  whoColor:'#FF2D2D', msg:'sent 50 Roses' },
-];
-
-let offset = 0, animId, lastW = 0;
+// Start completely empty — no demo data
+let events = [];
+let hasEvents = false;
+let offset = 0, animId;
 
 function randColor() { return RAINBOW_COLORS[Math.floor(Math.random() * RAINBOW_COLORS.length)]; }
 
 function build() {
+  if (events.length === 0) {
+    // Nothing yet — show waiting message, no scroll
+    cancelAnimationFrame(animId);
+    track.style.transform = '';
+    track.innerHTML = '<div class="ticker-waiting">Waiting for stream events… 🌈</div>';
+    return;
+  }
+  // Duplicate for seamless loop
   const doubled = [...events, ...events];
   track.innerHTML = doubled.map(e =>
     `<span class="ticker-item"><span>${e.icon}</span><span class="who" style="color:${e.whoColor}">${e.who}</span><span>${e.msg}</span></span>`
   ).join('');
-  // Reset animation position to avoid jump
-  lastW = track.scrollWidth / 2;
-  offset = Math.min(offset, lastW - 1);
   cancelAnimationFrame(animId);
+  offset = 0;
   scroll();
 }
 
 function scroll() {
+  const halfW = track.scrollWidth / 2;
   function step() {
     offset += 1.2;
-    if (offset >= lastW) offset = 0;
+    if (offset >= halfW) offset = 0;
     track.style.transform = `translateX(-${offset}px)`;
     animId = requestAnimationFrame(step);
   }
@@ -84,23 +96,20 @@ es.onmessage = e => {
   const d = JSON.parse(e.data);
 
   if (d.type === 'state') {
-    // Detect new/updated gifters
-    if (d.gifters && d.gifters.length > 0) {
+    // New or updated gifters
+    if (d.gifters) {
       d.gifters.forEach(g => {
         const prev = prevGifters.find(p => p.id === g.id);
         if (!prev) {
-          // Brand new gifter
           addEvent({ icon:'🔥', who:'@'+(g.nickname||g.id), whoColor:randColor(), msg:'sent a gift' });
         } else if (g.count > prev.count) {
-          // Existing gifter sent more
           addEvent({ icon:'🔥', who:'@'+(g.nickname||g.id), whoColor:randColor(), msg:'sent another gift' });
         }
       });
       prevGifters = d.gifters;
     }
-
-    // Detect new followers
-    if (d.followers && d.followers.length > 0) {
+    // New followers
+    if (d.followers) {
       d.followers.forEach(f => {
         const key = f.id || f.nickname;
         if (!prevFollowers.find(p => (p.id||p.nickname) === key)) {
@@ -113,16 +122,14 @@ es.onmessage = e => {
 
   // Joins
   if (d.type === 'join') {
-    const key = d.nickname || 'unknown';
+    const key = d.nickname || d.uniqueId || 'unknown';
     if (!seenJoins.has(key)) {
       seenJoins.add(key);
-      if (seenJoins.size > 200) seenJoins.clear();
-      addEvent({ icon:'🌈', who:'@'+key, whoColor:randColor(), msg:'joined the stream' });
+      if (seenJoins.size > 300) seenJoins.clear();
+      addEvent({ icon:'🌈', who:'@'+key, whoColor:randColor(), msg:'joined' });
     }
   }
 };
-
-build();
 </script>
 </body>
 </html>
