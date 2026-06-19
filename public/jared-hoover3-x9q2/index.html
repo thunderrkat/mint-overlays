@@ -19,10 +19,9 @@ body {
   background:radial-gradient(120% 80% at 50% 0%, #1c0640 0%, var(--ink-2) 45%, var(--ink) 100%);
   color:var(--text); font-family:var(--font-body); min-height:100vh;
 }
-
 .page { max-width:960px; margin:0 auto; padding:48px 24px 60px; }
 
-/* ── HERO ── */
+/* HERO */
 .hero {
   display:flex; align-items:center; gap:28px;
   background:var(--panel); border:1.5px solid var(--panel-line);
@@ -38,7 +37,6 @@ body {
   content:''; position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(60% 80% at 0% 50%, rgba(155,91,255,.12), transparent 70%);
 }
-
 .avatar { position:relative; flex:none; }
 .avatar img {
   width:120px; height:120px; border-radius:50%; object-fit:cover; object-position:50% 22%;
@@ -50,12 +48,11 @@ body {
   background:radial-gradient(circle at 38% 32%, #FFC25A, var(--orange) 70%);
   border:3px solid var(--ink-2);
   display:flex; align-items:center; justify-content:center;
-  font-size:13px; color:#7a0e0e; letter-spacing:-1px; font-family:var(--font-display);
+  font-size:13px; color:#7a0e0e; font-family:var(--font-display);
 }
-
 .hero-info { flex:1; z-index:1; }
 .wordmark {
-  font-family:var(--font-display); font-size:54px; line-height:.92; letter-spacing:.5px;
+  font-family:var(--font-display); font-size:54px; line-height:.92;
   transform:skewX(-5deg); text-shadow:0 3px 0 rgba(0,0,0,.55), 0 0 22px rgba(155,91,255,.5);
 }
 .wordmark .a { color:var(--text); }
@@ -66,11 +63,13 @@ body {
   display:inline-flex; align-items:center; gap:8px; margin-top:12px;
   background:rgba(155,91,255,.15); border:1px solid var(--panel-line);
   border-radius:20px; padding:5px 14px; font-size:13px; color:var(--text-muted); letter-spacing:1px;
+  text-decoration:none; transition:border-color .2s;
 }
+.mint-badge:hover { border-color:var(--purple); color:var(--text-dim); }
 .mint-dot { width:8px; height:8px; background:#00ff88; border-radius:50%; box-shadow:0 0 6px #00ff88; animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
-/* ── SECTION ── */
+/* SECTION */
 .section-title {
   font-family:var(--font-cond); font-size:14px; letter-spacing:3px; color:var(--purple);
   text-transform:uppercase; margin-bottom:18px;
@@ -78,26 +77,21 @@ body {
 }
 .section-title::after { content:''; flex:1; height:1px; background:var(--panel-line); }
 
-/* ── WIDGET GRID ── */
+/* GRID */
 .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
-
 .card {
   background:var(--panel); border:1.5px solid var(--panel-line);
   border-radius:18px; padding:22px 20px;
-  transition:all .25s ease; text-decoration:none; color:inherit; display:block;
+  transition:all .25s ease; display:block; color:inherit;
   position:relative; overflow:hidden;
 }
-.card:hover {
-  border-color:var(--purple); transform:translateY(-3px);
-  box-shadow:0 12px 40px rgba(155,91,255,.3);
-}
+.card:hover { border-color:var(--purple); transform:translateY(-3px); box-shadow:0 12px 40px rgba(155,91,255,.3); }
 .card::before {
   content:''; position:absolute; top:0; left:0; right:0; height:2px;
   background:linear-gradient(90deg, var(--purple), var(--gold));
   opacity:0; transition:opacity .25s;
 }
 .card:hover::before { opacity:1; }
-
 .card-icon { font-size:34px; margin-bottom:12px; }
 .card-name {
   font-family:var(--font-cond); font-size:20px; font-weight:800;
@@ -108,28 +102,61 @@ body {
   background:rgba(155,91,255,.12); padding:3px 9px; border-radius:5px; margin-bottom:10px;
   font-family:var(--font-cond);
 }
-.card-desc { font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:16px; }
-.card-url {
-  font-size:11px; color:rgba(155,91,255,.6); font-family:monospace;
-  background:rgba(155,91,255,.08); padding:4px 8px; border-radius:5px;
-  margin-bottom:14px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+.card-desc { font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:14px; }
+
+/* URL + copy row */
+.url-row {
+  display:flex; align-items:center; gap:6px; margin-bottom:12px;
 }
+.card-url {
+  font-size:11px; color:rgba(155,91,255,.7); font-family:monospace;
+  background:rgba(155,91,255,.08); padding:5px 8px; border-radius:5px;
+  flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.copy-btn {
+  background:rgba(155,91,255,.2); border:1px solid rgba(155,91,255,.4);
+  border-radius:6px; padding:5px 10px; font-size:11px; color:var(--text-dim);
+  cursor:pointer; white-space:nowrap; transition:all .2s; font-family:var(--font-body);
+  flex-shrink:0;
+}
+.copy-btn:hover { background:rgba(155,91,255,.4); color:#fff; }
+.copy-btn.copied { background:rgba(0,255,136,.2); border-color:#00ff88; color:#00ff88; }
+
+/* Buttons */
+.card-btns { display:flex; gap:8px; }
 .card-btn {
-  display:flex; align-items:center; justify-content:center; gap:8px;
+  flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
   background:linear-gradient(135deg, rgba(155,91,255,.25), rgba(108,40,217,.4));
   border:1px solid rgba(155,91,255,.5); border-radius:10px;
-  padding:10px 16px; font-size:14px; font-weight:700; color:var(--text);
-  letter-spacing:1px; text-decoration:none; transition:all .2s;
-  font-family:var(--font-body);
+  padding:10px 12px; font-size:13px; font-weight:700; color:var(--text);
+  letter-spacing:1px; text-decoration:none; transition:all .2s; font-family:var(--font-body);
 }
-.card:hover .card-btn { background:rgba(155,91,255,.45); border-color:var(--gold); color:var(--gold); }
+.card-btn:hover { background:rgba(155,91,255,.45); border-color:var(--gold); color:var(--gold); }
 
-/* ── INSTRUCTIONS ── */
+/* INSTRUCTIONS */
 .instructions {
   background:var(--panel); border:1.5px solid rgba(244,182,60,.2);
   border-radius:18px; padding:28px 32px; margin-bottom:40px;
 }
-.instructions h3 { font-family:var(--font-cond); font-size:20px; letter-spacing:2px; color:var(--gold); margin-bottom:18px; text-transform:uppercase; }
+.instr-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;
+}
+.instr-header h3 {
+  font-family:var(--font-cond); font-size:20px; letter-spacing:2px;
+  color:var(--gold); text-transform:uppercase;
+}
+.toggle-wrap {
+  display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);
+}
+.toggle-btns { display:flex; border:1px solid var(--panel-line); border-radius:8px; overflow:hidden; }
+.toggle-btn {
+  padding:6px 14px; font-size:12px; font-weight:700; letter-spacing:1px;
+  cursor:pointer; transition:all .2s; border:none; font-family:var(--font-body);
+  background:transparent; color:var(--text-muted);
+}
+.toggle-btn.active { background:rgba(155,91,255,.3); color:var(--text); }
+
+.steps { display:flex; flex-direction:column; }
 .step { display:flex; gap:16px; align-items:flex-start; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.05); }
 .step:last-child { border-bottom:none; }
 .step-num {
@@ -142,12 +169,13 @@ body {
 .step-text strong { color:var(--text-dim); }
 .step-text code { background:rgba(155,91,255,.15); padding:1px 7px; border-radius:4px; color:var(--tiktok-cyan); font-size:13px; }
 
-/* ── FOOTER ── */
+/* FOOTER */
 footer {
   text-align:center; padding-top:20px;
   font-family:var(--font-cond); font-size:13px; letter-spacing:2px; color:var(--text-muted);
 }
-footer span { color:var(--purple); }
+footer a { color:var(--purple); text-decoration:none; }
+footer a:hover { color:var(--gold); }
 </style>
 </head>
 <body>
@@ -162,7 +190,7 @@ footer span { color:var(--purple); }
     <div class="hero-info">
       <div class="wordmark"><span class="a">JARED</span><span class="dot">.</span><span class="b">HOOVER3</span></div>
       <div class="hero-sub">🎵 TikTok Live — Custom Overlay Pack</div>
-      <div class="mint-badge"><div class="mint-dot"></div> Mint Overlays — Private Client</div>
+      <a class="mint-badge" href="https://mintoverlays.com"><div class="mint-dot"></div> Mint Overlays — Private Client</a>
     </div>
   </div>
 
@@ -170,73 +198,149 @@ footer span { color:var(--purple); }
   <div class="section-title">⚡ Your Widgets</div>
   <div class="grid">
 
-    <a class="card" href="widget-header.html" target="_blank">
+    <div class="card">
       <div class="card-icon">👤</div>
       <div class="card-name">Stream Header</div>
       <div class="card-size">1080 × 160 px</div>
       <div class="card-desc">Avatar ring, JARED.HOOVER3 wordmark, pulsing LIVE pill, viewer count.</div>
-      <span class="card-url">/widget-header.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+      <div class="url-row">
+        <span class="card-url" id="url-header">/jared-hoover3-x9q2/widget-header.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-header',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-header.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
-    <a class="card" href="widget-gift-goal.html" target="_blank">
-      <div class="card-icon">🌌</div>
+    <div class="card">
+      <div class="card-icon">🎁</div>
       <div class="card-name">Gift Goal Bar</div>
       <div class="card-size">560 × 100 px</div>
       <div class="card-desc">Gradient progress bar with shimmer. Set via URL: <code>?current=6420&target=10000</code></div>
-      <span class="card-url">/widget-gift-goal.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+      <div class="url-row">
+        <span class="card-url" id="url-goal">/jared-hoover3-x9q2/widget-gift-goal.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-goal',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-gift-goal.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
-    <a class="card" href="widget-top-gifters.html" target="_blank">
+    <div class="card">
       <div class="card-icon">🏆</div>
       <div class="card-name">Top Gifters</div>
-      <div class="card-size">344 × 260 px</div>
+      <div class="card-size">344 × 320 px</div>
       <div class="card-desc">Gold/silver/bronze ranked board. Set via URL: <code>?g1=username:48.2K</code></div>
-      <span class="card-url">/widget-top-gifters.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+      <div class="url-row">
+        <span class="card-url" id="url-gifters">/jared-hoover3-x9q2/widget-top-gifters.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-gifters',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-top-gifters.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
-    <a class="card" href="widget-alert.html" target="_blank">
+    <div class="card">
       <div class="card-icon">✨</div>
       <div class="card-name">Gift Alert</div>
       <div class="card-size">620 × 130 px</div>
       <div class="card-desc">Spring-in popup for gifts, follows, subs. Gradient border, auto-cycles in demo.</div>
-      <span class="card-url">/widget-alert.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+      <div class="url-row">
+        <span class="card-url" id="url-alert">/jared-hoover3-x9q2/widget-alert.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-alert',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-alert.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
-    <a class="card" href="widget-camframe.html" target="_blank">
-      <div class="card-icon">📺</div>
-      <div class="card-name">Cam Frame</div>
-      <div class="card-size">392 × 292 px</div>
-      <div class="card-desc">Purple→gold gradient border, floating animation, JARED name bar and CAM badge.</div>
-      <span class="card-url">/widget-camframe.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+    <div class="card">
+      <div class="card-icon">🐉</div>
+      <div class="card-name">Like-O-Meter</div>
+      <div class="card-size">400 × 320 px</div>
+      <div class="card-desc">Dragon Ball themed like tracker. Balls light up as likes increase. Set via URL: <code>?likes=5000</code></div>
+      <div class="url-row">
+        <span class="card-url" id="url-likemeter">/jared-hoover3-x9q2/widget-likemeter.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-likemeter',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-likemeter.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
-    <a class="card" href="widget-ticker.html" target="_blank">
+    <div class="card">
       <div class="card-icon">⚡</div>
       <div class="card-name">Event Ticker</div>
       <div class="card-size">1080 × 64 px</div>
-      <div class="card-desc">Scrolling gift/follow events with purple⚡RECENT label. Full-width strip.</div>
-      <span class="card-url">/widget-ticker.html</span>
-      <div class="card-btn">▶ Open Widget</div>
-    </a>
+      <div class="card-desc">Scrolling gift/follow events with purple ⚡ RECENT label. Full-width strip.</div>
+      <div class="url-row">
+        <span class="card-url" id="url-ticker">/jared-hoover3-x9q2/widget-ticker.html</span>
+        <button class="copy-btn" onclick="copyUrl('url-ticker',this)">Copy</button>
+      </div>
+      <div class="card-btns">
+        <a class="card-btn" href="widget-ticker.html" target="_blank">▶ Preview Widget</a>
+      </div>
+    </div>
 
   </div>
 
   <!-- INSTRUCTIONS -->
   <div class="instructions">
-    <h3>🎮 OBS / Streamlabs Setup</h3>
-    <div class="step"><div class="step-num">1</div><div class="step-text">In OBS, click <strong>+</strong> in Sources → choose <strong>Browser</strong></div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-text">Paste the widget URL (shown on each card above) into the <strong>URL field</strong></div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size exactly</div></div>
-    <div class="step"><div class="step-num">4</div><div class="step-text">Check <strong>"Shutdown source when not visible"</strong> and <strong>"Refresh browser when scene becomes active"</strong></div></div>
-    <div class="step"><div class="step-num">5</div><div class="step-text">Layer: Header top → Alert center → Ticker bottom. Each widget is its own source layer.</div></div>
+    <div class="instr-header">
+      <h3>🎮 Setup Instructions</h3>
+      <div class="toggle-wrap">
+        <div class="toggle-btns">
+          <button class="toggle-btn active" id="btn-tiktok" onclick="showInstr('tiktok')">TikTok Live Studio</button>
+          <button class="toggle-btn" id="btn-obs" onclick="showInstr('obs')">OBS / Streamlabs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TikTok Live Studio instructions (default) -->
+    <div class="steps" id="steps-tiktok">
+      <div class="step"><div class="step-num">1</div><div class="step-text">In TikTok Live Studio, click <strong>Add Source</strong> → choose <strong>Link</strong></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on a widget above, then paste the URL into the Link source field. Add <code>https://mintoverlays.com</code> before the path — e.g. <code>https://mintoverlays.com/jared-hoover3-x9q2/widget-header.html</code></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set the <strong>Width × Height</strong> to match each widget's size shown above</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Position the widget on your scene. Drag it to the right spot — header goes top, ticker goes bottom, alert goes center</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Resize by dragging the corners. Each widget has a transparent background so it overlays cleanly on your gameplay or camera</div></div>
+    </div>
+
+    <!-- OBS / Streamlabs instructions (toggled) -->
+    <div class="steps" id="steps-obs" style="display:none">
+      <div class="step"><div class="step-num">1</div><div class="step-text">In OBS, click <strong>+</strong> in the Sources panel → choose <strong>Browser</strong></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on a widget above, paste the full URL into the URL field</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size exactly (shown on each card)</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Check <strong>"Shutdown source when not visible"</strong> and <strong>"Refresh browser when scene becomes active"</strong></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Layer widgets over your scenes. Header top → Alert center → Ticker bottom. Each widget is its own source layer.</div></div>
+    </div>
   </div>
 
-  <footer>🔒 Private Link — Mint Overlays × <span>JARED.HOOVER3</span></footer>
+  <footer>🔒 Private Link — Mint Overlays × <a href="https://mintoverlays.com">JARED.HOOVER3</a></footer>
 </div>
+
+<script>
+const BASE = 'https://mintoverlays.com';
+
+// Prefix all URLs with full domain
+document.querySelectorAll('.card-url').forEach(el => {
+  el.textContent = BASE + el.textContent;
+});
+
+function copyUrl(id, btn) {
+  const url = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function showInstr(type) {
+  document.getElementById('steps-tiktok').style.display = type === 'tiktok' ? '' : 'none';
+  document.getElementById('steps-obs').style.display = type === 'obs' ? '' : 'none';
+  document.getElementById('btn-tiktok').classList.toggle('active', type === 'tiktok');
+  document.getElementById('btn-obs').classList.toggle('active', type === 'obs');
+}
+</script>
 </body>
 </html>
