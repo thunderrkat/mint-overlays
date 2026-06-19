@@ -5,7 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --neon-purple:#9B00FF;--neon-pink:#FF00FF;--weed-green:#44CC44;
+  --neon-purple:#9B00FF;--neon-pink:#FF00FF;
   --tiktok-pink:#FE2C55;--tiktok-cyan:#25F4EE;
   --ink-2:#0d0020;--ink-3:#1a0035;--text:#FFFFFF;--text-dim:#E0CCFF;
   --rainbow:linear-gradient(90deg,#FF2D2D,#FF7F00,#FFD700,#00CC44,#00AAFF,#CC00FF);
@@ -25,15 +25,13 @@ body{width:620px;height:130px;background:transparent;overflow:hidden;font-family
 .alert-frame.show{opacity:1;transform:scale(1) translateY(0);}
 .alert-frame.hide{opacity:0;transform:scale(.85) translateY(-10px);transition:opacity .3s ease-in,transform .3s ease-in;}
 @keyframes shift{to{background-position:200% 0;}}
-.alert-body{
-  border-radius:18px;background:linear-gradient(160deg,var(--ink-3) 0%,var(--ink-2) 100%);
-  padding:20px 24px;display:flex;align-items:center;gap:18px;
-}
+.alert-body{border-radius:18px;background:linear-gradient(160deg,var(--ink-3),var(--ink-2));padding:20px 24px;display:flex;align-items:center;gap:18px;}
 .alert-icon{width:74px;height:74px;flex:none;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;}
 .alert-icon.gift-style{background:linear-gradient(135deg,#FF7F00,#FF2D2D);box-shadow:0 0 24px rgba(255,127,0,.6);}
 .alert-icon.follow-style{background:linear-gradient(135deg,#00AAFF,#00CC44);box-shadow:0 0 24px rgba(0,170,255,.5);}
+.alert-icon.join-style{background:linear-gradient(135deg,#CC00FF,#9B00FF);box-shadow:0 0 24px rgba(153,0,255,.6);}
 .alert-text{flex:1;}
-.alert-title{font-family:var(--font-display);font-size:28px;letter-spacing:1px;transform:skewX(-4deg);display:block;background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 100%;animation:shift 2s linear infinite;}
+.alert-title{font-family:var(--font-display);font-size:28px;background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 100%;animation:shift 2s linear infinite;display:block;}
 .alert-sub{font-size:19px;font-weight:600;color:var(--text-dim);margin-top:4px;}
 .alert-sub .who{color:#FFD700;font-weight:800;}
 .alert-amt{font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:32px;color:#FFD700;text-shadow:0 0 15px rgba(255,215,0,.6);white-space:nowrap;}
@@ -52,38 +50,98 @@ body{width:620px;height:130px;background:transparent;overflow:hidden;font-family
     </div>
   </div>
 </div>
+
 <script>
-const SESSION='rainbow4life420-m7k3';
-const af=document.getElementById('af');
-let queue=[],showing=false;
-function show(d){
-  const ic=document.getElementById('icon');
-  ic.textContent=d.icon;ic.className='alert-icon '+d.cls;
-  document.getElementById('title').textContent=d.title;
-  document.getElementById('who').textContent=d.who;
-  document.getElementById('action').textContent=d.action;
-  document.getElementById('amt').textContent=d.amt;
-  af.classList.remove('hide');af.classList.add('show');showing=true;
-  setTimeout(()=>{af.classList.remove('show');af.classList.add('hide');showing=false;setTimeout(next,400);},4500);
+const SESSION = 'rainbow4life420-m7k3';
+const af = document.getElementById('af');
+let queue = [], showing = false;
+
+function showAlert(d) {
+  const ic = document.getElementById('icon');
+  ic.textContent = d.icon; ic.className = 'alert-icon ' + d.cls;
+  document.getElementById('title').textContent = d.title;
+  document.getElementById('who').textContent = d.who;
+  document.getElementById('action').textContent = d.action;
+  document.getElementById('amt').textContent = d.amt;
+  af.classList.remove('hide'); af.classList.add('show'); showing = true;
+  setTimeout(() => { af.classList.remove('show'); af.classList.add('hide'); showing = false; setTimeout(next, 400); }, 4500);
 }
-function next(){if(queue.length>0&&!showing)show(queue.shift());}
-function push(d){queue.push(d);if(!showing)next();}
-const es=new EventSource('/events/'+SESSION);
-es.onmessage=e=>{
-  const d=JSON.parse(e.data);
-  if(d.type==='gift')push({icon:'🔥',cls:'gift-style',title:'NEW GIFT!',who:'@'+(d.nickname||'viewer'),action:'sent '+(d.giftName||'a gift')+(d.repeatCount>1?' ×'+d.repeatCount:''),amt:d.diamondCount?'+'+(d.diamondCount*(d.repeatCount||1)).toLocaleString():'🔥'});
-  if(d.type==='follow')push({icon:'➕',cls:'follow-style',title:'NEW FOLLOWER!',who:'@'+(d.nickname||'viewer'),action:'just followed',amt:'🌈'});
-};
-setTimeout(()=>{
-  if(queue.length===0&&!showing){
-    const demos=[
-      {icon:'🔥',cls:'gift-style',title:'NEW GIFT!',who:'@420queen',action:'sent Rainbow Rose ×5',amt:'+4.2K'},
-      {icon:'➕',cls:'follow-style',title:'NEW FOLLOWER!',who:'@weedlover99',action:'just followed',amt:'🌈'},
-      {icon:'🔥',cls:'gift-style',title:'NEW TOP GIFT!',who:'@fortnite_fan',action:'sent Galaxy ×3',amt:'+15K'},
-    ];
-    let i=0;function nd(){push(demos[i%demos.length]);i++;setTimeout(nd,7000);}nd();
+function next() { if (queue.length > 0 && !showing) showAlert(queue.shift()); }
+function push(d) { queue.push(d); if (!showing) next(); }
+
+// Track previous state to detect NEW entries
+let prevGifters = [];
+let prevFollowers = [];
+
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+
+  // type:state — diff gifters and followers to find new activity
+  if (d.type === 'state') {
+
+    // Detect new top gifter or gifter count increase
+    if (d.gifters && d.gifters.length > 0) {
+      const newTop = d.gifters[0];
+      const oldTop = prevGifters[0];
+      // New top gifter OR top gifter's count went up
+      if (!oldTop || newTop.id !== oldTop.id || newTop.count > oldTop.count) {
+        if (prevGifters.length > 0) { // don't fire on initial load
+          const isNewTop = !oldTop || newTop.id !== oldTop.id;
+          push({
+            icon: '🔥', cls: 'gift-style',
+            title: isNewTop ? 'NEW TOP GIFTER!' : 'NEW GIFT!',
+            who: '@' + (newTop.nickname || newTop.id),
+            action: isNewTop ? 'is now #1 gifter!' : 'sent a gift',
+            amt: newTop.count ? '+' + newTop.count.toLocaleString() : '🔥'
+          });
+        }
+      }
+      prevGifters = d.gifters;
+    }
+
+    // Detect new followers
+    if (d.followers && d.followers.length > prevFollowers.length) {
+      const newFollowers = d.followers.slice(0, d.followers.length - prevFollowers.length);
+      newFollowers.forEach(f => {
+        push({
+          icon: '➕', cls: 'follow-style',
+          title: 'NEW FOLLOWER!',
+          who: '@' + (f.nickname || f.id),
+          action: 'just followed',
+          amt: '🌈'
+        });
+      });
+      prevFollowers = d.followers;
+    }
   }
-},3000);
+
+  // type:join — someone joined
+  if (d.type === 'join') {
+    push({
+      icon: '🌈', cls: 'join-style',
+      title: 'JOINED THE STREAM!',
+      who: '@' + (d.nickname || 'viewer'),
+      action: 'just joined',
+      amt: '👋'
+    });
+  }
+};
+
+// Demo fallback — only runs if no live session after 5s
+setTimeout(() => {
+  if (queue.length === 0 && !showing && prevGifters.length === 0) {
+    const demos = [
+      { icon:'🔥', cls:'gift-style',   title:'NEW GIFT!',      who:'@420queen',     action:'sent Rainbow Rose ×5', amt:'+4.2K' },
+      { icon:'➕', cls:'follow-style', title:'NEW FOLLOWER!',   who:'@weedlover99',  action:'just followed',         amt:'🌈'   },
+      { icon:'🔥', cls:'gift-style',   title:'NEW TOP GIFTER!', who:'@fortnite_fan', action:'sent Galaxy ×3',        amt:'+15K' },
+      { icon:'🌈', cls:'join-style',   title:'JOINED!',         who:'@highlife420',  action:'just joined',           amt:'👋'   },
+    ];
+    let i = 0;
+    function nd() { push(demos[i % demos.length]); i++; setTimeout(nd, 7000); }
+    nd();
+  }
+}, 5000);
 </script>
 </body>
 </html>

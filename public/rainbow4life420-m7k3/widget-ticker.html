@@ -28,37 +28,100 @@ body{width:1080px;height:64px;background:transparent;overflow:hidden;font-family
   <div class="ticker-label">🌈 LIVE</div>
   <div class="ticker-window"><div class="ticker-track" id="track"></div></div>
 </div>
+
 <script>
-const SESSION='rainbow4life420-m7k3';
-const COLORS=['#FF2D2D','#FF7F00','#FFD700','#00CC44','#00AAFF','#CC00FF'];
-let events=[
-  {icon:'🔥',who:'@420queen',whoColor:'#FF7F00',msg:'sent Rainbow Rose ×5'},
-  {icon:'➕',who:'@weedlover99',whoColor:'#00CC44',msg:'followed'},
-  {icon:'🌈',who:'@fortnite_fan',whoColor:'#00AAFF',msg:'dropped a Galaxy ×3'},
-  {icon:'🍃',who:'@highlife420',whoColor:'#CC00FF',msg:'joined the stream'},
-  {icon:'🔥',who:'@vibes_only',whoColor:'#FF2D2D',msg:'sent 50 Roses'},
+const SESSION = 'rainbow4life420-m7k3';
+const RAINBOW_COLORS = ['#FF2D2D','#FF7F00','#FFD700','#00CC44','#00AAFF','#CC00FF','#FF00FF'];
+const track = document.getElementById('track');
+
+let events = [
+  { icon:'🔥', who:'@420queen',    whoColor:'#FF7F00', msg:'sent Rainbow Rose ×5' },
+  { icon:'➕', who:'@weedlover99', whoColor:'#00CC44', msg:'followed' },
+  { icon:'🌈', who:'@fortnite_fan',whoColor:'#00AAFF', msg:'sent Galaxy ×3' },
+  { icon:'🍃', who:'@highlife420', whoColor:'#CC00FF', msg:'joined the stream' },
+  { icon:'🔥', who:'@vibes_only',  whoColor:'#FF2D2D', msg:'sent 50 Roses' },
 ];
-const track=document.getElementById('track');
-let offset=0,animId;
-function build(){
-  const doubled=[...events,...events];
-  track.innerHTML=doubled.map((e,i)=>`<span class="ticker-item"><span>${e.icon}</span><span class="who" style="color:${e.whoColor}">${e.who}</span><span>${e.msg}</span></span>`).join('');
-  offset=0;cancelAnimationFrame(animId);scroll();
+
+let offset = 0, animId, lastW = 0;
+
+function randColor() { return RAINBOW_COLORS[Math.floor(Math.random() * RAINBOW_COLORS.length)]; }
+
+function build() {
+  const doubled = [...events, ...events];
+  track.innerHTML = doubled.map(e =>
+    `<span class="ticker-item"><span>${e.icon}</span><span class="who" style="color:${e.whoColor}">${e.who}</span><span>${e.msg}</span></span>`
+  ).join('');
+  // Reset animation position to avoid jump
+  lastW = track.scrollWidth / 2;
+  offset = Math.min(offset, lastW - 1);
+  cancelAnimationFrame(animId);
+  scroll();
 }
-function scroll(){
-  const hw=track.scrollWidth/2;
-  function step(){offset+=1.2;if(offset>=hw)offset=0;track.style.transform=`translateX(-${offset}px)`;animId=requestAnimationFrame(step);}
-  animId=requestAnimationFrame(step);
+
+function scroll() {
+  function step() {
+    offset += 1.2;
+    if (offset >= lastW) offset = 0;
+    track.style.transform = `translateX(-${offset}px)`;
+    animId = requestAnimationFrame(step);
+  }
+  animId = requestAnimationFrame(step);
 }
-function add(evt){events.unshift(evt);if(events.length>20)events.pop();build();}
-const es=new EventSource('/events/'+SESSION);
-es.onmessage=e=>{
-  const d=JSON.parse(e.data);
-  const c=COLORS[Math.floor(Math.random()*6)];
-  if(d.type==='gift')add({icon:'🔥',who:'@'+(d.nickname||'viewer'),whoColor:c,msg:'sent '+(d.giftName||'a gift')});
-  if(d.type==='follow')add({icon:'➕',who:'@'+(d.nickname||'viewer'),whoColor:'#00CC44',msg:'followed'});
-  if(d.type==='join')add({icon:'🌈',who:'@'+(d.nickname||'viewer'),whoColor:c,msg:'joined'});
+
+function addEvent(evt) {
+  events.unshift(evt);
+  if (events.length > 20) events.pop();
+  build();
+}
+
+// Track previous state for diffing
+let prevGifters = [];
+let prevFollowers = [];
+let seenJoins = new Set();
+
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+
+  if (d.type === 'state') {
+    // Detect new/updated gifters
+    if (d.gifters && d.gifters.length > 0) {
+      d.gifters.forEach(g => {
+        const prev = prevGifters.find(p => p.id === g.id);
+        if (!prev) {
+          // Brand new gifter
+          addEvent({ icon:'🔥', who:'@'+(g.nickname||g.id), whoColor:randColor(), msg:'sent a gift' });
+        } else if (g.count > prev.count) {
+          // Existing gifter sent more
+          addEvent({ icon:'🔥', who:'@'+(g.nickname||g.id), whoColor:randColor(), msg:'sent another gift' });
+        }
+      });
+      prevGifters = d.gifters;
+    }
+
+    // Detect new followers
+    if (d.followers && d.followers.length > 0) {
+      d.followers.forEach(f => {
+        const key = f.id || f.nickname;
+        if (!prevFollowers.find(p => (p.id||p.nickname) === key)) {
+          addEvent({ icon:'➕', who:'@'+(f.nickname||f.id), whoColor:'#00CC44', msg:'followed' });
+        }
+      });
+      prevFollowers = d.followers;
+    }
+  }
+
+  // Joins
+  if (d.type === 'join') {
+    const key = d.nickname || 'unknown';
+    if (!seenJoins.has(key)) {
+      seenJoins.add(key);
+      if (seenJoins.size > 200) seenJoins.clear();
+      addEvent({ icon:'🌈', who:'@'+key, whoColor:randColor(), msg:'joined the stream' });
+    }
+  }
 };
+
 build();
 </script>
 </body>
