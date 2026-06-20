@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#003594; --navy-deep:#041E42; --silver:#869397; --steel:#C0C0C0;
+  --gold:#D4AF37; --white:#FFFFFF;
+  --tiktok-pink:#FE2C55;
+  --ink:#020810; --ink-2:#050F1A; --ink-3:#0A1F35;
+  --text:#FFFFFF; --text-dim:#B8C8E8; --text-muted:#5a7a9a;
+  --panel:rgba(4,14,34,.9); --panel-line:rgba(0,53,148,.55);
+  --font-display:'Anton',sans-serif; --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1080px;height:160px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+
+.header{
+  width:1080px;height:160px;padding:20px 34px;
+  display:flex;align-items:center;gap:22px;
+  background:linear-gradient(180deg,rgba(2,8,16,.96) 0%,rgba(4,14,34,.78) 100%);
+  position:relative;overflow:hidden;
+}
+/* Bottom accent line — Cowboys navy to silver */
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, var(--navy-deep), var(--navy) 30%, var(--steel) 50%, var(--navy) 70%, var(--navy-deep));
+}
+/* Subtle top line */
+.header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,53,148,.6),transparent);
+}
+
+/* Avatar */
+.avatar{position:relative;flex:none;}
+.avatar-ring{
+  width:110px;height:110px;border-radius:50%;padding:3px;
+  background:linear-gradient(135deg,var(--navy),var(--steel),var(--navy));
+  box-shadow:0 0 20px rgba(0,53,148,.6),0 0 40px rgba(0,53,148,.2);
+}
+.avatar-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.avatar .badge{
+  position:absolute;right:-3px;bottom:-3px;
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#B8960C);
+  border:3px solid var(--ink-2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:11px;color:var(--ink-2);font-weight:900;
+}
+
+/* Identity */
+.id{flex:1;min-width:0;}
+.wordmark{
+  font-family:var(--font-display);font-size:46px;line-height:.92;letter-spacing:.5px;
+  transform:skewX(-4deg);
+  text-shadow:0 3px 0 rgba(0,0,0,.7),0 0 30px rgba(0,53,148,.5);
+  color:var(--white);
+}
+.wordmark .accent{color:var(--navy);-webkit-text-stroke:1px var(--steel);}
+.submeta{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.submeta .handle{font-size:19px;font-weight:600;color:var(--text-dim);}
+.submeta .sep{width:4px;height:4px;border-radius:50%;background:var(--navy);}
+.submeta .game{font-size:17px;font-weight:600;color:var(--text-muted);}
+
+/* Right side */
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex:none;}
+.live-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--tiktok-pink);color:#fff;
+  font-family:var(--font-body);font-weight:800;font-size:20px;letter-spacing:2px;
+  padding:8px 18px 8px 13px;border-radius:10px;
+  box-shadow:0 4px 16px rgba(254,44,85,.45);
+  animation:livepulse 2.2s ease-out infinite;
+}
+.live-dot{width:10px;height:10px;border-radius:50%;background:#fff;animation:blink 1.1s infinite;}
+.viewers{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(4,14,34,.8);border:1.5px solid rgba(0,53,148,.5);
+  color:var(--text);font-weight:700;font-size:19px;padding:7px 15px;border-radius:10px;
+}
+.viewers-icon{width:18px;height:18px;opacity:.7;}
+
+@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(254,44,85,.55);}70%{box-shadow:0 0 0 12px rgba(254,44,85,0);}100%{box-shadow:0 0 0 0 rgba(254,44,85,0);}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="avatar">
+    <div class="avatar-ring">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImJnIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMEExRjM1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyMDgxMCIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3Rhci1maWxsIiBjeD0iNTAlIiBjeT0iMzUlIiByPSI1NSUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWE0YThhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjMDAzNTk0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA0MUU0MiIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3Rhci1lZGdlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0MwQzBDMCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4NjkzOTciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJlbHQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2OTM5NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjMwJSIgc3RvcC1jb2xvcj0iI0Q0QUYzNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjcwJSIgc3RvcC1jb2xvcj0iI0Q0QUYzNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4NjkzOTciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJnbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogICAgPGZpbHRlciBpZD0iZ2xvdy1zb2Z0Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPCEtLSBCYWNrZ3JvdW5kIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjE5NSIgZmlsbD0idXJsKCNiZykiLz4KICA8Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjE5NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3N0YXItZWRnZSkiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC44Ii8+CgogIDwhLS0gT3V0ZXIgZ2xvdyByaW5nIC0tPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTg1IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDM1OTQiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC41IiBmaWx0ZXI9InVybCgjZ2xvdykiLz4KCiAgPCEtLSBEYWxsYXMgQ293Ym95cyBTdGFyIOKAlCBsYXJnZSwgY2VudGVyZWQgLS0+CiAgPHBvbHlnb24gcG9pbnRzPSIyMDAsNjAgMjIwLDE1NSAzMTAsMTU1IDIzOCwyMTAgMjY1LDMwNSAyMDAsMjUyIDEzNSwzMDUgMTYyLDIxMCA5MCwxNTUgMTgwLDE1NSIKICAgIGZpbGw9InVybCgjc3Rhci1maWxsKSIgc3Ryb2tlPSJ1cmwoI3N0YXItZWRnZSkiIHN0cm9rZS13aWR0aD0iNSIgZmlsdGVyPSJ1cmwoI2dsb3ctc29mdCkiLz4KCiAgPCEtLSBJbm5lciBzdGFyIGhpZ2hsaWdodCAtLT4KICA8cG9seWdvbiBwb2ludHM9IjIwMCw4MCAyMTYsMTQ4IDI5OCwxNDggMjM0LDE5NSAyNTcsMjgyIDIwMCwyMzYgMTQzLDI4MiAxNjYsMTk1IDEwMiwxNDggMTg0LDE0OCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjE1KSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBGb3J0bml0ZS1zdHlsZSBkaWFnb25hbCBzbGFzaCBtYXJrcyBhY3Jvc3Mgc3RhciAtLT4KICA8bGluZSB4MT0iMTU1IiB5MT0iMTM1IiB4Mj0iMTc1IiB5Mj0iMjk1IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiIHN0cm9rZS13aWR0aD0iOCIvPgogIDxsaW5lIHgxPSIxODUiIHkxPSIxMzAiIHgyPSIyMDUiIHkyPSIzMDAiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSI2Ii8+CgogIDwhLS0gQ2hhbXBpb25zaGlwIGJlbHQgc3RyaXAgYXQgYm90dG9tIG9mIHN0YXIgLS0+CiAgPHJlY3QgeD0iMTEwIiB5PSIyNjgiIHdpZHRoPSIxODAiIGhlaWdodD0iMjQiIHJ4PSI0IiBmaWxsPSJ1cmwoI2JlbHQpIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIxMTAiIHk9IjI2OCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyNCIgcng9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjQpIiBzdHJva2Utd2lkdGg9IjEiLz4KICA8IS0tIEJlbHQgY2VudGVyIHBsYXRlIC0tPgogIDxyZWN0IHg9IjE3NiIgeT0iMjY0IiB3aWR0aD0iNDgiIGhlaWdodD0iMzIiIHJ4PSI2IiBmaWxsPSIjRDRBRjM3IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjg0IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2siIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMwNDFFNDIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSI5MDAiPkNIQU1QPC90ZXh0PgoKICA8IS0tIFNFTlBBSSB0ZXh0IGFib3ZlIHN0YXIgLS0+CiAgPHRleHQgeD0iMjAwIiB5PSI1MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIyIiBmaWxsPSIjRkZGRkZGIgogICAgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9IjkwMCIgbGV0dGVyLXNwYWNpbmc9IjQiCiAgICBzdHlsZT0idGV4dC1zaGFkb3c6IDAgMCAxMHB4ICMwMDM1OTQiPlNFTlBBSTwvdGV4dD4KCiAgPCEtLSBDSiB0ZXh0IGluc2lkZSBzdGFyIC0tPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjI1IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTIiIGZpbGw9IiNGRkZGRkYiCiAgICB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iOTAwIiBvcGFjaXR5PSIwLjk1Ij5DSjwvdGV4dD4KCiAgPCEtLSBDb3JuZXIgYWNjZW50IGRvdHMgLS0+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNiIgZmlsbD0iIzAwMzU5NCIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzQwIiBjeT0iNjAiIHI9IjYiIGZpbGw9IiMwMDM1OTQiIG9wYWNpdHk9IjAuNyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iMzQwIiByPSI0IiBmaWxsPSIjODY5Mzk3IiBvcGFjaXR5PSIwLjUiLz4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSIzNDAiIHI9IjQiIGZpbGw9IiM4NjkzOTciIG9wYWNpdHk9IjAuNSIvPgo8L3N2Zz4K" alt="SenpaiCJ">
+    </div>
+    <div class="badge">★</div>
+  </div>
+  <div class="id">
+    <div class="wordmark">SENPAI<span class="accent">CJ</span>COLLECTS</div>
+    <div class="submeta">
+      <span class="handle">@senpaicjcollects_0</span>
+      <span class="sep"></span>
+      <span class="game">TikTok Live · Follow For More</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+    <div class="viewers">
+      <svg class="viewers-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span id="viewers">--</span>
+    </div>
+  </div>
+</div>
+<script>
+const SESSION='senpaicjcollects0-v8n4';
+const es=new EventSource('/events/'+SESSION);
+es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='status'&&d.viewerCount)document.getElementById('viewers').textContent=d.viewerCount.toLocaleString();};
+async function poll(){try{const r=await fetch('/api/'+SESSION+'/status');const d=await r.json();if(d.viewerCount)document.getElementById('viewers').textContent=d.viewerCount.toLocaleString();}catch(e){}}
+poll();setInterval(poll,10000);
+</script>
+</body>
+</html>

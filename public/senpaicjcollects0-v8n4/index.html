@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SenpaiCJCollects — Mint Overlays</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;500;600;700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#003594;--navy-deep:#041E42;--silver:#869397;--steel:#C0C0C0;--gold:#D4AF37;
+  --tiktok-pink:#FE2C55;
+  --ink:#020810;--ink-2:#050F1A;--ink-3:#0A1F35;
+  --text:#FFFFFF;--text-dim:#B8C8E8;--text-muted:#5a7a9a;
+  --panel:rgba(4,14,34,.9);--panel-line:rgba(0,53,148,.45);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:radial-gradient(120% 80% at 50% 0%,#041E42 0%,var(--ink-2) 45%,var(--ink) 100%);color:var(--text);font-family:var(--font-body);min-height:100vh;}
+.page{max-width:960px;margin:0 auto;padding:48px 24px 60px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(254,44,85,.6);}70%{box-shadow:0 0 0 12px rgba(254,44,85,0);}100%{box-shadow:0 0 0 0 rgba(254,44,85,0);}}
+
+/* CONNECT BAR */
+.connect-bar{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:14px;padding:18px 26px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.connect-bar::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 30%,var(--steel) 50%,var(--navy) 70%,var(--navy-deep));}
+.connect-label{font-family:var(--font-cond);font-size:14px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;white-space:nowrap;}
+.input-wrap{flex:1;min-width:200px;position:relative;}
+.at{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--navy);font-weight:800;font-size:17px;pointer-events:none;}
+.username-input{width:100%;background:rgba(2,8,16,.8);border:1.5px solid rgba(0,53,148,.4);border-radius:9px;padding:11px 14px 11px 30px;color:var(--text);font-size:16px;font-weight:700;font-family:var(--font-body);outline:none;transition:border-color .2s;}
+.username-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,53,148,.15);}
+.username-input::placeholder{color:var(--text-muted);font-weight:400;}
+.username-input:disabled{opacity:.5;}
+.connect-btn{padding:11px 26px;border-radius:9px;font-size:14px;font-weight:800;letter-spacing:1px;cursor:pointer;border:none;font-family:var(--font-cond);transition:all .2s;white-space:nowrap;text-transform:uppercase;}
+.connect-btn.go{background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:#fff;border:1.5px solid var(--navy);box-shadow:0 4px 16px rgba(0,53,148,.4);}
+.connect-btn.go:hover{background:linear-gradient(135deg,#0044BB,var(--navy));transform:translateY(-1px);}
+.connect-btn.disconnect{background:rgba(0,53,148,.15);border:1.5px solid rgba(0,53,148,.4);color:var(--text-dim);}
+.status-pill{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;letter-spacing:1px;white-space:nowrap;font-family:var(--font-cond);}
+.status-pill.disconnected{background:rgba(255,255,255,.05);color:var(--text-muted);border:1px solid rgba(255,255,255,.08);}
+.status-pill.connecting{background:rgba(212,175,55,.1);color:var(--gold);border:1px solid rgba(212,175,55,.25);}
+.status-pill.connected{background:rgba(0,160,80,.1);color:#00C060;border:1px solid rgba(0,160,80,.3);}
+.status-pill.error{background:rgba(254,44,85,.1);color:var(--tiktok-pink);border:1px solid rgba(254,44,85,.25);}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.disconnected .status-dot{background:#444;}
+.connecting .status-dot{background:var(--gold);animation:pulse 1s infinite;}
+.connected .status-dot{background:#00C060;box-shadow:0 0 5px #00C060;animation:pulse 2s infinite;}
+.error .status-dot{background:var(--tiktok-pink);}
+
+/* HERO */
+.hero{display:flex;align-items:center;gap:26px;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:20px;padding:28px 32px;margin-bottom:44px;box-shadow:0 0 50px rgba(0,53,148,.12);position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 30%,var(--steel) 50%,var(--navy) 70%,var(--navy-deep));}
+.hero-av{position:relative;flex:none;}
+.hero-av img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid var(--navy);box-shadow:0 0 0 3px rgba(2,8,16,.9),0 0 24px rgba(0,53,148,.5);}
+.hero-badge{position:absolute;right:-3px;bottom:-3px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8960C);border:3px solid var(--ink-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:12px;color:var(--ink);}
+.hero-info{flex:1;}
+.wordmark{font-family:var(--font-display);font-size:44px;line-height:.92;transform:skewX(-4deg);text-shadow:0 3px 0 rgba(0,0,0,.7),0 0 24px rgba(0,53,148,.4);color:var(--white);}
+.wordmark .accent{color:var(--navy);-webkit-text-stroke:1px var(--steel);}
+.hero-sub{font-size:15px;color:var(--text-dim);margin-top:8px;font-weight:500;}
+.mint-badge{display:inline-flex;align-items:center;gap:7px;margin-top:10px;background:rgba(0,53,148,.12);border:1px solid var(--panel-line);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--text-muted);letter-spacing:1px;text-decoration:none;font-family:var(--font-cond);text-transform:uppercase;transition:border-color .2s;}
+.mint-badge:hover{border-color:var(--navy);color:var(--text-dim);}
+.mint-dot{width:7px;height:7px;background:#00C060;border-radius:50%;box-shadow:0 0 5px #00C060;animation:pulse 2s infinite;}
+
+/* SECTION */
+.section-title{font-family:var(--font-cond);font-size:13px;letter-spacing:3px;color:var(--silver);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:"";flex:1;height:1px;background:var(--panel-line);}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:44px;}
+.card{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:16px;padding:18px 16px;transition:all .22s ease;color:inherit;display:block;position:relative;overflow:hidden;}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 40%,var(--steel) 100%);opacity:0;transition:opacity .22s;}
+.card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 10px 34px rgba(0,53,148,.25);}
+.card:hover::before{opacity:1;}
+.card-icon{font-size:28px;margin-bottom:10px;}
+.card-name{font-family:var(--font-cond);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--steel);margin-bottom:5px;}
+.card-size{display:inline-block;font-size:11px;color:var(--navy);letter-spacing:1.5px;background:rgba(0,53,148,.15);padding:2px 8px;border-radius:4px;margin-bottom:9px;font-family:var(--font-cond);border:1px solid rgba(0,53,148,.3);}
+.card-desc{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:12px;}
+.url-row{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.card-url{font-size:11px;color:rgba(0,53,148,.7);font-family:monospace;background:rgba(0,53,148,.1);padding:4px 7px;border-radius:4px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.copy-btn{background:rgba(0,53,148,.2);border:1px solid rgba(0,53,148,.35);border-radius:5px;padding:4px 9px;font-size:11px;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:var(--font-cond);letter-spacing:1px;flex-shrink:0;text-transform:uppercase;}
+.copy-btn:hover{background:rgba(0,53,148,.4);color:#fff;}
+.copy-btn.copied{background:rgba(0,160,80,.2);border-color:#00C060;color:#00C060;}
+.card-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,53,148,.2);border:1px solid rgba(0,53,148,.4);border-radius:8px;padding:9px 12px;font-size:12px;font-weight:800;color:var(--text);letter-spacing:1.5px;text-decoration:none;transition:all .2s;font-family:var(--font-cond);text-transform:uppercase;}
+.card-btn:hover{background:rgba(0,53,148,.4);border-color:var(--steel);color:var(--steel);}
+
+/* INSTRUCTIONS */
+.instructions{background:var(--panel);border:1.5px solid rgba(212,175,55,.2);border-radius:16px;padding:24px 28px;margin-bottom:36px;}
+.instr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.instr-header h3{font-family:var(--font-cond);font-size:18px;letter-spacing:3px;text-transform:uppercase;color:var(--steel);}
+.toggle-btns{display:flex;border:1px solid var(--panel-line);border-radius:7px;overflow:hidden;}
+.toggle-btn{padding:7px 15px;font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;border:none;font-family:var(--font-cond);background:transparent;color:var(--text-muted);transition:all .2s;text-transform:uppercase;}
+.toggle-btn.active{background:rgba(0,53,148,.3);color:var(--text);}
+.step{display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.step:last-child{border-bottom:none;}
+.step-num{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--navy),var(--navy-deep));border:1px solid var(--navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:#fff;}
+.step-text{font-size:13px;color:var(--text-muted);line-height:1.6;padding-top:4px;}
+.step-text strong{color:var(--text-dim);}
+.step-text code{background:rgba(0,53,148,.15);padding:1px 6px;border-radius:3px;color:#6699CC;font-size:12px;}
+
+footer{text-align:center;padding-top:18px;font-family:var(--font-cond);font-size:12px;letter-spacing:2px;color:var(--text-muted);}
+footer a{color:var(--silver);text-decoration:none;}
+footer a:hover{color:var(--steel);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- CONNECT BAR -->
+  <div class="connect-bar">
+    <div class="connect-label">TikTok Live</div>
+    <div class="input-wrap">
+      <span class="at">@</span>
+      <input class="username-input" id="username-input" type="text" placeholder="your tiktok username" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="connect-btn go" id="connect-btn" onclick="handleConnect()">Go Live</button>
+    <div class="status-pill disconnected" id="status-pill">
+      <div class="status-dot"></div><span id="status-text">Not connected</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-av">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImJnIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMEExRjM1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyMDgxMCIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3Rhci1maWxsIiBjeD0iNTAlIiBjeT0iMzUlIiByPSI1NSUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWE0YThhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjMDAzNTk0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA0MUU0MiIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3Rhci1lZGdlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0MwQzBDMCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4NjkzOTciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJlbHQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2OTM5NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjMwJSIgc3RvcC1jb2xvcj0iI0Q0QUYzNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjcwJSIgc3RvcC1jb2xvcj0iI0Q0QUYzNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4NjkzOTciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJnbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogICAgPGZpbHRlciBpZD0iZ2xvdy1zb2Z0Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPCEtLSBCYWNrZ3JvdW5kIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjE5NSIgZmlsbD0idXJsKCNiZykiLz4KICA8Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjE5NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3N0YXItZWRnZSkiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC44Ii8+CgogIDwhLS0gT3V0ZXIgZ2xvdyByaW5nIC0tPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTg1IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDM1OTQiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC41IiBmaWx0ZXI9InVybCgjZ2xvdykiLz4KCiAgPCEtLSBEYWxsYXMgQ293Ym95cyBTdGFyIOKAlCBsYXJnZSwgY2VudGVyZWQgLS0+CiAgPHBvbHlnb24gcG9pbnRzPSIyMDAsNjAgMjIwLDE1NSAzMTAsMTU1IDIzOCwyMTAgMjY1LDMwNSAyMDAsMjUyIDEzNSwzMDUgMTYyLDIxMCA5MCwxNTUgMTgwLDE1NSIKICAgIGZpbGw9InVybCgjc3Rhci1maWxsKSIgc3Ryb2tlPSJ1cmwoI3N0YXItZWRnZSkiIHN0cm9rZS13aWR0aD0iNSIgZmlsdGVyPSJ1cmwoI2dsb3ctc29mdCkiLz4KCiAgPCEtLSBJbm5lciBzdGFyIGhpZ2hsaWdodCAtLT4KICA8cG9seWdvbiBwb2ludHM9IjIwMCw4MCAyMTYsMTQ4IDI5OCwxNDggMjM0LDE5NSAyNTcsMjgyIDIwMCwyMzYgMTQzLDI4MiAxNjYsMTk1IDEwMiwxNDggMTg0LDE0OCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjE1KSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBGb3J0bml0ZS1zdHlsZSBkaWFnb25hbCBzbGFzaCBtYXJrcyBhY3Jvc3Mgc3RhciAtLT4KICA8bGluZSB4MT0iMTU1IiB5MT0iMTM1IiB4Mj0iMTc1IiB5Mj0iMjk1IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiIHN0cm9rZS13aWR0aD0iOCIvPgogIDxsaW5lIHgxPSIxODUiIHkxPSIxMzAiIHgyPSIyMDUiIHkyPSIzMDAiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSI2Ii8+CgogIDwhLS0gQ2hhbXBpb25zaGlwIGJlbHQgc3RyaXAgYXQgYm90dG9tIG9mIHN0YXIgLS0+CiAgPHJlY3QgeD0iMTEwIiB5PSIyNjgiIHdpZHRoPSIxODAiIGhlaWdodD0iMjQiIHJ4PSI0IiBmaWxsPSJ1cmwoI2JlbHQpIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIxMTAiIHk9IjI2OCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyNCIgcng9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjQpIiBzdHJva2Utd2lkdGg9IjEiLz4KICA8IS0tIEJlbHQgY2VudGVyIHBsYXRlIC0tPgogIDxyZWN0IHg9IjE3NiIgeT0iMjY0IiB3aWR0aD0iNDgiIGhlaWdodD0iMzIiIHJ4PSI2IiBmaWxsPSIjRDRBRjM3IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjg0IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2siIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMwNDFFNDIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSI5MDAiPkNIQU1QPC90ZXh0PgoKICA8IS0tIFNFTlBBSSB0ZXh0IGFib3ZlIHN0YXIgLS0+CiAgPHRleHQgeD0iMjAwIiB5PSI1MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIyIiBmaWxsPSIjRkZGRkZGIgogICAgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9IjkwMCIgbGV0dGVyLXNwYWNpbmc9IjQiCiAgICBzdHlsZT0idGV4dC1zaGFkb3c6IDAgMCAxMHB4ICMwMDM1OTQiPlNFTlBBSTwvdGV4dD4KCiAgPCEtLSBDSiB0ZXh0IGluc2lkZSBzdGFyIC0tPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjI1IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTIiIGZpbGw9IiNGRkZGRkYiCiAgICB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iOTAwIiBvcGFjaXR5PSIwLjk1Ij5DSjwvdGV4dD4KCiAgPCEtLSBDb3JuZXIgYWNjZW50IGRvdHMgLS0+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNiIgZmlsbD0iIzAwMzU5NCIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzQwIiBjeT0iNjAiIHI9IjYiIGZpbGw9IiMwMDM1OTQiIG9wYWNpdHk9IjAuNyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iMzQwIiByPSI0IiBmaWxsPSIjODY5Mzk3IiBvcGFjaXR5PSIwLjUiLz4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSIzNDAiIHI9IjQiIGZpbGw9IiM4NjkzOTciIG9wYWNpdHk9IjAuNSIvPgo8L3N2Zz4K" alt="SenpaiCJCollects">
+      <div class="hero-badge">★</div>
+    </div>
+    <div class="hero-info">
+      <div class="wordmark">SENPAI<span class="accent">CJ</span>COLLECTS</div>
+      <div class="hero-sub">@senpaicjcollects_0 — TikTok Live — Custom Overlay Pack</div>
+      <a class="mint-badge" href="https://mintoverlays.com"><div class="mint-dot"></div>Mint Overlays — Private Client</a>
+    </div>
+  </div>
+
+  <!-- WIDGETS -->
+  <div class="section-title">Your Widgets</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-icon">▬</div>
+      <div class="card-name">Stream Header</div>
+      <div class="card-size">1080 × 160 px</div>
+      <div class="card-desc">Cowboys-themed wordmark, avatar, LIVE pill, live viewer count.</div>
+      <div class="url-row"><span class="card-url" id="url-header">/senpaicjcollects0-v8n4/widget-header.html</span><button class="copy-btn" onclick="copyUrl('url-header',this)">Copy</button></div>
+      <a class="card-btn" href="widget-header.html" target="_blank">Preview</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">▲</div>
+      <div class="card-name">Top Gifters</div>
+      <div class="card-size">344 × 340 px</div>
+      <div class="card-desc">Gifters / Likers / Follows tabs with podium styling. Live data only.</div>
+      <div class="url-row"><span class="card-url" id="url-gifters">/senpaicjcollects0-v8n4/widget-top-gifters.html</span><button class="copy-btn" onclick="copyUrl('url-gifters',this)">Copy</button></div>
+      <a class="card-btn" href="widget-top-gifters.html" target="_blank">Preview</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">■</div>
+      <div class="card-name">Gift Alert</div>
+      <div class="card-size">620 × 130 px</div>
+      <div class="card-desc">Type-badge popup for gifts, follows, and joins. No demo data.</div>
+      <div class="url-row"><span class="card-url" id="url-alert">/senpaicjcollects0-v8n4/widget-alert.html</span><button class="copy-btn" onclick="copyUrl('url-alert',this)">Copy</button></div>
+      <a class="card-btn" href="widget-alert.html" target="_blank">Preview</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">◆</div>
+      <div class="card-name">Like-O-Meter</div>
+      <div class="card-size">460 × 130 px</div>
+      <div class="card-desc">Wrestling title ranks: Rookie → Contender → World Champ → Legend.</div>
+      <div class="url-row"><span class="card-url" id="url-likemeter">/senpaicjcollects0-v8n4/widget-likemeter.html</span><button class="copy-btn" onclick="copyUrl('url-likemeter',this)">Copy</button></div>
+      <a class="card-btn" href="widget-likemeter.html" target="_blank">Preview</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">◉</div>
+      <div class="card-name">Join Alert</div>
+      <div class="card-size">420 × 100 px</div>
+      <div class="card-desc">"Now Entering the Arena" — slides in with avatar and username on join.</div>
+      <div class="url-row"><span class="card-url" id="url-join">/senpaicjcollects0-v8n4/widget-join-alert.html</span><button class="copy-btn" onclick="copyUrl('url-join',this)">Copy</button></div>
+      <a class="card-btn" href="widget-join-alert.html" target="_blank">Preview</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">≡</div>
+      <div class="card-name">Event Ticker</div>
+      <div class="card-size">1080 × 64 px</div>
+      <div class="card-desc">Live feed with GIFT / FOLLOW / JOINED type tags. Starts empty.</div>
+      <div class="url-row"><span class="card-url" id="url-ticker">/senpaicjcollects0-v8n4/widget-ticker.html</span><button class="copy-btn" onclick="copyUrl('url-ticker',this)">Copy</button></div>
+      <a class="card-btn" href="widget-ticker.html" target="_blank">Preview</a>
+    </div>
+
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="instructions">
+    <div class="instr-header">
+      <h3>Setup Instructions</h3>
+      <div class="toggle-btns">
+        <button class="toggle-btn active" id="btn-tiktok" onclick="showInstr('tiktok')">TikTok Live Studio</button>
+        <button class="toggle-btn" id="btn-obs" onclick="showInstr('obs')">OBS / Streamlabs</button>
+      </div>
+    </div>
+    <div id="steps-tiktok">
+      <div class="step"><div class="step-num">1</div><div class="step-text">In TikTok Live Studio, click <strong>Add Source</strong> and choose <strong>Link</strong></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget card above, paste the full URL into the Link field</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size shown on the card</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Position on your scene — Header top, Alert center, Ticker bottom. All widgets are transparent</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Resize by dragging corners to fit your layout</div></div>
+    </div>
+    <div id="steps-obs" style="display:none">
+      <div class="step"><div class="step-num">1</div><div class="step-text">In OBS or Streamlabs, click <strong>+</strong> in Sources and choose <strong>Browser</strong></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget above and paste into the URL field</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> exactly as shown on each widget card</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Check <strong>Shutdown source when not visible</strong> and <strong>Refresh browser when scene becomes active</strong></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Layer widgets over your scenes — Header top, Alert center, Ticker bottom</div></div>
+    </div>
+  </div>
+
+  <footer>Private Pack — Mint Overlays x <a href="https://mintoverlays.com">mintoverlays.com</a></footer>
+</div>
+
+<script>
+const BASE="https://mintoverlays.com";
+const SESSION="senpaicjcollects0-v8n4";
+document.querySelectorAll(".card-url").forEach(el=>{el.textContent=BASE+el.textContent;});
+
+let connected=false;
+function setStatus(state,msg){const p=document.getElementById("status-pill");p.className="status-pill "+state;document.getElementById("status-text").textContent=msg;}
+function handleConnect(){connected?disconnect():connect();}
+async function connect(){
+  const u=document.getElementById("username-input").value.trim().replace("@","");
+  if(!u){document.getElementById("username-input").focus();return;}
+  setStatus("connecting","Connecting...");
+  const btn=document.getElementById("connect-btn");
+  btn.textContent="Connecting...";btn.disabled=true;document.getElementById("username-input").disabled=true;
+  try{
+    const r=await fetch("/api/"+SESSION+"/connect",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u})});
+    if(r.ok){connected=true;setStatus("connected","@"+u+" — LIVE");btn.textContent="Disconnect";btn.className="connect-btn disconnect";btn.disabled=false;}
+    else throw new Error();
+  }catch(e){setStatus("error","Connection failed — try again");btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;document.getElementById("username-input").disabled=false;}
+}
+async function disconnect(){
+  try{await fetch("/api/"+SESSION+"/reset",{method:"POST"});}catch(e){}
+  connected=false;setStatus("disconnected","Not connected");
+  const btn=document.getElementById("connect-btn");
+  btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;
+  document.getElementById("username-input").disabled=false;document.getElementById("username-input").value="";
+}
+document.getElementById("username-input").addEventListener("keydown",e=>{if(e.key==="Enter")handleConnect();});
+function copyUrl(id,btn){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{btn.textContent="Copied";btn.classList.add("copied");setTimeout(()=>{btn.textContent="Copy";btn.classList.remove("copied");},2000);});}
+function showInstr(type){document.getElementById("steps-tiktok").style.display=type==="tiktok"?"":"none";document.getElementById("steps-obs").style.display=type==="obs"?"":"none";document.getElementById("btn-tiktok").classList.toggle("active",type==="tiktok");document.getElementById("btn-obs").classList.toggle("active",type==="obs");}
+</script>
+</body>
+</html>
