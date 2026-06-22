@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#8B00FF;--purple-mid:#6600CC;--purple-deep:#3D0080;--purple-glow:#B44FFF;--purple-light:#CC88FF;
+  --ink:#050008;--ink-2:#0A0012;
+  --text:#FFFFFF;--text-dim:#D4B8FF;--text-muted:#7744AA;
+  --panel:rgba(10,0,18,.92);--panel-line:rgba(139,0,255,.5);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:460px;height:130px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+.meter{
+  width:460px;height:130px;background:var(--panel);border:1.5px solid var(--panel-line);
+  border-radius:12px;padding:14px 20px;
+  box-shadow:0 8px 28px rgba(0,0,0,.7),0 0 20px rgba(139,0,255,.12);
+  display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+}
+.meter::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--ink),var(--purple-deep) 30%,var(--purple) 50%,var(--purple-deep) 70%,var(--ink));
+  box-shadow:0 0 10px rgba(139,0,255,.7);}
+/* Lightning eye glow accent */
+.meter::after{content:"";position:absolute;right:16px;top:50%;transform:translateY(-50%);width:60px;height:40px;
+  background:radial-gradient(ellipse,rgba(139,0,255,.12) 0%,transparent 70%);pointer-events:none;}
+.top-row{display:flex;align-items:center;justify-content:space-between;}
+.title{font-family:var(--font-cond);font-weight:800;font-size:16px;letter-spacing:3px;color:var(--purple-light);text-transform:uppercase;}
+.like-count{font-family:var(--font-display);font-size:28px;color:var(--text);display:flex;align-items:baseline;gap:6px;text-shadow:0 0 20px rgba(139,0,255,.5);}
+.like-label{font-family:var(--font-cond);font-size:12px;color:var(--text-muted);letter-spacing:2px;}
+.bar-wrap{display:flex;flex-direction:column;gap:5px;}
+.bar-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);}
+.bar-meta .power{color:var(--purple-glow);font-weight:800;font-family:var(--font-cond);letter-spacing:2px;font-size:13px;text-shadow:0 0 8px rgba(139,0,255,.6);}
+.bar-bg{height:20px;border-radius:4px;background:rgba(5,0,8,.9);overflow:hidden;border:1px solid rgba(139,0,255,.25);position:relative;}
+.bar-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--purple-deep) 0%,var(--purple) 50%,var(--purple-glow) 100%);
+  box-shadow:0 0 16px rgba(139,0,255,.6);
+  transition:width .8s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden;
+}
+.bar-fill::after{content:"";position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s ease-in-out infinite;}
+.bar-gloss{position:absolute;inset:0;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none;}
+.bar-marks{position:absolute;inset:0;display:flex;}
+.bar-mark{flex:1;border-right:1px solid rgba(0,0,0,.3);}
+@keyframes shimmer{to{left:200%;}}
+.milestone{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-family:var(--font-cond);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;color:var(--purple-glow);opacity:0;transition:opacity .4s;text-shadow:0 0 10px rgba(139,0,255,.7);}
+.milestone.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="meter">
+  <div class="top-row">
+    <div class="title">❤️ LIKE-O-METER</div>
+    <div class="like-count"><span id="like-num">8,500</span><span class="like-label">LIKES</span></div>
+  </div>
+  <div class="bar-wrap">
+    <div class="bar-meta">
+      <span id="next-label">1,500 to next rank</span>
+      <span class="power" id="power">PHANTOM</span>
+    </div>
+    <div class="bar-bg">
+      <div class="bar-fill" id="bar" style="width:85%"></div>
+      <div class="bar-gloss"></div>
+      <div class="bar-marks"><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div></div>
+    </div>
+  </div>
+  <div class="milestone" id="milestone"></div>
+</div>
+<script>
+const SESSION="bnthcalm615-p2x9";
+const T=[1000,2500,5000,10000,20000,40000,75000];
+const PWR=["RECRUIT","LURKER","OPERATOR","SPECTER","PHANTOM","GHOST","REAPER","SHADOW ELITE"];
+const MS=["","1K — LURKER!","2.5K — OPERATOR!","5K — SPECTER!","10K — PHANTOM!","20K — GHOST!","40K — REAPER!","75K — SHADOW ELITE!!"];
+let likes=parseInt(new URLSearchParams(location.search).get("likes"))||8500;
+let lastLv=-1;
+function update(n){
+  likes=Math.max(0,n);document.getElementById("like-num").textContent=likes.toLocaleString();
+  let lv=0;for(let i=0;i<7;i++){if(likes>=T[i])lv=i+1;}
+  const prev=lv===0?0:T[lv-1],next=lv<7?T[lv]:T[6];
+  const pct=lv<7?((likes-prev)/(next-prev))*100:100;
+  document.getElementById("bar").style.width=Math.min(pct,100)+"%";
+  document.getElementById("next-label").textContent=lv<7?(next-likes).toLocaleString()+" to next rank":"SHADOW ELITE — MAX RANK";
+  document.getElementById("power").textContent=PWR[lv];
+  if(lv>lastLv&&lv>0){lastLv=lv;const m=document.getElementById("milestone");m.textContent=MS[lv];m.classList.add("show");setTimeout(()=>m.classList.remove("show"),3500);}
+}
+update(likes);
+const es=new EventSource("/events/"+SESSION);
+es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="likeMeter")update(d.total||0);};
+</script>
+</body>
+</html>
