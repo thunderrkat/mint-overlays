@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C;
+  --tiktok-pink:#FE2C55; --tiktok-cyan:#25F4EE;
+  --ink:#06010f; --ink-2:#0d0322; --ink-3:#1a0742;
+  --text:#F5F2FF; --text-dim:#C9AEFF; --text-muted:#8f7bbf;
+  --panel:rgba(16,5,38,.88); --panel-line:rgba(155,91,255,.42);
+  --font-display:'Anton',sans-serif; --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:620px; height:130px; background:transparent; overflow:hidden; font-family:var(--font-body); }
+
+.tts-wrap { width:620px; height:130px; display:flex; align-items:center; }
+
+.tts-frame {
+  position:relative; border-radius:16px; padding:3px; width:100%;
+  background:linear-gradient(120deg, var(--purple-deep), var(--purple), var(--tiktok-cyan));
+  box-shadow:0 10px 36px rgba(108,40,217,.5), 0 0 30px rgba(37,244,238,.15);
+  opacity:0; transform:scale(.86) translateY(12px);
+  transition:opacity .4s ease, transform .4s cubic-bezier(.2,1.1,.3,1);
+}
+.tts-frame.show { opacity:1; transform:scale(1) translateY(0); }
+.tts-frame.hide { opacity:0; transform:scale(.88) translateY(-10px); transition:opacity .3s ease-in, transform .3s ease-in; }
+
+.tts-body {
+  border-radius:14px; background:linear-gradient(160deg,var(--ink-3),var(--ink-2));
+  padding:16px 20px; display:flex; align-items:center; gap:16px; height:100%;
+}
+
+/* Animated sound wave icon */
+.tts-icon {
+  flex-shrink:0; width:64px; height:64px; border-radius:14px;
+  background:linear-gradient(135deg, var(--purple-deep), var(--purple));
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  box-shadow:0 0 20px rgba(155,91,255,.5);
+}
+.tts-icon .bar {
+  width:5px; border-radius:3px; background:var(--tiktok-cyan);
+  animation:wave-bar 1.2s ease-in-out infinite;
+}
+.tts-icon .bar:nth-child(1) { height:16px; animation-delay:0s; }
+.tts-icon .bar:nth-child(2) { height:28px; animation-delay:.15s; }
+.tts-icon .bar:nth-child(3) { height:38px; animation-delay:.3s; }
+.tts-icon .bar:nth-child(4) { height:28px; animation-delay:.45s; }
+.tts-icon .bar:nth-child(5) { height:16px; animation-delay:.6s; }
+@keyframes wave-bar {
+  0%,100% { transform:scaleY(.4); opacity:.5; }
+  50% { transform:scaleY(1); opacity:1; }
+}
+
+.tts-content { flex:1; min-width:0; }
+.tts-label {
+  font-family:var(--font-cond); font-size:12px; font-weight:800;
+  letter-spacing:3px; text-transform:uppercase; color:var(--tiktok-cyan);
+  margin-bottom:4px;
+}
+.tts-user {
+  font-family:var(--font-display); font-size:20px; color:var(--gold);
+  text-shadow:0 0 12px rgba(244,182,60,.5); margin-bottom:3px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.tts-message {
+  font-size:17px; font-weight:600; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  line-height:1.3;
+}
+
+.tts-queue {
+  flex-shrink:0; text-align:center;
+  font-family:var(--font-cond); font-size:12px; color:var(--text-muted);
+  letter-spacing:1px;
+}
+.tts-queue .q-num {
+  font-family:var(--font-display); font-size:26px; color:var(--purple);
+  display:block; line-height:1;
+}
+</style>
+</head>
+<body>
+<div class="tts-wrap">
+  <div class="tts-frame" id="frame">
+    <div class="tts-body">
+      <div class="tts-icon">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div>
+      </div>
+      <div class="tts-content">
+        <div class="tts-label">💬 TTS — Now Reading</div>
+        <div class="tts-user" id="tts-user">@username</div>
+        <div class="tts-message" id="tts-msg">message appears here</div>
+      </div>
+      <div class="tts-queue">
+        <span class="q-num" id="q-num">0</span>
+        IN QUEUE
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION = 'jared-hoover3-x9q2';
+const frame = document.getElementById('frame');
+const p = new URLSearchParams(location.search);
+
+// Settings (configurable via URL params)
+const SETTINGS = {
+  rate:       parseFloat(p.get('rate'))    || 1.0,
+  pitch:      parseFloat(p.get('pitch'))   || 1.0,
+  volume:     parseFloat(p.get('volume'))  || 1.0,
+  voiceIndex: parseInt(p.get('voice'))     || 0,
+  minCoins:   parseInt(p.get('mincoins'))  || 0,    // min gifter coins to get TTS
+  prefix:     p.get('prefix') || '',                // optional prefix like "chat says"
+  showWidget: p.get('show') !== 'false',
+};
+
+let queue = [];
+let speaking = false;
+let voices = [];
+
+// Load voices
+function loadVoices() {
+  voices = speechSynthesis.getVoices();
+}
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function updateQueue() {
+  document.getElementById('q-num').textContent = Math.max(0, queue.length - 1);
+}
+
+function speak(item) {
+  const utt = new SpeechSynthesisUtterance();
+  const text = SETTINGS.prefix
+    ? `${item.user} says: ${item.msg}`
+    : item.msg;
+
+  utt.text = text;
+  utt.rate = SETTINGS.rate;
+  utt.pitch = SETTINGS.pitch;
+  utt.volume = SETTINGS.volume;
+
+  if (voices.length > 0 && voices[SETTINGS.voiceIndex]) {
+    utt.voice = voices[SETTINGS.voiceIndex];
+  }
+
+  // Show widget
+  if (SETTINGS.showWidget) {
+    document.getElementById('tts-user').textContent = '@' + item.user;
+    document.getElementById('tts-msg').textContent = item.msg;
+    frame.classList.remove('hide');
+    frame.classList.add('show');
+  }
+
+  utt.onend = () => {
+    speaking = false;
+    queue.shift();
+    updateQueue();
+    if (SETTINGS.showWidget) {
+      frame.classList.remove('show');
+      frame.classList.add('hide');
+    }
+    setTimeout(next, 600);
+  };
+  utt.onerror = () => { speaking = false; queue.shift(); updateQueue(); setTimeout(next, 300); };
+
+  speaking = true;
+  speechSynthesis.speak(utt);
+}
+
+function next() {
+  if (queue.length === 0 || speaking) return;
+  speak(queue[0]);
+  updateQueue();
+}
+
+function push(item) {
+  queue.push(item);
+  updateQueue();
+  if (!speaking) next();
+}
+
+// SSE — listen for chat/comment events
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+
+  // TikTok Live sends chat as type:'chat' with d.comment and d.nickname
+  if (d.type === 'chat' && d.comment) {
+    const msg = d.comment.trim();
+    if (!msg) return;
+    // Optional: filter by gifts (minCoins) — skip if below threshold
+    push({ user: d.nickname || 'viewer', msg });
+  }
+};
+
+// Keep speech synth alive (Chrome pauses after 15s)
+setInterval(() => {
+  if (!speaking && queue.length === 0) {
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    speechSynthesis.speak(u);
+  }
+}, 10000);
+</script>
+</body>
+</html>

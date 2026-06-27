@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIP Sound Board — Jared.Hoover3</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;500;600;700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#9B5BFF; --purple-deep:#6C28D9; --gold:#F4B63C; --orange:#F0760F;
+  --tiktok-pink:#FE2C55; --tiktok-cyan:#25F4EE;
+  --ink:#06010f; --ink-2:#0d0322; --ink-3:#1a0742;
+  --text:#F5F2FF; --text-dim:#C9AEFF; --text-muted:#8f7bbf;
+  --panel:rgba(16,5,38,.88); --panel-line:rgba(155,91,255,.42);
+  --font-display:'Anton',sans-serif; --font-cond:'Saira Condensed',sans-serif; --font-body:'Outfit',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:radial-gradient(120% 80% at 50% 0%, #1c0640 0%, var(--ink-2) 45%, var(--ink) 100%);
+  color:var(--text); font-family:var(--font-body); min-height:100vh;
+}
+.page { max-width:860px; margin:0 auto; padding:40px 24px 60px; }
+
+/* Header */
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:12px; }
+.page-title { font-family:var(--font-display); font-size:36px; color:var(--text); }
+.page-title span { color:var(--purple); }
+.back-btn {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(155,91,255,.15); border:1px solid var(--panel-line);
+  border-radius:8px; padding:8px 16px; color:var(--text-dim);
+  text-decoration:none; font-size:14px; font-weight:700;
+  font-family:var(--font-cond); letter-spacing:1px; text-transform:uppercase;
+  transition:all .2s;
+}
+.back-btn:hover { background:rgba(155,91,255,.3); color:var(--text); }
+
+/* Add VIP form */
+.add-card {
+  background:var(--panel); border:1.5px solid var(--panel-line);
+  border-radius:18px; padding:24px 28px; margin-bottom:28px;
+  position:relative; overflow:hidden;
+}
+.add-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--purple), var(--gold), var(--tiktok-pink));
+}
+.add-card h2 { font-family:var(--font-cond); font-size:16px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+
+.form-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; flex:1; min-width:180px; }
+.form-group label { font-family:var(--font-cond); font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); }
+.form-group input, .form-group select {
+  background:rgba(6,1,15,.7); border:1.5px solid rgba(155,91,255,.35);
+  border-radius:8px; padding:10px 14px; color:var(--text);
+  font-size:15px; font-weight:600; font-family:var(--font-body);
+  outline:none; transition:border-color .2s; width:100%;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color:var(--purple); box-shadow:0 0 0 3px rgba(155,91,255,.12);
+}
+.form-group input::placeholder { color:var(--text-muted); font-weight:400; }
+.form-group select option { background:var(--ink-2); }
+
+/* File upload area */
+.upload-area {
+  border:2px dashed rgba(155,91,255,.35); border-radius:10px;
+  padding:20px; text-align:center; cursor:pointer;
+  transition:all .2s; position:relative; background:rgba(6,1,15,.4);
+}
+.upload-area:hover, .upload-area.drag-over {
+  border-color:var(--purple); background:rgba(155,91,255,.08);
+}
+.upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.upload-area .upload-icon { font-size:28px; margin-bottom:6px; }
+.upload-area .upload-text { font-size:14px; color:var(--text-muted); }
+.upload-area .upload-text strong { color:var(--purple); }
+.upload-area .file-name { font-size:13px; color:var(--gold); margin-top:6px; font-weight:600; }
+
+.btn-primary {
+  background:linear-gradient(135deg, var(--purple-deep), var(--purple));
+  border:none; border-radius:10px; padding:12px 28px;
+  color:#fff; font-size:14px; font-weight:800; font-family:var(--font-cond);
+  letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;
+  transition:all .2s; box-shadow:0 4px 18px rgba(155,91,255,.35);
+}
+.btn-primary:hover { background:linear-gradient(135deg, var(--purple), #B07BFF); transform:translateY(-1px); }
+.btn-primary:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+/* Section title */
+.section-title {
+  font-family:var(--font-cond); font-size:13px; letter-spacing:3px;
+  color:var(--purple); text-transform:uppercase; margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:var(--panel-line); }
+.section-title .count {
+  background:rgba(155,91,255,.2); color:var(--text-dim);
+  font-size:12px; padding:2px 8px; border-radius:10px;
+}
+
+/* VIP list */
+.vip-list { display:flex; flex-direction:column; gap:10px; }
+
+.vip-card {
+  background:var(--panel); border:1.5px solid var(--panel-line);
+  border-radius:14px; padding:16px 20px;
+  display:flex; align-items:center; gap:14px;
+  transition:border-color .2s;
+}
+.vip-card:hover { border-color:var(--purple); }
+.vip-card.playing { border-color:var(--tiktok-cyan); box-shadow:0 0 20px rgba(37,244,238,.2); }
+
+.vip-num {
+  font-family:var(--font-display); font-size:20px; color:var(--purple);
+  width:28px; text-align:center; flex-shrink:0;
+}
+.vip-avatar {
+  width:44px; height:44px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg, var(--purple-deep), var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:20px; color:#fff;
+  border:2px solid rgba(155,91,255,.4);
+}
+.vip-info { flex:1; min-width:0; }
+.vip-username {
+  font-family:var(--font-display); font-size:18px; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:3px;
+}
+.vip-sound-name { font-size:13px; color:var(--text-muted); font-weight:600; }
+.vip-sound-name .sound-icon { color:var(--tiktok-cyan); margin-right:4px; }
+
+/* Inline edit */
+.vip-username-edit {
+  font-family:var(--font-display); font-size:18px;
+  background:rgba(6,1,15,.7); border:1.5px solid var(--purple);
+  border-radius:6px; padding:4px 10px; color:var(--text);
+  width:100%; outline:none; display:none;
+}
+
+.vip-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.vip-btn {
+  background:rgba(155,91,255,.15); border:1px solid rgba(155,91,255,.3);
+  border-radius:7px; padding:7px 12px; font-size:12px; font-weight:800;
+  font-family:var(--font-cond); letter-spacing:1px; text-transform:uppercase;
+  color:var(--text-dim); cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.vip-btn:hover { background:rgba(155,91,255,.3); color:var(--text); }
+.vip-btn.preview { border-color:rgba(37,244,238,.4); color:var(--tiktok-cyan); }
+.vip-btn.preview:hover { background:rgba(37,244,238,.15); }
+.vip-btn.preview.playing { background:rgba(37,244,238,.2); animation:pulse-btn .8s ease-in-out infinite; }
+.vip-btn.rename { border-color:rgba(244,182,60,.35); color:var(--gold); }
+.vip-btn.rename:hover { background:rgba(244,182,60,.15); }
+.vip-btn.delete { border-color:rgba(254,44,85,.35); color:var(--tiktok-pink); }
+.vip-btn.delete:hover { background:rgba(254,44,85,.15); }
+
+@keyframes pulse-btn { 0%,100%{opacity:1;} 50%{opacity:.6;} }
+
+/* Drag handle */
+.drag-handle {
+  cursor:grab; color:var(--text-muted); font-size:18px; flex-shrink:0;
+  opacity:.5; transition:opacity .2s;
+}
+.drag-handle:hover { opacity:1; }
+.vip-card.dragging { opacity:.4; border-style:dashed; }
+
+/* Empty state */
+.empty-state {
+  text-align:center; padding:48px 20px;
+  background:var(--panel); border:1.5px dashed var(--panel-line); border-radius:18px;
+}
+.empty-state .e-icon { font-size:48px; margin-bottom:12px; opacity:.5; }
+.empty-state .e-title { font-family:var(--font-cond); font-size:16px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+.empty-state .e-sub { font-size:14px; color:rgba(155,91,255,.5); }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:rgba(16,5,38,.95); border:1px solid var(--panel-line);
+  border-radius:10px; padding:10px 20px; font-size:14px; font-weight:600;
+  color:var(--text); opacity:0; transition:all .3s; pointer-events:none; z-index:100;
+  white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.success { border-color:rgba(37,244,238,.5); color:var(--tiktok-cyan); }
+.toast.error { border-color:rgba(254,44,85,.5); color:var(--tiktok-pink); }
+
+@keyframes pulse { 0%,100%{opacity:1;}50%{opacity:.4;} }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title">VIP <span>Sound Board</span></div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px;font-family:var(--font-cond);letter-spacing:1px;">JARED.HOOVER3 · Saved locally in your browser</div>
+    </div>
+    <a class="back-btn" href="index.html">← Back to Hub</a>
+  </div>
+
+  <!-- Add VIP form -->
+  <div class="add-card">
+    <h2>➕ Add VIP</h2>
+    <div class="form-row">
+      <div class="form-group" style="max-width:260px;">
+        <label>TikTok Username</label>
+        <input type="text" id="add-username" placeholder="@username" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label>Sound File (MP3 / WAV / OGG)</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="add-file" accept=".mp3,.wav,.ogg,audio/*">
+          <div class="upload-icon">🎵</div>
+          <div class="upload-text">Drop a file or <strong>click to browse</strong></div>
+          <div class="file-name" id="file-name" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="add-btn" onclick="addVip()">Add to VIP List</button>
+  </div>
+
+  <!-- VIP list -->
+  <div class="section-title">
+    🎖 VIP List
+    <span class="count" id="count-badge">0 VIPs</span>
+  </div>
+  <div class="vip-list" id="vip-list">
+    <div class="empty-state">
+      <div class="e-icon">🎵</div>
+      <div class="e-title">No VIPs yet</div>
+      <div class="e-sub">Add a username and sound above to get started</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'jared_vip_sounds_v2';
+
+// VIP list: [{ id, username, soundName, soundData (base64), added }]
+let vips = [];
+let currentAudio = null;
+let dragSrc = null;
+
+// ── STORAGE ──────────────────────────────────────────────────
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(vips));
+  } catch(e) {
+    // Storage full — warn user
+    showToast('Storage almost full! Consider removing unused VIPs.', 'error');
+  }
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) vips = JSON.parse(raw);
+  } catch(e) { vips = []; }
+  render();
+}
+
+// ── FILE INPUT ────────────────────────────────────────────────
+const fileInput = document.getElementById('add-file');
+const fileName  = document.getElementById('file-name');
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) {
+    fileName.textContent = '✓ ' + fileInput.files[0].name;
+    fileName.style.display = 'block';
+  }
+});
+
+// Drag-over styling
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', () => uploadArea.classList.remove('drag-over'));
+
+// ── ADD VIP ───────────────────────────────────────────────────
+async function addVip() {
+  const usernameRaw = document.getElementById('add-username').value.trim();
+  const file = fileInput.files[0];
+
+  if (!usernameRaw) { showToast('Enter a TikTok username', 'error'); return; }
+  if (!file)         { showToast('Choose a sound file', 'error'); return; }
+
+  const username = usernameRaw.replace(/^@/, '').toLowerCase();
+
+  // Check duplicate
+  if (vips.find(v => v.username.toLowerCase() === username)) {
+    showToast(`@${username} is already in the list`, 'error'); return;
+  }
+
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  try {
+    const soundData = await fileToBase64(file);
+    const vip = {
+      id: Date.now().toString(),
+      username,
+      soundName: file.name,
+      soundData,
+      added: new Date().toLocaleDateString(),
+    };
+    vips.push(vip);
+    save();
+    render();
+
+    // Reset form
+    document.getElementById('add-username').value = '';
+    fileInput.value = '';
+    fileName.style.display = 'none';
+    showToast(`@${username} added to VIP list ✓`, 'success');
+  } catch(e) {
+    showToast('Failed to save sound — file may be too large', 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Add to VIP List';
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── PREVIEW SOUND ─────────────────────────────────────────────
+function previewSound(id) {
+  const vip = vips.find(v => v.id === id);
+  if (!vip) return;
+
+  // Stop current
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+    document.querySelectorAll('.vip-btn.preview').forEach(b => b.classList.remove('playing'));
+    document.querySelectorAll('.vip-card').forEach(c => c.classList.remove('playing'));
+  }
+
+  const btn = document.querySelector(`[data-preview="${id}"]`);
+  const card = document.querySelector(`[data-id="${id}"]`);
+
+  const audio = new Audio(vip.soundData);
+  currentAudio = audio;
+  btn.classList.add('playing');
+  btn.textContent = '⏹ Stop';
+  card.classList.add('playing');
+
+  audio.play().catch(() => showToast('Could not play sound', 'error'));
+  audio.onended = () => {
+    btn.classList.remove('playing');
+    btn.textContent = '▶ Preview';
+    card.classList.remove('playing');
+    currentAudio = null;
+  };
+
+  // Click again to stop
+  btn.onclick = () => {
+    if (currentAudio === audio) {
+      audio.pause();
+      btn.classList.remove('playing');
+      btn.textContent = '▶ Preview';
+      card.classList.remove('playing');
+      currentAudio = null;
+      btn.onclick = () => previewSound(id);
+    }
+  };
+}
+
+// ── RENAME ────────────────────────────────────────────────────
+function startRename(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  const nameEl = card.querySelector('.vip-username');
+  const editEl = card.querySelector('.vip-username-edit');
+  const renameBtn = card.querySelector('.vip-btn.rename');
+
+  nameEl.style.display = 'none';
+  editEl.style.display = 'block';
+  editEl.value = nameEl.textContent.replace('@','');
+  editEl.focus();
+  editEl.select();
+  renameBtn.textContent = 'Save';
+  renameBtn.onclick = () => saveRename(id);
+  editEl.onkeydown = e => { if(e.key==='Enter') saveRename(id); if(e.key==='Escape') cancelRename(id); };
+}
+
+function saveRename(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  const editEl = card.querySelector('.vip-username-edit');
+  const newName = editEl.value.trim().replace(/^@/,'').toLowerCase();
+  if (!newName) { showToast('Username cannot be empty', 'error'); return; }
+
+  const vip = vips.find(v => v.id === id);
+  if (vip) { vip.username = newName; save(); render(); showToast(`Renamed to @${newName}`, 'success'); }
+}
+
+function cancelRename(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  const nameEl = card.querySelector('.vip-username');
+  const editEl = card.querySelector('.vip-username-edit');
+  const renameBtn = card.querySelector('.vip-btn.rename');
+  nameEl.style.display = '';
+  editEl.style.display = 'none';
+  renameBtn.textContent = '✏ Rename';
+  renameBtn.onclick = () => startRename(id);
+}
+
+// ── DELETE ────────────────────────────────────────────────────
+function deleteVip(id) {
+  const vip = vips.find(v => v.id === id);
+  if (!vip) return;
+  if (!confirm(`Remove @${vip.username} from VIP list?`)) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  vips = vips.filter(v => v.id !== id);
+  save();
+  render();
+  showToast(`@${vip.username} removed`, 'success');
+}
+
+// ── DRAG TO REORDER ───────────────────────────────────────────
+function initDrag() {
+  document.querySelectorAll('.vip-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      dragSrc = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      dragSrc = null;
+    });
+    card.addEventListener('dragover', e => {
+      e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    });
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      if (dragSrc && dragSrc !== card) {
+        const allCards = [...document.querySelectorAll('.vip-card')];
+        const fromIdx = allCards.indexOf(dragSrc);
+        const toIdx   = allCards.indexOf(card);
+        const [moved] = vips.splice(fromIdx, 1);
+        vips.splice(toIdx, 0, moved);
+        save(); render();
+      }
+    });
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────
+function render() {
+  const list = document.getElementById('vip-list');
+  document.getElementById('count-badge').textContent = `${vips.length} VIP${vips.length !== 1 ? 's' : ''}`;
+
+  if (vips.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="e-icon">🎵</div>
+      <div class="e-title">No VIPs yet</div>
+      <div class="e-sub">Add a username and sound above to get started</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = vips.map((v, i) => `
+    <div class="vip-card" data-id="${v.id}" draggable="true">
+      <div class="drag-handle" title="Drag to reorder">⠿</div>
+      <div class="vip-num">${i + 1}</div>
+      <div class="vip-avatar">${v.username.charAt(0).toUpperCase()}</div>
+      <div class="vip-info">
+        <div class="vip-username">@${v.username}</div>
+        <input class="vip-username-edit">
+        <div class="vip-sound-name"><span class="sound-icon">🎵</span>${v.soundName} · Added ${v.added}</div>
+      </div>
+      <div class="vip-actions">
+        <button class="vip-btn preview" data-preview="${v.id}" onclick="previewSound('${v.id}')">▶ Preview</button>
+        <button class="vip-btn rename" onclick="startRename('${v.id}')">✏ Rename</button>
+        <button class="vip-btn delete" onclick="deleteVip('${v.id}')">✕ Delete</button>
+      </div>
+    </div>
+  `).join('');
+
+  initDrag();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+load();
+
+// Enter key on username field
+document.getElementById('add-username').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('add-file').click();
+});
+</script>
+</body>
+</html>

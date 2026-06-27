@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+/* Invisible overlay widget — just plays sounds */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1px; height:1px; background:transparent; overflow:hidden; }
+</style>
+</head>
+<body>
+<script>
+const SESSION = 'jared-hoover3-x9q2';
+const STORAGE_KEY = 'jared_vip_sounds_v2';
+
+let vips = [];
+let queue = [];
+let playing = false;
+let currentAudio = null;
+
+function loadVips() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) vips = JSON.parse(raw);
+  } catch(e) { vips = []; }
+}
+
+function findVip(username) {
+  if (!username) return null;
+  const u = username.toLowerCase().replace(/^@/, '');
+  return vips.find(v => v.username.toLowerCase() === u) || null;
+}
+
+function playSound(vip) {
+  queue.push(vip);
+  if (!playing) nextSound();
+}
+
+function nextSound() {
+  if (queue.length === 0) { playing = false; return; }
+  playing = true;
+  const vip = queue.shift();
+  try {
+    const audio = new Audio(vip.soundData);
+    currentAudio = audio;
+    audio.play().catch(() => { playing = false; nextSound(); });
+    audio.onended = () => { playing = false; nextSound(); };
+    audio.onerror = () => { playing = false; nextSound(); };
+  } catch(e) { playing = false; nextSound(); }
+}
+
+// Reload VIP list every 30s in case user made changes on the management page
+loadVips();
+setInterval(loadVips, 30000);
+
+// SSE connection
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+
+  // Check joins
+  if (d.type === 'join') {
+    const vip = findVip(d.nickname || d.uniqueId);
+    if (vip) playSound(vip);
+  }
+
+  // Check chat comments too
+  if (d.type === 'chat') {
+    const vip = findVip(d.nickname || d.uniqueId);
+    if (vip) playSound(vip);
+  }
+
+  // Check new gifters from state diff
+  if (d.type === 'state' && d.gifters) {
+    d.gifters.forEach(g => {
+      const vip = findVip(g.nickname || g.id);
+      if (vip) {
+        // Only trigger once per session — check if already played
+        const key = 'vip_played_' + (g.nickname || g.id);
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, '1');
+          playSound(vip);
+        }
+      }
+    });
+  }
+};
+
+es.onerror = () => { /* silently reconnect */ };
+</script>
+</body>
+</html>
