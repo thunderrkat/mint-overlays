@@ -143,6 +143,9 @@ window.addEventListener('message', e => { if (e.data && e.data.likes !== undefin
 const _es = new EventSource('/events/jared-hoover3-x9q2');
 _es.onmessage = e => {
   const d = JSON.parse(e.data);
-  if (d.type === 'likeMeter') update(d.total || 0);
+  if (d.type === 'state' && d.likers) {
+    const total = d.likers.reduce((sum, u) => sum + (u.count || 0), 0);
+    update(total);
+  }
 };
 </script>

@@ -134,23 +134,7 @@ es.onmessage = e => {
   }
 };
 
-// Demo fallback when no live session active
-setTimeout(() => {
-  if (alertQueue.length === 0 && !showing) {
-    const demos = [
-      { icon:'🔥', iconClass:'gift-style',   typeNew:'NEW',  typeLbl:'TOP GIFT!',  who:'@bigfan_2025',  action:'sent Galaxy ×3',    amt:'+15K' },
-      { icon:'➕', iconClass:'follow-style', typeNew:'NEW',  typeLbl:'FOLLOWER!',  who:'@mike_jones',   action:'just followed',      amt:'♥'   },
-      { icon:'🔥', iconClass:'gift-style',   typeNew:'GIFT', typeLbl:'ALERT!',     who:'@kayla_x',      action:'sent 99 Roses',      amt:'+9.9K'},
-    ];
-    let di = 0;
-    function nextDemo() {
-      queueAlert(demos[di % demos.length]);
-      di++;
-      setTimeout(nextDemo, 7000);
-    }
-    nextDemo();
-  }
-}, 3000);
+
 </script>
 </body>
 </html>
