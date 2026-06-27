@@ -15,20 +15,24 @@
   --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:radial-gradient(120% 80% at 50% 0%,#041E42 0%,var(--ink-2) 45%,var(--ink) 100%);color:var(--text);font-family:var(--font-body);min-height:100vh;}
+body{
+  background:
+    repeating-linear-gradient(-45deg,rgba(0,53,148,.04) 0px,rgba(0,53,148,.04) 1px,transparent 1px,transparent 28px),
+    radial-gradient(120% 80% at 50% 0%,#041E42 0%,var(--ink-2) 45%,var(--ink) 100%);
+  color:var(--text);font-family:var(--font-body);min-height:100vh;
+}
 .page{max-width:960px;margin:0 auto;padding:48px 24px 60px;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
-@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(254,44,85,.6);}70%{box-shadow:0 0 0 12px rgba(254,44,85,0);}100%{box-shadow:0 0 0 0 rgba(254,44,85,0);}}
+@keyframes ring-spin{to{filter:hue-rotate(30deg);}}
 
 /* CONNECT BAR */
-.connect-bar{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:14px;padding:18px 26px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.connect-bar{background:linear-gradient(135deg,rgba(4,30,66,.95),rgba(4,14,34,.95));border:1.5px solid var(--panel-line);border-radius:14px;padding:18px 26px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,53,148,.15);}
 .connect-bar::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 30%,var(--steel) 50%,var(--navy) 70%,var(--navy-deep));}
 .connect-label{font-family:var(--font-cond);font-size:14px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;white-space:nowrap;}
 .input-wrap{flex:1;min-width:200px;position:relative;}
 .at{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--navy);font-weight:800;font-size:17px;pointer-events:none;}
-.username-input{width:100%;background:rgba(2,8,16,.8);border:1.5px solid rgba(0,53,148,.4);border-radius:9px;padding:11px 14px 11px 30px;color:var(--text);font-size:16px;font-weight:700;font-family:var(--font-body);outline:none;transition:border-color .2s;}
-.username-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,53,148,.15);}
+.username-input{width:100%;background:rgba(2,8,16,.8);border:1.5px solid rgba(0,53,148,.35);border-radius:9px;padding:11px 14px 11px 30px;color:var(--text);font-size:16px;font-weight:700;font-family:var(--font-body);outline:none;transition:border-color .2s;}
+.username-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,53,148,.12);}
 .username-input::placeholder{color:var(--text-muted);font-weight:400;}
 .username-input:disabled{opacity:.5;}
 .connect-btn{padding:11px 26px;border-radius:9px;font-size:14px;font-weight:800;letter-spacing:1px;cursor:pointer;border:none;font-family:var(--font-cond);transition:all .2s;white-space:nowrap;text-transform:uppercase;}
@@ -47,43 +51,57 @@ body{background:radial-gradient(120% 80% at 50% 0%,#041E42 0%,var(--ink-2) 45%,v
 .error .status-dot{background:var(--tiktok-pink);}
 
 /* HERO */
-.hero{display:flex;align-items:center;gap:26px;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:20px;padding:28px 32px;margin-bottom:44px;box-shadow:0 0 50px rgba(0,53,148,.12);position:relative;overflow:hidden;}
+.hero{display:flex;align-items:center;gap:26px;background:linear-gradient(135deg,rgba(4,30,66,.95),rgba(4,14,34,.92));border:1.5px solid var(--panel-line);border-radius:20px;padding:28px 32px;margin-bottom:44px;box-shadow:0 0 50px rgba(0,53,148,.12);position:relative;overflow:hidden;}
 .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 30%,var(--steel) 50%,var(--navy) 70%,var(--navy-deep));}
-.hero-av{position:relative;flex:none;}
+.hero::after{content:"★";position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:120px;color:rgba(0,53,148,.07);pointer-events:none;z-index:0;line-height:1;}
+.hero-av{position:relative;flex:none;z-index:1;}
 .hero-av img{width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:3px solid var(--navy);box-shadow:0 0 0 3px rgba(2,8,16,.9),0 0 24px rgba(0,53,148,.5);}
-.hero-badge{position:absolute;right:-3px;bottom:-3px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8960C);border:3px solid var(--ink-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:12px;color:var(--ink);}
-.hero-info{flex:1;}
-.wordmark{font-family:var(--font-display);font-size:44px;line-height:.92;transform:skewX(-4deg);text-shadow:0 3px 0 rgba(0,0,0,.7),0 0 24px rgba(0,53,148,.4);color:var(--white);}
-.wordmark .accent{color:var(--navy);-webkit-text-stroke:1px var(--steel);}
+.hero-badge{position:absolute;right:-3px;bottom:-3px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8960C);border:3px solid var(--ink-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:var(--ink);}
+.hero-info{flex:1;z-index:1;}
+.wordmark{font-family:var(--font-display);font-size:44px;line-height:.92;transform:skewX(-4deg);text-shadow:0 3px 0 rgba(0,0,0,.7),0 0 24px rgba(0,53,148,.4);color:var(--white,#fff);}
+.wordmark .accent{color:var(--gold);-webkit-text-stroke:1px rgba(212,175,55,.5);text-shadow:0 0 20px rgba(212,175,55,.3);}
 .hero-sub{font-size:15px;color:var(--text-dim);margin-top:8px;font-weight:500;}
 .mint-badge{display:inline-flex;align-items:center;gap:7px;margin-top:10px;background:rgba(0,53,148,.12);border:1px solid var(--panel-line);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--text-muted);letter-spacing:1px;text-decoration:none;font-family:var(--font-cond);text-transform:uppercase;transition:border-color .2s;}
 .mint-badge:hover{border-color:var(--navy);color:var(--text-dim);}
 .mint-dot{width:7px;height:7px;background:#00C060;border-radius:50%;box-shadow:0 0 5px #00C060;animation:pulse 2s infinite;}
 
 /* SECTION */
-.section-title{font-family:var(--font-cond);font-size:13px;letter-spacing:3px;color:var(--silver);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title{font-family:var(--font-cond);font-size:13px;letter-spacing:3px;color:var(--silver);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:"★";color:var(--gold);font-size:13px;}
 .section-title::after{content:"";flex:1;height:1px;background:var(--panel-line);}
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:44px;}
-.card{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:16px;padding:18px 16px;transition:all .22s ease;color:inherit;display:block;position:relative;overflow:hidden;}
+/* ── GRID: 3×2 top + 1 wide bottom ── */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.grid-bottom{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:44px;}
+
+/* CARDS */
+.card{background:linear-gradient(160deg,rgba(4,30,66,.9),rgba(4,14,34,.92));border:1.5px solid var(--panel-line);border-radius:16px;padding:20px 18px;transition:all .22s ease;color:inherit;display:block;position:relative;overflow:hidden;}
 .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--navy-deep),var(--navy) 40%,var(--steel) 100%);opacity:0;transition:opacity .22s;}
 .card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 10px 34px rgba(0,53,148,.25);}
 .card:hover::before{opacity:1;}
-.card-icon{font-size:28px;margin-bottom:10px;}
-.card-name{font-family:var(--font-cond);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--steel);margin-bottom:5px;}
-.card-size{display:inline-block;font-size:11px;color:var(--navy);letter-spacing:1.5px;background:rgba(0,53,148,.15);padding:2px 8px;border-radius:4px;margin-bottom:9px;font-family:var(--font-cond);border:1px solid rgba(0,53,148,.3);}
-.card-desc{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:12px;}
+.card-icon{font-size:34px;margin-bottom:12px;}
+.card-name{font-family:var(--font-cond);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.card-size{display:inline-block;font-size:11px;color:var(--steel);letter-spacing:1.5px;background:rgba(0,53,148,.12);padding:3px 8px;border-radius:4px;margin-bottom:10px;font-family:var(--font-cond);border:1px solid rgba(192,192,192,.2);}
+.card-desc{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:14px;}
 .url-row{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
 .card-url{font-size:11px;color:rgba(0,53,148,.7);font-family:monospace;background:rgba(0,53,148,.1);padding:4px 7px;border-radius:4px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.copy-btn{background:rgba(0,53,148,.2);border:1px solid rgba(0,53,148,.35);border-radius:5px;padding:4px 9px;font-size:11px;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:var(--font-cond);letter-spacing:1px;flex-shrink:0;text-transform:uppercase;}
+.copy-btn{background:rgba(0,53,148,.2);border:1px solid rgba(0,53,148,.35);border-radius:5px;padding:4px 9px;font-size:10px;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:var(--font-cond);letter-spacing:1px;flex-shrink:0;text-transform:uppercase;}
 .copy-btn:hover{background:rgba(0,53,148,.4);color:#fff;}
 .copy-btn.copied{background:rgba(0,160,80,.2);border-color:#00C060;color:#00C060;}
 .card-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,53,148,.2);border:1px solid rgba(0,53,148,.4);border-radius:8px;padding:9px 12px;font-size:12px;font-weight:800;color:var(--text);letter-spacing:1.5px;text-decoration:none;transition:all .2s;font-family:var(--font-cond);text-transform:uppercase;}
 .card-btn:hover{background:rgba(0,53,148,.4);border-color:var(--steel);color:var(--steel);}
 
+/* Wide VIP card */
+.card.wide{display:flex;align-items:flex-start;gap:28px;}
+.card.wide .card-left{flex:1;}
+.card.wide .card-right{flex:1;border-left:1px solid var(--panel-line);padding-left:24px;}
+.card.wide .card-right .card-btn{margin-top:0;}
+
+/* Ghost card */
+.card.ghost{border-color:rgba(0,53,148,.2);opacity:.8;}
+
 /* INSTRUCTIONS */
-.instructions{background:var(--panel);border:1.5px solid rgba(212,175,55,.2);border-radius:16px;padding:24px 28px;margin-bottom:36px;}
+.instructions{background:linear-gradient(160deg,rgba(4,30,66,.9),rgba(4,14,34,.95));border:1.5px solid rgba(212,175,55,.2);border-radius:16px;padding:26px 30px;margin-bottom:40px;}
 .instr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
 .instr-header h3{font-family:var(--font-cond);font-size:18px;letter-spacing:3px;text-transform:uppercase;color:var(--steel);}
 .toggle-btns{display:flex;border:1px solid var(--panel-line);border-radius:7px;overflow:hidden;}
@@ -91,104 +109,14 @@ body{background:radial-gradient(120% 80% at 50% 0%,#041E42 0%,var(--ink-2) 45%,v
 .toggle-btn.active{background:rgba(0,53,148,.3);color:var(--text);}
 .step{display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
 .step:last-child{border-bottom:none;}
-.step-num{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--navy),var(--navy-deep));border:1px solid var(--navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:#fff;}
-.step-text{font-size:13px;color:var(--text-muted);line-height:1.6;padding-top:4px;}
+.step-num{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--navy),var(--navy-deep));border:1px solid var(--navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:#fff;box-shadow:0 0 8px rgba(0,53,148,.3);}
+.step-text{font-size:14px;color:var(--text-muted);line-height:1.6;padding-top:4px;}
 .step-text strong{color:var(--text-dim);}
-.step-text code{background:rgba(0,53,148,.15);padding:1px 6px;border-radius:3px;color:#6699CC;font-size:12px;}
+.step-text code{background:rgba(0,53,148,.15);padding:1px 6px;border-radius:3px;color:#6699CC;font-size:13px;}
 
-footer{text-align:center;padding-top:18px;font-family:var(--font-cond);font-size:12px;letter-spacing:2px;color:var(--text-muted);}
+footer{text-align:center;padding-top:20px;border-top:1px solid rgba(0,53,148,.15);font-family:var(--font-cond);font-size:12px;letter-spacing:2px;color:var(--text-muted);}
 footer a{color:var(--silver);text-decoration:none;}
 footer a:hover{color:var(--steel);}
-
-  /* ═══ COWBOYS VISUAL OVERHAUL ═══ */
-
-  /* Diagonal stripe pattern on body bg */
-  body {
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        rgba(0,53,148,.04) 0px,
-        rgba(0,53,148,.04) 1px,
-        transparent 1px,
-        transparent 28px
-      ),
-      radial-gradient(120% 80% at 50% 0%, #041E42 0%, var(--ink-2) 45%, var(--ink) 100%);
-  }
-
-  /* Hero gets a stronger Cowboys glow + star watermark */
-  .hero {
-    background: linear-gradient(135deg, rgba(4,30,66,.95) 0%, rgba(4,14,34,.92) 60%, rgba(0,53,148,.08) 100%);
-    border-color: rgba(0,53,148,.6);
-    box-shadow: 0 0 60px rgba(0,53,148,.25), inset 0 0 80px rgba(0,53,148,.05);
-  }
-  .hero::after {
-    content: "★";
-    position: absolute; right: 28px; top: 50%; transform: translateY(-50%);
-    font-size: 120px; color: rgba(0,53,148,.08);
-    font-family: "Arial Black", sans-serif;
-    pointer-events: none; z-index: 0; line-height: 1;
-  }
-
-  /* Wordmark stronger */
-  .wordmark { font-size: 48px; letter-spacing: 1px; }
-  .wordmark .accent {
-    color: var(--gold);
-    -webkit-text-stroke: 1px rgba(212,175,55,.5);
-    text-shadow: 0 0 20px rgba(212,175,55,.3);
-  }
-
-  /* Cards — Cowboys panel style */
-  .card {
-    background: linear-gradient(160deg, rgba(4,30,66,.9) 0%, rgba(4,14,34,.92) 100%);
-    border-color: rgba(0,53,148,.4);
-  }
-  .card:hover {
-    background: linear-gradient(160deg, rgba(0,53,148,.2) 0%, rgba(4,14,34,.95) 100%);
-    border-color: rgba(0,53,148,.7);
-    box-shadow: 0 10px 34px rgba(0,53,148,.35), 0 0 0 1px rgba(134,147,151,.15);
-  }
-  .card-icon { font-size: 36px; }
-  .card-name { color: var(--gold); }
-  .card-size { color: var(--steel); background: rgba(0,53,148,.12); border-color: rgba(192,192,192,.2); }
-
-  /* Connect bar stronger */
-  .connect-bar {
-    background: linear-gradient(135deg, rgba(4,30,66,.95), rgba(4,14,34,.95));
-    border-color: rgba(0,53,148,.5);
-    box-shadow: 0 4px 24px rgba(0,53,148,.15);
-  }
-  .connect-btn.go {
-    background: linear-gradient(135deg, var(--navy), #0044CC);
-    border-color: rgba(134,147,151,.4);
-    box-shadow: 0 4px 18px rgba(0,53,148,.5);
-    letter-spacing: 2px;
-  }
-
-  /* Section title with Cowboys star */
-  .section-title::before {
-    content: "★";
-    color: var(--gold);
-    font-size: 14px;
-    margin-right: 4px;
-  }
-
-  /* Instructions panel */
-  .instructions {
-    background: linear-gradient(160deg, rgba(4,30,66,.9), rgba(4,14,34,.95));
-    border-color: rgba(212,175,55,.25);
-  }
-  .step-num {
-    background: linear-gradient(135deg, var(--navy), #0044CC);
-    border-color: rgba(134,147,151,.3);
-    box-shadow: 0 0 8px rgba(0,53,148,.3);
-  }
-
-  /* Copy buttons */
-  .copy-btn { letter-spacing: 1px; text-transform: uppercase; }
-
-  /* Footer */
-  footer { border-top: 1px solid rgba(0,53,148,.2); padding-top: 20px; margin-top: 4px; }
-
 </style>
 </head>
 <body>
@@ -196,7 +124,7 @@ footer a:hover{color:var(--steel);}
 
   <!-- CONNECT BAR -->
   <div class="connect-bar">
-    <div class="connect-label">TikTok Live</div>
+    <div class="connect-label">🎵 TikTok Live</div>
     <div class="input-wrap">
       <span class="at">@</span>
       <input class="username-input" id="username-input" type="text" placeholder="your tiktok username" autocomplete="off" spellcheck="false">
@@ -220,32 +148,34 @@ footer a:hover{color:var(--steel);}
     </div>
   </div>
 
-  <!-- WIDGETS -->
+  <!-- WIDGETS — 3×2 grid -->
   <div class="section-title">Your Widgets</div>
+
   <div class="grid">
 
     <div class="card">
       <div class="card-icon">📺</div>
       <div class="card-name">Stream Header</div>
       <div class="card-size">1080 × 160 px</div>
-      <div class="card-desc">Cowboys-themed wordmark, avatar, LIVE pill, live viewer count.</div>
+      <div class="card-desc">Cowboys wordmark, avatar, LIVE pill, live viewer count.</div>
       <div class="url-row"><span class="card-url" id="url-header">/senpaicjcollects0-v8n4/widget-header.html</span><button class="copy-btn" onclick="copyUrl('url-header',this)">Copy</button></div>
-      <a class="card-btn" href="widget-header.html" target="_blank">Preview</a>
+      <a class="card-btn" href="widget-header.html" target="_blank">▶ Preview</a>
     </div>
 
     <div class="card">
       <div class="card-icon">🏆</div>
       <div class="card-name">Top Gifters</div>
       <div class="card-size">344 × 340 px</div>
-      <div class="card-desc">Gifters / Likers / Follows tabs with podium styling. Live data only.</div>
+      <div class="card-desc">Gifters / Likers / Follows tabs. Podium styling. Live data.</div>
       <div class="url-row"><span class="card-url" id="url-gifters">/senpaicjcollects0-v8n4/widget-top-gifters.html</span><button class="copy-btn" onclick="copyUrl('url-gifters',this)">Copy</button></div>
-      <a class="card-btn" href="widget-top-gifters.html" target="_blank">Preview</a>
-  
+      <a class="card-btn" href="widget-top-gifters.html" target="_blank">▶ Preview</a>
+    </div>
+
     <div class="card">
       <div class="card-icon">❤️</div>
       <div class="card-name">Like-O-Meter</div>
       <div class="card-size">460 × 130 px</div>
-      <div class="card-desc">Wrestling title ranks: Rookie → Contender → World Champ → Legend. Live like count.</div>
+      <div class="card-desc">Wrestling ranks: Rookie → Contender → World Champ → Legend.</div>
       <div class="url-row"><span class="card-url" id="url-likemeter">/senpaicjcollects0-v8n4/widget-likemeter.html</span><button class="copy-btn" onclick="copyUrl('url-likemeter',this)">Copy</button></div>
       <a class="card-btn" href="widget-likemeter.html" target="_blank">▶ Preview</a>
     </div>
@@ -263,26 +193,39 @@ footer a:hover{color:var(--steel);}
       <div class="card-icon">📡</div>
       <div class="card-name">Event Ticker</div>
       <div class="card-size">1080 × 64 px</div>
-      <div class="card-desc">Live feed with GIFT / FOLLOW / JOINED type tags. Starts empty, fills with real events.</div>
+      <div class="card-desc">GIFT / FOLLOW / JOINED type tags. Live feed, starts empty.</div>
       <div class="url-row"><span class="card-url" id="url-ticker">/senpaicjcollects0-v8n4/widget-ticker.html</span><button class="copy-btn" onclick="copyUrl('url-ticker',this)">Copy</button></div>
       <a class="card-btn" href="widget-ticker.html" target="_blank">▶ Preview</a>
     </div>
-    <div class="card">
-      <div class="card-icon">🎖</div>
-      <div class="card-name">VIP Sound Board</div>
-      <div class="card-size">Management Page</div>
-      <div class="card-desc">Assign custom sounds to VIP usernames. Auto-plays when they join or chat. Saved in your browser permanently.</div>
-      <div class="url-row"><span class="card-url" id="url-vip">/senpaicjcollects0-v8n4/vip-sounds.html</span><button class="copy-btn" onclick="copyUrl('url-vip',this)">Copy</button></div>
-      <a class="card-btn" href="vip-sounds.html" target="_blank">⚙ Manage VIPs</a>
-    </div>
 
-    <div class="card" style="border-color:rgba(0,53,148,.25);opacity:.85;">
+    <div class="card ghost">
       <div class="card-icon">👻</div>
       <div class="card-name">VIP Trigger</div>
       <div class="card-size">Add as 1×1 Browser Source</div>
-      <div class="card-desc">Invisible background widget — auto-plays VIP sounds when matching users join or chat. Keep running at all times.</div>
+      <div class="card-desc">Invisible widget — runs in background and auto-plays VIP sounds when matching users join or chat.</div>
       <div class="url-row"><span class="card-url" id="url-vipw">/senpaicjcollects0-v8n4/widget-vip.html</span><button class="copy-btn" onclick="copyUrl('url-vipw',this)">Copy</button></div>
       <a class="card-btn" href="widget-vip.html" target="_blank">▶ Preview</a>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM ROW: VIP Sound Board spans wide -->
+  <div class="grid-bottom">
+
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:160px;border-color:rgba(0,53,148,.3);">
+      <div style="font-size:42px;margin-bottom:10px;">🎖</div>
+      <div class="card-name" style="font-size:22px;">VIP Sound Board</div>
+      <div class="card-size" style="margin:8px 0;">Management Page</div>
+      <a class="card-btn" href="vip-sounds.html" target="_blank" style="margin-top:12px;padding:12px 24px;font-size:13px;">⚙ Manage VIPs</a>
+    </div>
+
+    <div class="card" style="border-color:rgba(212,175,55,.25);">
+      <div class="card-name" style="color:var(--steel);font-size:14px;margin-bottom:12px;">ABOUT VIP SOUND BOARD</div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">
+        Assign a custom sound to any TikTok username. When that person <strong style="color:var(--text-dim)">joins your stream</strong> or <strong style="color:var(--text-dim)">sends a chat message</strong>, their sound plays automatically.<br><br>
+        <strong style="color:var(--gold)">Saved permanently</strong> in your browser — survives restarts, redeploys, everything. Add the VIP Trigger as a 1×1 browser source to activate it during your stream.
+      </div>
+      <div class="url-row" style="margin-top:16px;"><span class="card-url" id="url-vip">/senpaicjcollects0-v8n4/vip-sounds.html</span><button class="copy-btn" onclick="copyUrl('url-vip',this)">Copy</button></div>
     </div>
 
   </div>
@@ -298,28 +241,27 @@ footer a:hover{color:var(--steel);}
     </div>
     <div id="steps-tiktok">
       <div class="step"><div class="step-num">1</div><div class="step-text">In TikTok Live Studio, click <strong>Add Source</strong> and choose <strong>Link</strong></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget card above, paste the full URL into the Link field</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget above, paste the full URL into the Link field</div></div>
       <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> to match each widget's size shown on the card</div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-text">Position on your scene — Header top, Alert center, Ticker bottom. All widgets are transparent</div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-text">Resize by dragging corners to fit your layout</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Position on your scene — Header top, Join Alert center, Ticker bottom. All widgets are transparent</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">For the VIP Trigger, set size to <code>1×1</code> px and place it anywhere off-screen</div></div>
     </div>
     <div id="steps-obs" style="display:none">
       <div class="step"><div class="step-num">1</div><div class="step-text">In OBS or Streamlabs, click <strong>+</strong> in Sources and choose <strong>Browser</strong></div></div>
       <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>Copy</strong> on any widget above and paste into the URL field</div></div>
       <div class="step"><div class="step-num">3</div><div class="step-text">Set <strong>Width × Height</strong> exactly as shown on each widget card</div></div>
       <div class="step"><div class="step-num">4</div><div class="step-text">Check <strong>Shutdown source when not visible</strong> and <strong>Refresh browser when scene becomes active</strong></div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-text">Layer widgets over your scenes — Header top, Alert center, Ticker bottom</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">For the VIP Trigger, set size to <code>1×1</code> px — it runs invisibly in the background</div></div>
     </div>
   </div>
 
-  <footer>Private Pack — Mint Overlays x <a href="https://mintoverlays.com">mintoverlays.com</a></footer>
+  <footer>Private Pack — Mint Overlays × <a href="https://mintoverlays.com">mintoverlays.com</a></footer>
 </div>
 
 <script>
 const BASE="https://mintoverlays.com";
 const SESSION="senpaicjcollects0-v8n4";
 document.querySelectorAll(".card-url").forEach(el=>{el.textContent=BASE+el.textContent;});
-
 let connected=false;
 function setStatus(state,msg){const p=document.getElementById("status-pill");p.className="status-pill "+state;document.getElementById("status-text").textContent=msg;}
 function handleConnect(){connected?disconnect():connect();}
@@ -327,8 +269,7 @@ async function connect(){
   const u=document.getElementById("username-input").value.trim().replace("@","");
   if(!u){document.getElementById("username-input").focus();return;}
   setStatus("connecting","Connecting...");
-  const btn=document.getElementById("connect-btn");
-  btn.textContent="Connecting...";btn.disabled=true;document.getElementById("username-input").disabled=true;
+  const btn=document.getElementById("connect-btn");btn.textContent="Connecting...";btn.disabled=true;document.getElementById("username-input").disabled=true;
   try{
     const r=await fetch("/api/"+SESSION+"/connect",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u})});
     if(r.ok){connected=true;setStatus("connected","@"+u+" — LIVE");btn.textContent="Disconnect";btn.className="connect-btn disconnect";btn.disabled=false;}
@@ -338,8 +279,7 @@ async function connect(){
 async function disconnect(){
   try{await fetch("/api/"+SESSION+"/reset",{method:"POST"});}catch(e){}
   connected=false;setStatus("disconnected","Not connected");
-  const btn=document.getElementById("connect-btn");
-  btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;
+  const btn=document.getElementById("connect-btn");btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;
   document.getElementById("username-input").disabled=false;document.getElementById("username-input").value="";
 }
 document.getElementById("username-input").addEventListener("keydown",e=>{if(e.key==="Enter")handleConnect();});
