@@ -149,6 +149,20 @@ function connect(session, username) {
   conn.on('member', handleJoin);
   conn.on('roomUser', handleJoin);
 
+  // Chat comments — for TTS widget
+  conn.on('chat', data => {
+    const nickname = data.nickname || data.uniqueId || 'viewer';
+    const comment = data.comment || '';
+    if (!comment.trim()) return;
+    broadcast(session, {
+      type: 'chat',
+      nickname,
+      uniqueId: data.uniqueId || '',
+      comment: comment.trim(),
+      profilePicture: data.profilePictureUrl || '',
+    });
+  });
+
   conn.on('disconnected', () => {
     session.connected = false;
     broadcast(session, { type:'status', status:'disconnected' });
