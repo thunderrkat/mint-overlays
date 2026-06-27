@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF6A00;--orange-hot:#FF8C00;--orange-dim:#CC4400;--orange-deep:#7A2800;
+  --ink:#0A0A0A;--ink-2:#111111;--ink-3:#1C0C00;
+  --text:#FFFFFF;--text-dim:#FFD0A0;--text-muted:#886644;
+  --panel:rgba(15,8,0,.93);--panel-line:rgba(255,106,0,.45);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1080px;height:64px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+.ticker{width:1080px;height:64px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(10,5,0,.97),rgba(15,8,0,.93));position:relative;}
+.ticker::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ink),var(--orange-deep) 30%,var(--orange) 50%,var(--orange-deep) 70%,var(--ink));box-shadow:0 0 10px rgba(255,106,0,.7);}
+.ticker::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ink),var(--orange-deep) 30%,var(--orange) 50%,var(--orange-deep) 70%,var(--ink));box-shadow:0 0 10px rgba(255,106,0,.7);}
+.ticker-label{flex:none;display:flex;align-items:center;gap:10px;height:100%;padding:0 20px;z-index:2;background:linear-gradient(90deg,var(--orange-deep),var(--orange-dim));font-family:var(--font-cond);font-weight:800;font-size:19px;letter-spacing:3px;color:#fff;box-shadow:6px 0 18px rgba(0,0,0,.7);white-space:nowrap;border-right:2px solid rgba(255,106,0,.4);}
+.ticker-window{flex:1;overflow:hidden;}
+.ticker-track{display:flex;align-items:center;white-space:nowrap;}
+.ticker-item{display:inline-flex;align-items:center;gap:10px;padding:0 26px;font-size:17px;font-weight:600;color:var(--text-dim);border-right:1px solid rgba(255,106,0,.15);}
+.ticker-item .type{font-family:var(--font-cond);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex-shrink:0;}
+.ticker-item .type.gift{background:rgba(255,106,0,.2);color:var(--orange-hot);border:1px solid rgba(255,106,0,.3);}
+.ticker-item .type.follow{background:rgba(170,100,50,.15);color:#CC8844;border:1px solid rgba(170,100,50,.25);}
+.ticker-item .type.join{background:rgba(90,50,20,.2);color:#886644;border:1px solid rgba(90,50,20,.3);}
+.ticker-item .who{font-weight:800;color:var(--text);}
+.ticker-waiting{padding:0 24px;font-family:var(--font-cond);font-size:13px;letter-spacing:2px;color:rgba(255,106,0,.35);text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="ticker">
+  <div class="ticker-label">🔥 LIVE FEED</div>
+  <div class="ticker-window"><div class="ticker-track" id="track"><div class="ticker-waiting">WAITING FOR STREAM EVENTS</div></div></div>
+</div>
+<script>
+const SESSION="swolemigoking-r3x7";
+const track=document.getElementById("track");
+let events=[
+  {type:"gift",  typeLabel:"GIFT",  who:"@iron_grind",   msg:"sent a gift"},
+  {type:"follow",typeLabel:"FOLLOW",who:"@swole_nation",  msg:"followed"},
+  {type:"gift",  typeLabel:"GIFT",  who:"@gains_only",    msg:"sent another gift"},
+  {type:"join",  typeLabel:"JOINED",who:"@king_lifts",    msg:"joined the stream"},
+  {type:"follow",typeLabel:"FOLLOW",who:"@migo_fan1",     msg:"followed"},
+  {type:"gift",  typeLabel:"GIFT",  who:"@beast_mode99",  msg:"sent a gift"},
+],offset=0,animId;
+function build(){
+  if(events.length===0){cancelAnimationFrame(animId);track.style.transform="";track.innerHTML="<div class=\"ticker-waiting\">WAITING FOR STREAM EVENTS</div>";return;}
+  const d=[...events,...events];
+  track.innerHTML=d.map(e=>"<span class=\"ticker-item\"><span class=\"type "+e.type+"\">"+e.typeLabel+"</span><span class=\"who\">"+e.who+"</span><span>"+e.msg+"</span></span>").join("");
+  cancelAnimationFrame(animId);offset=0;scroll();
+}
+function scroll(){
+  const hw=track.scrollWidth/2;
+  function step(){offset+=1.2;if(offset>=hw)offset=0;track.style.transform="translateX(-"+offset+"px)";animId=requestAnimationFrame(step);}
+  animId=requestAnimationFrame(step);
+}
+function addEvent(evt){events.unshift(evt);if(events.length>20)events.pop();build();}
+let prevGifters=[],prevFollowers=[],seenJoins=new Set();
+const es=new EventSource("/events/"+SESSION);
+es.onmessage=e=>{
+  const d=JSON.parse(e.data);
+  if(d.type==="state"){
+    if(d.gifters){d.gifters.forEach(g=>{const prev=prevGifters.find(p=>p.id===g.id);if(!prev)addEvent({type:"gift",typeLabel:"GIFT",who:"@"+(g.nickname||g.id),msg:"sent a gift"});else if(g.count>prev.count)addEvent({type:"gift",typeLabel:"GIFT",who:"@"+(g.nickname||g.id),msg:"sent another gift"});});prevGifters=d.gifters;}
+    if(d.followers){d.followers.forEach(f=>{const key=f.id||f.nickname;if(!prevFollowers.find(p=>(p.id||p.nickname)===key))addEvent({type:"follow",typeLabel:"FOLLOW",who:"@"+(f.nickname||f.id),msg:"followed"});});prevFollowers=d.followers;}
+  }
+  if(d.type==="join"){const key=d.nickname||"unknown";if(!seenJoins.has(key)){seenJoins.add(key);if(seenJoins.size>300)seenJoins.clear();addEvent({type:"join",typeLabel:"JOINED",who:"@"+key,msg:"joined the stream"});}}
+};
+build();
+</script>
+</body>
+</html>
