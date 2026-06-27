@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>* { margin:0; padding:0; } body { width:1px; height:1px; background:transparent; overflow:hidden; }</style>
+</head>
+<body>
+<script>
+const SESSION = 'senpaicjcollects0-v8n4';
+const STORAGE_KEY = 'senpaicj_vip_sounds_v1';
+let vips = [], queue = [], playing = false, currentAudio = null;
+
+function loadVips() {
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) vips = JSON.parse(r); } catch(e) { vips = []; }
+}
+function findVip(username) {
+  if (!username) return null;
+  const u = username.toLowerCase().replace(/^@/, '');
+  return vips.find(v => v.username.toLowerCase() === u) || null;
+}
+function playSound(vip) { queue.push(vip); if (!playing) nextSound(); }
+function nextSound() {
+  if (queue.length === 0) { playing = false; return; }
+  playing = true;
+  const vip = queue.shift();
+  try {
+    const audio = new Audio(vip.soundData);
+    currentAudio = audio;
+    audio.play().catch(() => { playing = false; nextSound(); });
+    audio.onended = () => { playing = false; nextSound(); };
+    audio.onerror = () => { playing = false; nextSound(); };
+  } catch(e) { playing = false; nextSound(); }
+}
+
+loadVips();
+setInterval(loadVips, 30000);
+
+const es = new EventSource('/events/' + SESSION);
+es.onmessage = e => {
+  const d = JSON.parse(e.data);
+  if (d.type === 'join') {
+    const vip = findVip(d.nickname || d.uniqueId);
+    if (vip) playSound(vip);
+  }
+  if (d.type === 'chat') {
+    const vip = findVip(d.nickname || d.uniqueId);
+    if (vip) playSound(vip);
+  }
+  if (d.type === 'state' && d.gifters) {
+    d.gifters.forEach(g => {
+      const vip = findVip(g.nickname || g.id);
+      if (vip) {
+        const key = 'vip_played_' + (g.nickname || g.id);
+        if (!sessionStorage.getItem(key)) { sessionStorage.setItem(key, '1'); playSound(vip); }
+      }
+    });
+  }
+};
+</script>
+</body>
+</html>
