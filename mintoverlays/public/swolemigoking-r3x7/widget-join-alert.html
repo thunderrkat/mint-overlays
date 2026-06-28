@@ -58,11 +58,15 @@ function showJoin(d){
 }
 function next(){if(queue.length>0&&!showing)showJoin(queue.shift());}
 function push(d){queue.push(d);if(!showing)next();}
-const es=new EventSource("/events/"+SESSION);
-es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="join")push(d);};
-const demos=[{nickname:"iron_grind"},{nickname:"swole_nation"},{nickname:"gains_only"},{nickname:"king_lifts"}];
-let dji=0;function demoNext(){push(demos[dji%demos.length]);dji++;setTimeout(demoNext,5000);}
-setTimeout(demoNext,1500);
+function connectSSE() {
+  const es = new EventSource("/events/"+SESSION);
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    if (d.type === "join") push(d);
+  };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 3000); };
+}
+connectSSE();
 </script>
 </body>
 </html>

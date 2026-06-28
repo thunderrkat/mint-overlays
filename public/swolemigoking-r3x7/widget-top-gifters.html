@@ -75,8 +75,28 @@ function renderTab(tab){
   },150);
 }
 function setTab(tab){currentTab=tab;document.querySelectorAll(".tab").forEach((t,i)=>t.classList.toggle("active",["gifters","likers","followers"][i]===tab));renderTab(tab);}
-const es=new EventSource("/events/"+SESSION);
-es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="state"){if(d.gifters!==undefined)live.gifters=d.gifters;if(d.likers!==undefined)live.likers=d.likers;if(d.followers!==undefined)live.followers=d.followers;renderTab(currentTab);}};
+function connectSSE() {
+  const es = new EventSource("/events/"+SESSION);
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    if (d.type === "state") {
+      if (d.gifters !== undefined) live.gifters = d.gifters;
+      if (d.likers  !== undefined) live.likers  = d.likers;
+      if (d.followers !== undefined) live.followers = d.followers;
+      renderTab(currentTab);
+    }
+    if (d.type === "join") {
+      const f = {id: d.nickname||d.uniqueId, nickname: d.nickname||d.uniqueId, count:1};
+      if (!live.followers.find(x => x.id === f.id)) {
+        live.followers.unshift(f);
+        if (live.followers.length > 5) live.followers.pop();
+        if (currentTab === "followers") renderTab("followers");
+      }
+    }
+  };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 3000); };
+}
+connectSSE();
 let ai=0;setInterval(()=>{ai=(ai+1)%3;setTab(["gifters","likers","followers"][ai]);},8000);
 renderTab("gifters");
 </script>

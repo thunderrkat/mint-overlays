@@ -72,8 +72,15 @@ function update(n){
   if(lv>lastLv&&lv>0){lastLv=lv;const m=document.getElementById("milestone");m.textContent=MS[lv];m.classList.add("show");setTimeout(()=>m.classList.remove("show"),3500);}
 }
 update(likes);
-const es=new EventSource("/events/"+SESSION);
-es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="likeMeter")update(d.total||0);};
+function connectSSE() {
+  const es = new EventSource("/events/"+SESSION);
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    if (d.type === "likeMeter") update(d.total || 0);
+  };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 3000); };
+}
+connectSSE();
 </script>
 </body>
 </html>
