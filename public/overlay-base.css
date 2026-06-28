@@ -1,4 +1,19 @@
 /* Mint Overlays — Base CSS using theme variables */
+
+/* Self-hosted Burbank Big Condensed (used by the Storm / Fortnite theme).
+   Bold face covers regular→semibold; Black face covers bold→heavy so the
+   widgets' 700-weight headers render in the iconic Fortnite "Black" cut. */
+@font-face {
+  font-family: 'Burbank Big Condensed';
+  src: url('/fonts/burbankbigcondensed_bold.otf') format('opentype');
+  font-weight: 400 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Burbank Big Condensed';
+  src: url('/fonts/burbankbigcondensed_black.otf') format('opentype');
+  font-weight: 700 900; font-style: normal; font-display: swap;
+}
+
 :root {
   --bg: rgba(8,8,12,0.90);
   --border: #C8962A;

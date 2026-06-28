@@ -46,6 +46,7 @@
   function initials(n){ return (n||'?').slice(0,2).toUpperCase(); }
 
   function renderBoard(items, key) {
+    items = (items || []).slice(0, 5);
     if (!items || items.length === 0) {
       listEl.innerHTML = `<div class="empty"><span>⚡</span><p>No ${key} yet</p></div>`;
       return;

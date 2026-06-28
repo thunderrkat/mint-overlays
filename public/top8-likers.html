@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mint Overlays — Top 8 Likers</title>
+<link rel="stylesheet" href="/overlay-base.css">
+<script src="/theme.js"></script>
+<style>
+  /* ── Top 8 Likers — dedicated leaderboard ───────────────────── */
+  /* FULLY TRANSPARENT — no panel background, border, or glow.
+     The leaderboard floats over the stream; text shadows keep it readable. */
+  body { width: 360px; background: transparent; }
+  .panel { padding: 2px 4px 4px; background: transparent; border: none; box-shadow: none; animation: none; }
+  .glow-tl, .glow-br { display: none; }
+
+  /* Legibility over arbitrary video — soft dark outline on all text */
+  .title, .uname, .rank, .likes-num, .likes-lbl, .total-likes, .sublabel, .empty p {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.7);
+  }
+
+  .header { margin-bottom: 9px; }
+  .title { font-size: 13px; }
+  .crown { font-size: 16px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8)); }
+  .total-likes {
+    font-family: var(--head-font); font-size: 12px; font-weight: 700;
+    color: var(--a1); letter-spacing: 0.04em; margin-right: 7px;
+  }
+  .total-likes .heart { font-size: 10px; }
+
+  /* The list is positioned so rows can FLIP-animate between ranks */
+  #board { position: relative; }
+
+  .row {
+    display: flex; align-items: center; gap: 9px;
+    padding: 4px 6px; margin-bottom: 3px;
+    position: relative;
+    background: transparent; border: none;
+    transition: transform 0.5s cubic-bezier(.22,1,.36,1), opacity 0.35s ease;
+  }
+  .row:last-child { margin-bottom: 0; }
+  /* Hierarchy comes from rank text color + avatar ring, not from any fill */
+
+  .rank {
+    font-family: var(--head-font); font-weight: 700;
+    min-width: 26px; text-align: center; line-height: 1; flex-shrink: 0;
+    font-size: 15px;
+  }
+  .rank .medal { font-size: 17px; }
+  .rk1 .rank { color: var(--r1); }
+  .rk2 .rank { color: var(--r2); }
+  .rk3 .rank { color: var(--r3); }
+  .rk4 .rank, .rk5 .rank, .rk6 .rank, .rk7 .rank, .rk8 .rank {
+    color: var(--sub); font-size: 13px;
+  }
+
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid var(--a1); background: rgba(15,10,12,0.6); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--head-font); font-size: 11px; font-weight: 700; color: var(--a1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .rk1 .avatar { border-color: var(--r1); box-shadow: 0 0 8px var(--border-glow), 0 1px 4px rgba(0,0,0,0.6); }
+  .rk2 .avatar { border-color: var(--r2); }
+  .rk3 .avatar { border-color: var(--r3); }
+
+  .name { flex: 1; min-width: 0; }
+  .uname {
+    font-size: 12px; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .uname .at { color: var(--a1); opacity: 0.8; }
+
+  .likes { text-align: right; flex-shrink: 0; }
+  .likes-num {
+    font-family: var(--head-font); font-weight: 700; line-height: 1;
+    font-size: 15px; color: var(--text);
+    display: inline-block; transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .rk1 .likes-num { color: var(--r1); font-size: 16px; }
+  .rk2 .likes-num { color: var(--r2); }
+  .rk3 .likes-num { color: var(--r3); }
+  .likes-num.bump { transform: scale(1.22); color: #fff; }
+  .likes-lbl {
+    font-size: 8px; color: var(--sub); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 1px;
+  }
+
+  /* Enter / leave animation */
+  .row.entering { opacity: 0; transform: translateX(14px); }
+  .row.leaving { opacity: 0; transform: translateX(-14px); }
+</style>
+</head>
+<body>
+<div class="panel" id="panel">
+  <div class="glow-tl"></div>
+  <div class="glow-br"></div>
+  <div class="header">
+    <span class="crown">👑</span>
+    <span class="title">Top 8 Likers</span>
+    <span class="total-likes" id="totalLikes" style="display:none"><span class="heart">❤️</span> <span id="totalNum">0</span></span>
+    <div class="status-dot" id="statusDot"></div>
+  </div>
+  <div class="divider"></div>
+  <div id="board"><div class="empty"><span>👑</span><p>Waiting for live…</p></div></div>
+</div>
+
+<script>
+  const SESSION = new URLSearchParams(location.search).get('s') || 'default';
+  const MAX = 8;
+  const MEDALS = ['🥇','🥈','🥉'];
+
+  const boardEl  = document.getElementById('board');
+  const dotEl    = document.getElementById('statusDot');
+  const totalEl  = document.getElementById('totalLikes');
+  const totalNum = document.getElementById('totalNum');
+
+  // id -> { el, refs, count } so rows persist and FLIP-animate between ranks
+  const rows = new Map();
+  let hasData = false;
+
+  const initials = (n) => (n || '?').replace(/^@/,'').slice(0,2).toUpperCase();
+  const fmt = (n) => (n || 0).toLocaleString();
+
+  function makeRow(item) {
+    const el = document.createElement('div');
+    el.className = 'row entering';
+    el.innerHTML = `
+      <span class="rank"></span>
+      <div class="avatar"><span class="ph"></span></div>
+      <div class="name"><div class="uname"></div></div>
+      <div class="likes"><div class="likes-num"></div><div class="likes-lbl">Likes</div></div>`;
+    const refs = {
+      rank: el.querySelector('.rank'),
+      avatar: el.querySelector('.avatar'),
+      ph: el.querySelector('.ph'),
+      uname: el.querySelector('.uname'),
+      num: el.querySelector('.likes-num'),
+    };
+    // avatar
+    setAvatar(refs, item);
+    refs.uname.innerHTML = `<span class="at">@</span>${escapeHtml((item.nickname || item.id || '').replace(/^@/,''))}`;
+    refs.num.textContent = fmt(item.count);
+    requestAnimationFrame(() => el.classList.remove('entering'));
+    return { el, refs, count: item.count, pic: item.profilePicture || '' };
+  }
+
+  function setAvatar(refs, item) {
+    refs.ph.textContent = '';
+    if (item.profilePicture) {
+      const img = document.createElement('img');
+      img.alt = '';
+      img.onerror = () => { refs.ph.textContent = initials(item.nickname); };
+      img.src = item.profilePicture;
+      refs.ph.appendChild(img);
+    } else {
+      refs.ph.textContent = initials(item.nickname);
+    }
+  }
+
+  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function render(likers) {
+    const items = (likers || []).slice(0, MAX);
+
+    if (items.length === 0) {
+      if (!hasData) return; // keep the "waiting" placeholder
+    }
+    if (!hasData && items.length) {
+      hasData = true;
+      boardEl.innerHTML = '';
+    }
+
+    const incoming = new Set(items.map(i => i.id));
+
+    // 1. FIRST — record current positions for FLIP
+    const firstTop = new Map();
+    for (const [id, r] of rows) firstTop.set(id, r.el.getBoundingClientRect().top);
+
+    // 2. Remove rows that dropped out
+    for (const [id, r] of rows) {
+      if (!incoming.has(id)) {
+        r.el.classList.add('leaving');
+        const el = r.el;
+        setTimeout(() => el.remove(), 350);
+        rows.delete(id);
+      }
+    }
+
+    // 3. Update / create + set rank classes, then reorder DOM
+    items.forEach((item, i) => {
+      let r = rows.get(item.id);
+      if (!r) { r = makeRow(item); rows.set(item.id, r); boardEl.appendChild(r.el); }
+      // rank label
+      r.refs.rank.innerHTML = i < 3 ? `<span class="medal">${MEDALS[i]}</span>` : (i + 1);
+      r.el.className = 'row rk' + (i + 1);
+      // avatar pic changed?
+      if ((item.profilePicture || '') !== r.pic) { setAvatar(r.refs, item); r.pic = item.profilePicture || ''; }
+      // name
+      r.refs.uname.innerHTML = `<span class="at">@</span>${escapeHtml((item.nickname || item.id || '').replace(/^@/,''))}`;
+      // count + bump
+      if (item.count !== r.count) {
+        r.refs.num.textContent = fmt(item.count);
+        if (item.count > r.count) {
+          r.refs.num.classList.add('bump');
+          setTimeout(() => r.refs.num.classList.remove('bump'), 220);
+        }
+        r.count = item.count;
+      }
+      boardEl.appendChild(r.el); // reorder to match ranking
+    });
+
+    // 4. LAST + INVERT + PLAY — FLIP animate the reorder
+    for (const [id, r] of rows) {
+      const first = firstTop.get(id);
+      if (first == null) continue;
+      const last = r.el.getBoundingClientRect().top;
+      const dy = first - last;
+      if (Math.abs(dy) < 1) continue;
+      r.el.style.transition = 'none';
+      r.el.style.transform = `translateY(${dy}px)`;
+      requestAnimationFrame(() => {
+        r.el.style.transition = '';
+        r.el.style.transform = '';
+      });
+    }
+  }
+
+  function setStatus(s) {
+    dotEl.className = 'status-dot';
+    if (s === 'connected') dotEl.classList.add('live');
+    else if (s === 'connecting') dotEl.classList.add('connecting');
+  }
+
+  const sse = new EventSource(`/events/${SESSION}`);
+  sse.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'state')  render(msg.likers || []);
+    if (msg.type === 'status') setStatus(msg.status);
+    if (msg.type === 'theme')  applyTheme(msg.theme);
+    if (msg.type === 'likeMeter') {
+      if (msg.total > 0) { totalEl.style.display = ''; totalNum.textContent = fmt(msg.total); }
+    }
+  };
+  sse.onerror = () => setStatus('disconnected');
+
+  fetch(`/api/${SESSION}/status`).then(r => r.json()).then(d => {
+    if (d.theme) applyTheme(d.theme);
+    if (d.likers) render(d.likers);
+    if (d.totalLikes > 0) { totalEl.style.display = ''; totalNum.textContent = fmt(d.totalLikes); }
+    setStatus(d.connected ? 'connected' : 'disconnected');
+  });
+</script>
+</body>
+</html>

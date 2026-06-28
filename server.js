@@ -45,7 +45,7 @@ app.get('/events/:sessionId', (req, res) => {
   const send = (msg) => res.write(msg);
   session.clients.add(send);
   // Send current state
-  send(`data: ${JSON.stringify({ type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) })}\n\n`);
+  send(`data: ${JSON.stringify({ type:'state', likers: getTopLikers(session, 8), gifters: getTopGifters(session), followers: getTopFollowers(session) })}\n\n`);
   send(`data: ${JSON.stringify({ type:'status', status: session.connected ? 'connected' : 'disconnected', username: session.username })}\n\n`);
   send(`data: ${JSON.stringify({ type:'likeMeter', total: session.totalLikes, goal: session.likeMeterGoal })}\n\n`);
   send(`data: ${JSON.stringify({ type:'theme', theme: session.theme })}\n\n`);
@@ -114,7 +114,7 @@ function connect(session, username) {
   conn.on('like', data => {
     const updated = upsert(session.likerMap, data, data.likeCount || 1);
     session.totalLikes += (data.likeCount || 1);
-    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
+    broadcast(session, { type:'state', likers: getTopLikers(session, 8), gifters: getTopGifters(session), followers: getTopFollowers(session) });
     broadcast(session, { type:'likeMeter', total: session.totalLikes, goal: session.likeMeterGoal });
   });
 
@@ -124,7 +124,7 @@ function connect(session, username) {
     const diamonds = (data.diamondCount || 0) * (data.repeatCount || 1);
     if (diamonds === 0) return;
     upsert(session.gifterMap, data, diamonds);
-    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
+    broadcast(session, { type:'state', likers: getTopLikers(session, 8), gifters: getTopGifters(session), followers: getTopFollowers(session) });
   });
 
   // Follows
@@ -133,7 +133,7 @@ function connect(session, username) {
     if (session.followerList.find(f => f.id === key)) return;
     session.followerList.push({ id: key, nickname: data.nickname || key, profilePicture: data.profilePictureUrl || '', count: 1 });
     if (session.followerList.length > 100) session.followerList.shift();
-    broadcast(session, { type:'state', likers: getTopLikers(session), gifters: getTopGifters(session), followers: getTopFollowers(session) });
+    broadcast(session, { type:'state', likers: getTopLikers(session, 8), gifters: getTopGifters(session), followers: getTopFollowers(session) });
   });
 
   // Joins
@@ -216,7 +216,7 @@ app.get('/api/themes', (req, res) => {
 
 app.get('/api/:sessionId/status', (req, res) => {
   const session = getSession(req.params.sessionId);
-  res.json({ connected: session.connected, username: session.username, theme: session.theme, likers: getTopLikers(session), totalLikes: session.totalLikes, likeMeterGoal: session.likeMeterGoal });
+  res.json({ connected: session.connected, username: session.username, theme: session.theme, likers: getTopLikers(session, 8), totalLikes: session.totalLikes, likeMeterGoal: session.likeMeterGoal });
 });
 
 // Clean up old sessions every hour

@@ -55,8 +55,8 @@ const THEME_VARS = {
     '--glow-tl':'rgba(27,144,221,0.15)','--glow-br':'rgba(138,43,226,0.12)',
     '--r1':'#FFD700','--r2':'#5FCEEA','--r3':'#8A2BE2',
     '--live':'#1B90DD','--live-glow':'rgba(27,144,221,0.9)',
-    '--font':'"Nunito",sans-serif','--head-font':'"Nunito",sans-serif',
-    '--gfonts':'Nunito:wght@600;700;800;900',
+    '--font':'"Burbank Big Condensed","Barlow Condensed",sans-serif','--head-font':'"Burbank Big Condensed","Barlow Condensed",sans-serif',
+    '--gfonts':'Barlow+Condensed:wght@600;700;800',
     '--scanlines':'none','--corner-text':'VICTORY ROYALE',
   },
   raiders: {
