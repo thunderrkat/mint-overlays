@@ -36,14 +36,7 @@ body{width:1080px;height:64px;background:transparent;overflow:hidden;font-family
 <script>
 const SESSION="swolemigoking-r3x7";
 const track=document.getElementById("track");
-let events=[
-  {type:"gift",  typeLabel:"GIFT",  who:"@iron_grind",   msg:"sent a gift"},
-  {type:"follow",typeLabel:"FOLLOW",who:"@swole_nation",  msg:"followed"},
-  {type:"gift",  typeLabel:"GIFT",  who:"@gains_only",    msg:"sent another gift"},
-  {type:"join",  typeLabel:"JOINED",who:"@king_lifts",    msg:"joined the stream"},
-  {type:"follow",typeLabel:"FOLLOW",who:"@migo_fan1",     msg:"followed"},
-  {type:"gift",  typeLabel:"GIFT",  who:"@beast_mode99",  msg:"sent a gift"},
-],offset=0,animId;
+let events=[],offset=0,animId;
 function build(){
   if(events.length===0){cancelAnimationFrame(animId);track.style.transform="";track.innerHTML="<div class=\"ticker-waiting\">WAITING FOR STREAM EVENTS</div>";return;}
   const d=[...events,...events];

@@ -57,29 +57,7 @@ const CFG={
   likers:{title:"TOP LIKERS",key:"likers",sub:r=>r.count.toLocaleString()+" likes"},
   followers:{title:"NEW FOLLOWERS",key:"followers",sub:()=>"just followed"},
 };
-let live={
-  gifters:[
-    {id:"iron_grind",nickname:"iron_grind",count:41200},
-    {id:"swole_nation",nickname:"swole_nation",count:29800},
-    {id:"gains_only",nickname:"gains_only",count:18600},
-    {id:"migo_fan1",nickname:"migo_fan1",count:9400},
-    {id:"king_lifts",nickname:"king_lifts",count:5700},
-  ],
-  likers:[
-    {id:"beast_mode99",nickname:"beast_mode99",count:3120},
-    {id:"swole_daily",nickname:"swole_daily",count:2280},
-    {id:"hex_warrior",nickname:"hex_warrior",count:1640},
-    {id:"grind_set",nickname:"grind_set",count:980},
-    {id:"orange_fire",nickname:"orange_fire",count:710},
-  ],
-  followers:[
-    {id:"new_swole",nickname:"new_swole"},
-    {id:"migo_army",nickname:"migo_army"},
-    {id:"gym_king",nickname:"gym_king"},
-    {id:"iron_daily",nickname:"iron_daily"},
-    {id:"sweat_lord",nickname:"sweat_lord"},
-  ]
-};
+let live={gifters:[],likers:[],followers:[]};
 let currentTab="gifters";
 function getInit(n){return(n||"?").replace("@","").charAt(0).toUpperCase();}
 function renderTab(tab){

@@ -47,7 +47,7 @@ body{width:460px;height:130px;background:transparent;overflow:hidden;font-family
       <span class="power" id="power">IRON FIST</span>
     </div>
     <div class="bar-bg">
-      <div class="bar-fill" id="bar" style="width:85%"></div>
+      <div class="bar-fill" id="bar" style="width:0%"></div>
       <div class="bar-gloss"></div>
       <div class="bar-marks"><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div></div>
     </div>
@@ -59,7 +59,7 @@ const SESSION="swolemigoking-r3x7";
 const T=[1000,2500,5000,10000,20000,40000,75000];
 const PWR=["ROOKIE","GRINDER","IRON FIST","SWOLE RISING","BEAST MODE","IRON KING","MIGO ELITE","SWOLE GOD"];
 const MS=["","1K — GRINDER!","2.5K — IRON FIST!","5K — SWOLE RISING!","10K — BEAST MODE!","20K — IRON KING!","40K — MIGO ELITE!","75K — SWOLE GOD!!"];
-let likes=parseInt(new URLSearchParams(location.search).get("likes"))||8500;
+let likes=parseInt(new URLSearchParams(location.search).get("likes"))||0;
 let lastLv=-1;
 function update(n){
   likes=Math.max(0,n);document.getElementById("like-num").textContent=likes.toLocaleString();
