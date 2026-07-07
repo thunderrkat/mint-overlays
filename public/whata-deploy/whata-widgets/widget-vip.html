@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>*{margin:0;padding:0;}body{width:1px;height:1px;background:transparent;overflow:hidden;}</style>
+</head><body>
+<script>
+const SESSION="whatachingona-f5p8";
+const STORAGE_KEY="whata_vip_sounds_v1";
+let vips=[],queue=[],playing=false;
+function loadVips(){try{const r=localStorage.getItem(STORAGE_KEY);if(r)vips=JSON.parse(r);}catch(e){vips=[];}}
+function findVip(u){if(!u)return null;const n=u.toLowerCase().replace(/^@/,"");return vips.find(v=>v.username.toLowerCase()===n)||null;}
+function playSound(vip){queue.push(vip);if(!playing)nextSound();}
+function nextSound(){
+  if(queue.length===0){playing=false;return;}playing=true;
+  const vip=queue.shift();
+  try{const a=new Audio(vip.soundData);a.play().catch(()=>{playing=false;nextSound();});a.onended=()=>{playing=false;nextSound();};a.onerror=()=>{playing=false;nextSound();};}
+  catch(e){playing=false;nextSound();}
+}
+loadVips();setInterval(loadVips,30000);
+function connectSSE(){
+  const es=new EventSource("/events/"+SESSION);
+  es.onmessage=e=>{
+    const d=JSON.parse(e.data);
+    if(d.type==="join"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
+    if(d.type==="chat"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
+    if(d.type==="state"&&d.gifters){d.gifters.forEach(g=>{const v=findVip(g.nickname||g.id);if(v){const k="vip_"+(g.nickname||g.id);if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");playSound(v);}}});}
+  };
+  es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
+}
+connectSSE();
+</script></body></html>
