@@ -363,22 +363,26 @@ const RANKS = [
 ];
 const KEY_USER  = 'gsa2_user';
 const KEY_DONE  = 'gsa2_done';
-const LB_PREFIX = 'gsa2_lb_';
 
 let user = '', done = [], syncTimer = null;
 
-/* ── STORAGE ── */
-async function dbGet(key, shared) {
-  try { const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }
-  catch(e) { return null; }
+/* ── API ── */
+async function apiSubmit(name, pts, tasks) {
+  try {
+    const r = await fetch('/api/gsa/submit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({name, pts, tasks})
+    });
+    return r.ok;
+  } catch(e) { return false; }
 }
-async function dbSet(key, val, shared) {
-  try { await window.storage.set(key, JSON.stringify(val), shared); return true; }
-  catch(e) { return false; }
-}
-async function dbList(prefix, shared) {
-  try { const r = await window.storage.list(prefix, shared); return r ? r.keys : []; }
-  catch(e) { return []; }
+async function apiFetchBoard() {
+  try {
+    const r = await fetch('/api/gsa/leaderboard');
+    if (!r.ok) return [];
+    return await r.json();
+  } catch(e) { return []; }
 }
 
 /* ── AUTH ── */
@@ -460,17 +464,14 @@ function setSyncDot(state) {
 }
 async function push() {
   if (!user) return;
-  const key = LB_PREFIX + user.replace(/[^\w-]/g, '_');
-  const ok = await dbSet(key, {name:user, pts:calcPts(), tasks:done.length, ts:Date.now()}, true);
+  const ok = await apiSubmit(user, calcPts(), done.length);
   setSyncDot(ok ? 'ok' : 'err');
 }
 
 /* ── LEADERBOARD ── */
 async function loadBoard() {
   document.getElementById('lb-content').innerHTML = '<div class="lb-empty">Loading…</div>';
-  const keys = await dbList(LB_PREFIX, true);
-  const entries = (await Promise.all(keys.map(k => dbGet(k, true)))).filter(Boolean);
-  entries.sort((a,b) => b.pts - a.pts || b.tasks - a.tasks);
+  const entries = await apiFetchBoard();
   const medals = ['🥇','🥈','🥉'];
   const rankCls = ['gold','silver','bronze'];
   if (!entries.length) {

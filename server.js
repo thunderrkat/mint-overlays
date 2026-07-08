@@ -219,6 +219,27 @@ app.get('/api/:sessionId/status', (req, res) => {
   res.json({ connected: session.connected, username: session.username, theme: session.theme, likers: getTopLikers(session, 8), totalLikes: session.totalLikes, likeMeterGoal: session.likeMeterGoal });
 });
 
+// ── GSA Scavenger Hunt Leaderboard ───────────────────────────
+const gsaLeaderboard = new Map(); // key: username -> { name, pts, tasks, ts }
+
+app.post('/api/gsa/submit', (req, res) => {
+  const { name, pts, tasks } = req.body;
+  if (!name || typeof pts !== 'number') return res.status(400).json({ error: 'name and pts required' });
+  gsaLeaderboard.set(name.toLowerCase(), { name, pts, tasks: tasks || 0, ts: Date.now() });
+  res.json({ ok: true });
+});
+
+app.get('/api/gsa/leaderboard', (req, res) => {
+  const entries = [...gsaLeaderboard.values()]
+    .sort((a, b) => b.pts - a.pts || b.tasks - a.tasks);
+  res.json(entries);
+});
+
+app.delete('/api/gsa/reset', (req, res) => {
+  gsaLeaderboard.clear();
+  res.json({ ok: true });
+});
+
 // Clean up old sessions every hour
 setInterval(() => {
   const cutoff = Date.now() - 3600000;
