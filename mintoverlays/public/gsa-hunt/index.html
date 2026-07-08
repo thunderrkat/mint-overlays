@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GSA Support Scavenger Hunt</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #080B14;
+  --bg-card:   #0E1220;
+  --bg-raised: #141928;
+  --border:    rgba(255,255,255,.07);
+  --border-hi: rgba(109,40,217,.5);
+  --violet:    #6D28D9;
+  --violet-lo: #4C1D95;
+  --violet-hi: #8B5CF6;
+  --cyan:      #06B6D4;
+  --cyan-lo:   #0E7490;
+  --gold:      #F59E0B;
+  --gold-lo:   #92400E;
+  --green:     #10B981;
+  --red:       #EF4444;
+  --text:      #F1F5F9;
+  --text-2:    #94A3B8;
+  --text-3:    #475569;
+  --font-d:    'Anton', sans-serif;
+  --font-b:    'Inter', sans-serif;
+  --r:         10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo-mark {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-size: 20px; color: #fff;
+  flex-shrink: 0;
+}
+.site-title { font-family: var(--font-d); font-size: 22px; letter-spacing: 1px; color: var(--text); line-height: 1; }
+.site-sub { font-size: 12px; color: var(--text-2); letter-spacing: .5px; margin-top: 2px; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.user-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 12px 5px 8px;
+  font-size: 13px; color: var(--text-2); cursor: pointer;
+  transition: border-color .2s;
+}
+.user-chip:hover { border-color: var(--violet-hi); }
+.user-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); transition: background .3s; }
+.sync-dot.saving { background: var(--gold); animation: pulse-dot 1s infinite; }
+.sync-dot.err { background: var(--red); }
+@keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+/* ── LAYOUT ── */
+.page { max-width: 780px; margin: 0 auto; padding: 28px 20px 0; }
+
+/* ── JOIN ── */
+.join-screen {
+  max-width: 440px; margin: 60px auto 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 32px; text-align: center;
+}
+.join-icon { font-size: 48px; margin-bottom: 16px; }
+.join-screen h2 { font-family: var(--font-d); font-size: 28px; letter-spacing: 1px; margin-bottom: 8px; }
+.join-screen p { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 24px; }
+.join-screen input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 16px; color: var(--text);
+  font-size: 15px; font-family: var(--font-b); outline: none;
+  transition: border-color .2s; margin-bottom: 12px;
+}
+.join-screen input:focus { border-color: var(--violet); }
+.join-screen input::placeholder { color: var(--text-3); }
+.btn { border: none; border-radius: var(--r); padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: var(--font-b); cursor: pointer; transition: all .15s; }
+.btn-primary { background: var(--violet); color: #fff; width: 100%; letter-spacing: .5px; }
+.btn-primary:hover { background: var(--violet-hi); transform: translateY(-1px); }
+.btn-ghost { background: var(--bg-raised); color: var(--text-2); border: 1px solid var(--border); font-size: 12px; padding: 5px 12px; border-radius: 6px; }
+.btn-ghost:hover { border-color: var(--border-hi); color: var(--text); }
+
+/* ── SCORE HERO ── */
+.score-hero {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px 28px;
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 20px; align-items: center; margin-bottom: 20px;
+}
+.rank-badge {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 2px solid var(--violet-hi);
+  background: var(--bg); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(109,40,217,.3);
+}
+.rank-label { font-size: 9px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; }
+.rank-name { font-family: var(--font-d); font-size: 13px; color: var(--violet-hi); text-align: center; line-height: 1.1; padding: 0 4px; }
+.score-center { }
+.score-pts { font-family: var(--font-d); font-size: 52px; line-height: 1; color: var(--text); letter-spacing: 1px; }
+.score-pts span { font-size: 20px; color: var(--text-2); margin-left: 4px; }
+.score-meta { font-size: 13px; color: var(--text-2); margin-top: 4px; }
+.score-right { text-align: right; }
+.tasks-frac { font-family: var(--font-d); font-size: 28px; color: var(--cyan); }
+.tasks-label { font-size: 11px; color: var(--text-3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.prog-wrap { margin-top: 16px; }
+.prog-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--violet), var(--cyan)); border-radius: 3px; transition: width .6s cubic-bezier(.25,.46,.45,.94); }
+.prog-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); margin-top: 5px; }
+
+/* ── TABS ── */
+.tabs { display: flex; gap: 4px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+.tab { flex: 1; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-2); border-radius: 7px; transition: all .15s; letter-spacing: .3px; }
+.tab.active { background: var(--bg-raised); color: var(--text); border: 1px solid var(--border-hi); }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── TASKS ── */
+.task-section-label {
+  font-size: 11px; letter-spacing: 2px; color: var(--text-3);
+  text-transform: uppercase; margin: 16px 0 8px; padding-left: 4px;
+}
+.task-list { display: flex; flex-direction: column; gap: 6px; }
+.task {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: var(--r); padding: 13px 16px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all .15s; user-select: none;
+}
+.task:hover { border-color: rgba(255,255,255,.12); border-left-color: var(--violet); background: var(--bg-raised); }
+.task.done { border-color: rgba(16,185,129,.15); border-left-color: var(--green); background: rgba(16,185,129,.04); }
+.chk {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--text-3); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent; transition: all .15s;
+}
+.task.done .chk { background: var(--green); border-color: var(--green); color: #fff; }
+.task-body { flex: 1; min-width: 0; }
+.task-text { font-size: 14px; color: var(--text); line-height: 1.4; }
+.task.done .task-text { color: var(--text-3); text-decoration: line-through; }
+.task-pts {
+  font-family: var(--font-d); font-size: 17px; color: var(--violet-hi);
+  flex-shrink: 0; transition: color .15s;
+}
+.task.done .task-pts { color: var(--green); }
+.bonus-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 8px; letter-spacing: .5px;
+  background: rgba(245,158,11,.12); color: var(--gold);
+  border: 1px solid rgba(245,158,11,.25); margin-left: 8px; vertical-align: middle;
+}
+
+/* ── LEADERBOARD ── */
+.lb-list { display: flex; flex-direction: column; gap: 5px; }
+.lb-row {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 16px;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color .15s;
+}
+.lb-row.me { border-color: var(--violet); background: rgba(109,40,217,.08); }
+.lb-row:hover { border-color: rgba(255,255,255,.12); }
+.lb-rank { font-family: var(--font-d); font-size: 18px; width: 32px; text-align: center; flex-shrink: 0; color: var(--text-3); }
+.lb-rank.gold { color: var(--gold); }
+.lb-rank.silver { color: var(--text-2); }
+.lb-rank.bronze { color: #b45309; }
+.lb-info { flex: 1; min-width: 0; }
+.lb-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-name.me { color: var(--violet-hi); }
+.lb-sub { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+.lb-pts { font-family: var(--font-d); font-size: 22px; color: var(--text); flex-shrink: 0; }
+.lb-empty { text-align: center; padding: 3rem; color: var(--text-3); font-size: 14px; }
+.lb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.lb-header h3 { font-family: var(--font-d); font-size: 20px; letter-spacing: 1px; }
+.refresh-btn { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--text-2); cursor: pointer; transition: all .15s; }
+.refresh-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* ── REWARDS ── */
+.reward-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.reward-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+}
+.reward-card.full { grid-column: 1/-1; border-color: rgba(109,40,217,.3); background: rgba(109,40,217,.06); }
+.reward-icon { font-size: 28px; margin-bottom: 10px; }
+.reward-title { font-weight: 700; font-size: 15px; margin-bottom: 5px; }
+.reward-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+.reward-card.full .reward-title { color: var(--violet-hi); }
+
+/* ── ABOUT ── */
+.about-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; }
+.about-wrap h3 { font-family: var(--font-d); font-size: 18px; margin-bottom: 12px; }
+.about-wrap p { font-size: 13px; color: var(--text-2); line-height: 1.7; margin-bottom: 12px; }
+.about-wrap p:last-child { margin-bottom: 0; }
+
+/* ── UTILS ── */
+.mt8 { margin-top: 8px; }
+.hint { font-size: 12px; color: var(--text-3); text-align: center; margin-top: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo-mark">G</div>
+  <div>
+    <div class="site-title">GSA HUNT</div>
+    <div class="site-sub">SUPPORT SCAVENGER HUNT</div>
+  </div>
+  <div class="header-right" id="header-right" style="display:none;">
+    <div class="user-chip" onclick="promptSwitch()">
+      <div class="user-dot"></div>
+      <span id="chip-name">—</span>
+    </div>
+    <div class="sync-dot" id="sync-dot" title="Sync status"></div>
+  </div>
+</header>
+
+<!-- JOIN -->
+<div id="join-screen" class="page">
+  <div class="join-screen">
+    <div class="join-icon">🎯</div>
+    <h2>JOIN THE HUNT</h2>
+    <p>Enter your Discord username to start tracking tasks and appear on the live community leaderboard.</p>
+    <input id="uname-input" type="text" placeholder="DiscordName#0000" maxlength="40"
+      onkeydown="if(event.key==='Enter')join()">
+    <button class="btn btn-primary" onclick="join()">Start tracking →</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-screen" class="page" style="display:none;">
+
+  <!-- SCORE HERO -->
+  <div class="score-hero">
+    <div class="rank-badge" id="rank-badge">
+      <div class="rank-label">RANK</div>
+      <div class="rank-name" id="rank-name">—</div>
+    </div>
+    <div class="score-center">
+      <div class="score-pts"><span id="score-num">0</span><span>pts</span></div>
+      <div class="score-meta" id="score-meta">Connect and start completing tasks</div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="prog-labels"><span id="prog-left">0 pts</span><span id="prog-right">125 pts max</span></div>
+      </div>
+    </div>
+    <div class="score-right">
+      <div class="tasks-frac" id="tasks-frac">0/11</div>
+      <div class="tasks-label">tasks done</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tasks')">Tasks</button>
+    <button class="tab" onclick="showTab('board')">Leaderboard</button>
+    <button class="tab" onclick="showTab('rewards')">Rewards</button>
+    <button class="tab" onclick="showTab('about')">About</button>
+  </div>
+
+  <!-- TASKS PANEL -->
+  <div id="p-tasks" class="panel active">
+    <div class="task-section-label">Complete tasks · Tap to check off</div>
+    <div class="task-list" id="task-list"></div>
+    <p class="hint">Progress saves automatically and syncs to the shared leaderboard.</p>
+  </div>
+
+  <!-- BOARD PANEL -->
+  <div id="p-board" class="panel">
+    <div class="lb-header">
+      <h3>LEADERBOARD</h3>
+      <button class="refresh-btn" onclick="loadBoard()">↻ Refresh</button>
+    </div>
+    <div id="lb-content"><div class="lb-empty">Loading…</div></div>
+    <p class="hint">Updates as community members complete tasks. Hit refresh to pull the latest.</p>
+  </div>
+
+  <!-- REWARDS PANEL -->
+  <div id="p-rewards" class="panel">
+    <div class="reward-grid">
+      <div class="reward-card">
+        <div class="reward-icon">🥇</div>
+        <div class="reward-title">Top scorer prize</div>
+        <div class="reward-desc">Highest points earns special GSA recognition or a prize.</div>
+      </div>
+      <div class="reward-card">
+        <div class="reward-icon">🎁</div>
+        <div class="reward-title">Giveaway entry</div>
+        <div class="reward-desc">Complete the hunt to enter the community giveaway.</div>
+      </div>
+      <div class="reward-card">
+        <div class="reward-icon">🎉</div>
+        <div class="reward-title">Surprise challenges</div>
+        <div class="reward-desc">Bonus tasks may drop throughout the week — stay alert.</div>
+      </div>
+      <div class="reward-card full">
+        <div class="reward-icon">💜</div>
+        <div class="reward-title">The mission</div>
+        <div class="reward-desc">No Streamer Left Behind isn't just a motto — it's our mission. Every task helps a creator grow. Together we're proving that community support changes lives.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT PANEL -->
+  <div id="p-about" class="panel">
+    <div class="about-wrap">
+      <h3>HOW IT WORKS</h3>
+      <p>Enter your Discord username once — your progress is saved in your browser and synced to the shared leaderboard so the whole community can see standings in real time.</p>
+      <p>Tap any task to mark it complete. Your score updates immediately. Check the Leaderboard tab to see where you rank against other GSA members.</p>
+      <p>Tasks are worth 5–20 points each. The bonus task (be recognized by a streamer) is worth 20 extra points. Maximum score: <strong style="color:var(--violet-hi)">125 points</strong>.</p>
+      <p style="color:var(--text-3);font-size:12px;">Hosted on mintoverlays.com · Powered by GSA</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TASKS = [
+  {id:'t1',  text:'Tap 5,000 likes in a GSA member\'s LIVE',                                 pts:5},
+  {id:'t2',  text:'Share 5 different GSA LIVE streams to outside GSA community members',      pts:10},
+  {id:'t3',  text:'Welcome 10 new viewers in chat',                                           pts:10},
+  {id:'t4',  text:'Follow 3 new GSA creators',                                                pts:5},
+  {id:'t5',  text:'Stay in a LIVE for at least 20 minutes',                                   pts:10},
+  {id:'t6',  text:'Invite a friend to a GSA creator\'s LIVE (they must follow)',               pts:15},
+  {id:'t7',  text:'Send a 1-coin gift to a creator (optional)',                               pts:5},
+  {id:'t8',  text:'Comment on 5 TikTok videos from GSA creators (GSA TikTok page)',           pts:10},
+  {id:'t9',  text:'Screenshot yourself supporting 3 different creators',                      pts:15},
+  {id:'t10', text:'Help a creator reach a goal (likes, shares, Community Fans, etc.)',        pts:20},
+  {id:'t11', text:'Be recognized by a streamer for your support during their LIVE', pts:20, bonus:true},
+];
+const MAX = TASKS.reduce((s,t) => s+t.pts, 0);
+const RANKS = [
+  {min:0,   name:'ROOKIE'},
+  {min:10,  name:'SUPPORTER'},
+  {min:30,  name:'HYPE MAN'},
+  {min:55,  name:'COMMUNITY\nPRO'},
+  {min:80,  name:'GSA ELITE'},
+  {min:MAX, name:'LEGEND'},
+];
+const KEY_USER  = 'gsa2_user';
+const KEY_DONE  = 'gsa2_done';
+const LB_PREFIX = 'gsa2_lb_';
+
+let user = '', done = [], syncTimer = null;
+
+/* ── STORAGE ── */
+async function dbGet(key, shared) {
+  try { const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }
+  catch(e) { return null; }
+}
+async function dbSet(key, val, shared) {
+  try { await window.storage.set(key, JSON.stringify(val), shared); return true; }
+  catch(e) { return false; }
+}
+async function dbList(prefix, shared) {
+  try { const r = await window.storage.list(prefix, shared); return r ? r.keys : []; }
+  catch(e) { return []; }
+}
+
+/* ── AUTH ── */
+function join() {
+  const v = document.getElementById('uname-input').value.trim();
+  if (!v) return;
+  user = v;
+  const saved = localStorage.getItem(KEY_DONE + '_' + user);
+  done = saved ? JSON.parse(saved) : [];
+  localStorage.setItem(KEY_USER, user);
+  showMain();
+}
+function showMain() {
+  document.getElementById('join-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'block';
+  document.getElementById('header-right').style.display = 'flex';
+  document.getElementById('chip-name').textContent = user;
+  render();
+  push();
+}
+function promptSwitch() {
+  if (!confirm('Switch user? Your progress is saved and you can come back.')) return;
+  localStorage.setItem(KEY_USER, '');
+  user = ''; done = [];
+  document.getElementById('join-screen').style.display = 'block';
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('header-right').style.display = 'none';
+}
+
+/* ── SCORE ── */
+function calcPts() { return TASKS.filter(t => done.includes(t.id)).reduce((s,t) => s+t.pts, 0); }
+function getrank(pts) {
+  let r = RANKS[0];
+  for (const rank of RANKS) { if (pts >= rank.min) r = rank; }
+  return r;
+}
+
+/* ── RENDER ── */
+function render() {
+  const pts = calcPts();
+  const pct = Math.round((pts / MAX) * 100);
+  const rank = getrank(pts);
+  document.getElementById('score-num').textContent = pts;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-left').textContent = pts + ' pts earned';
+  document.getElementById('tasks-frac').textContent = done.length + '/11';
+  document.getElementById('rank-name').textContent = rank.name;
+  document.getElementById('score-meta').textContent =
+    done.length === 0 ? 'Start completing tasks below!' :
+    done.length === TASKS.length ? '🎉 All tasks complete! You\'re a legend.' :
+    (TASKS.length - done.length) + ' tasks remaining';
+
+  document.getElementById('task-list').innerHTML = TASKS.map(t => `
+    <div class="task${done.includes(t.id) ? ' done' : ''}" onclick="toggle('${t.id}')">
+      <div class="chk">${done.includes(t.id) ? '✓' : ''}</div>
+      <div class="task-body">
+        <span class="task-text">${t.text}</span>
+        ${t.bonus ? '<span class="bonus-tag">BONUS</span>' : ''}
+      </div>
+      <div class="task-pts">${t.pts}pt</div>
+    </div>`).join('');
+}
+
+/* ── TOGGLE ── */
+function toggle(id) {
+  if (done.includes(id)) done = done.filter(d => d !== id);
+  else done.push(id);
+  localStorage.setItem(KEY_DONE + '_' + user, JSON.stringify(done));
+  render();
+  setSyncDot('saving');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(push, 900);
+}
+
+/* ── SYNC ── */
+function setSyncDot(state) {
+  const d = document.getElementById('sync-dot');
+  if (d) d.className = 'sync-dot ' + (state === 'ok' ? '' : state);
+}
+async function push() {
+  if (!user) return;
+  const key = LB_PREFIX + user.replace(/[^\w-]/g, '_');
+  const ok = await dbSet(key, {name:user, pts:calcPts(), tasks:done.length, ts:Date.now()}, true);
+  setSyncDot(ok ? 'ok' : 'err');
+}
+
+/* ── LEADERBOARD ── */
+async function loadBoard() {
+  document.getElementById('lb-content').innerHTML = '<div class="lb-empty">Loading…</div>';
+  const keys = await dbList(LB_PREFIX, true);
+  const entries = (await Promise.all(keys.map(k => dbGet(k, true)))).filter(Boolean);
+  entries.sort((a,b) => b.pts - a.pts || b.tasks - a.tasks);
+  const medals = ['🥇','🥈','🥉'];
+  const rankCls = ['gold','silver','bronze'];
+  if (!entries.length) {
+    document.getElementById('lb-content').innerHTML = '<div class="lb-empty">No entries yet — be the first!</div>';
+    return;
+  }
+  document.getElementById('lb-content').innerHTML = '<div class="lb-list">' +
+    entries.map((p,i) => `
+      <div class="lb-row${p.name === user ? ' me' : ''}">
+        <div class="lb-rank${i < 3 ? ' ' + rankCls[i] : ''}">${i < 3 ? medals[i] : i+1}</div>
+        <div class="lb-info">
+          <div class="lb-name${p.name === user ? ' me' : ''}">${p.name}${p.name === user ? ' · you' : ''}</div>
+          <div class="lb-sub">${p.tasks} tasks completed</div>
+        </div>
+        <div class="lb-pts">${p.pts}pts</div>
+      </div>`).join('') + '</div>';
+}
+
+/* ── TABS ── */
+function showTab(t) {
+  document.querySelectorAll('.tab').forEach((b,i) =>
+    b.classList.toggle('active', ['tasks','board','rewards','about'][i] === t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('p-' + t).classList.add('active');
+  if (t === 'board') loadBoard();
+}
+
+/* ── INIT ── */
+(async () => {
+  const saved = localStorage.getItem(KEY_USER);
+  if (saved) {
+    user = saved;
+    const local = localStorage.getItem(KEY_DONE + '_' + user);
+    done = local ? JSON.parse(local) : [];
+    showMain();
+  }
+})();
+</script>
+</body>
+</html>
