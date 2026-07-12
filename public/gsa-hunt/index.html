@@ -334,10 +334,10 @@ async function push(){
   localStorage.setItem(localKey,JSON.stringify(done));
   // Then sync to Supabase
   try{
-    await sb('/rest/v1/gsa_leaderboard',{method:'POST',prefer:'resolution=merge-duplicates',
+    await sb('/rest/v1/gsa_leaderboard?on_conflict=discord_id,week_num,year_num',{method:'POST',prefer:'resolution=merge-duplicates,return=representation',
       body:JSON.stringify({discord_id:discordId,name:user,avatar:avatar||null,week_num:currentWeek.week,year_num:currentWeek.year,pts:calcPts(),tasks:done.length,done,updated_at:new Date().toISOString()})});
     setSyncDot('ok');
-  }catch(e){setSyncDot('err');}
+  }catch(e){setSyncDot('err');console.error('Supabase push failed:',e.message);}
 }
 function setSyncDot(s){const d=document.getElementById('sync-dot');if(d)d.className='sync-dot '+(s==='ok'?'':s);}
 
