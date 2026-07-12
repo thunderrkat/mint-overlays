@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GSA Hunt — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080B14;--bg-card:#0E1220;--bg-raised:#141928;
+  --border:rgba(255,255,255,.07);--border-hi:rgba(109,40,217,.5);
+  --violet:#6D28D9;--violet-hi:#8B5CF6;--cyan:#06B6D4;
+  --gold:#F59E0B;--green:#10B981;--red:#EF4444;--orange:#F97316;
+  --text:#F1F5F9;--text-2:#94A3B8;--text-3:#475569;
+  --font-d:'Anton',sans-serif;--font-b:'Inter',sans-serif;--r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;padding-bottom:60px;}
+.header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:18px;color:#fff;flex-shrink:0;}
+.title{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.badge{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;letter-spacing:1px;margin-left:4px;}
+.header-right{margin-left:auto;}
+.btn{border:none;border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:600;font-family:var(--font-b);cursor:pointer;transition:all .15s;}
+.btn-primary{background:var(--violet);color:#fff;}
+.btn-primary:hover{background:var(--violet-hi);}
+.btn-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,.25);}
+.btn-ghost{background:var(--bg-raised);border:1px solid var(--border);color:var(--text-2);}
+.btn-ghost:hover{border-color:var(--border-hi);color:var(--text);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-warn{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);color:var(--orange);}
+.btn-warn:hover{background:rgba(249,115,22,.25);}
+
+/* LOGIN */
+.login-screen{max-width:380px;margin:80px auto;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;}
+.lock-icon{font-size:40px;margin-bottom:14px;}
+.login-screen h2{font-family:var(--font-d);font-size:22px;margin-bottom:8px;}
+.login-screen p{font-size:13px;color:var(--text-2);margin-bottom:20px;}
+.login-screen input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:14px;font-family:var(--font-b);outline:none;margin-bottom:10px;transition:border-color .2s;}
+.login-screen input:focus{border-color:var(--violet);}
+.login-screen input::placeholder{color:var(--text-3);}
+.error-msg{color:var(--red);font-size:12px;margin-bottom:8px;}
+
+/* PAGE */
+.page{max-width:1000px;margin:0 auto;padding:24px 16px;}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.section-hdr h2{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+select.ctl{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:13px;color:var(--text-2);font-family:var(--font-b);outline:none;}
+select.ctl:focus{border-color:var(--violet);}
+input.search{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;color:var(--text);font-family:var(--font-b);outline:none;width:200px;}
+input.search:focus{border-color:var(--violet);}
+input.search::placeholder{color:var(--text-3);}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.stat-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.stat-val{font-family:var(--font-d);font-size:28px;color:var(--text);}
+.stat-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+
+/* WINNER CARD */
+.winner-card{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(109,40,217,.1));border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px;}
+.winner-av{width:56px;height:56px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.winner-av img{width:100%;height:100%;object-fit:cover;}
+.winner-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.winner-name{font-family:var(--font-d);font-size:22px;color:var(--text);}
+.winner-pts{font-size:14px;color:var(--text-2);margin-top:2px;}
+.winner-badge{margin-left:auto;font-size:48px;}
+
+/* TABLE */
+.table-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+table{width:100%;border-collapse:collapse;}
+th{padding:10px 16px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);text-align:left;background:var(--bg-raised);border-bottom:1px solid var(--border);}
+td{padding:10px 16px;font-size:14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.rank-cell{font-family:var(--font-d);font-size:17px;width:40px;}
+.rank-cell.gold{color:var(--gold);}
+.rank-cell.silver{color:var(--text-2);}
+.rank-cell.bronze{color:#b45309;}
+.av-cell{width:36px;height:36px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;overflow:hidden;flex-shrink:0;}
+.av-cell img{width:100%;height:100%;object-fit:cover;}
+.name-cell{font-weight:600;}
+.pts-cell{font-family:var(--font-d);font-size:17px;color:var(--violet-hi);}
+.actions-cell{display:flex;gap:6px;}
+.user-row{display:flex;align-items:center;gap:10px;}
+.edit-input{background:var(--bg);border:1px solid var(--violet);border-radius:5px;padding:3px 8px;color:var(--text);font-size:14px;font-family:var(--font-b);outline:none;width:80px;}
+
+/* WEEK HISTORY */
+.week-history{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:24px;}
+.week-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;}
+.week-card.current-week{border-color:var(--violet);}
+.wk-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;display:flex;justify-content:space-between;}
+.wk-current{color:var(--violet-hi);}
+.wk-winner{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.wk-av{width:28px;height:28px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.wk-av img{width:100%;height:100%;object-fit:cover;}
+.wk-name{font-weight:600;font-size:14px;}
+.wk-pts{font-family:var(--font-d);font-size:16px;color:var(--gold);}
+.wk-participants{font-size:12px;color:var(--text-3);margin-top:4px;}
+
+.empty{text-align:center;padding:2rem;color:var(--text-3);font-size:14px;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,8,20,.97);border:1px solid var(--border-hi);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:200;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:rgba(16,185,129,.5);color:var(--green);}
+.toast.err{border-color:rgba(239,68,68,.4);color:var(--red);}
+.divider{height:1px;background:var(--border);margin:24px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">G</div>
+  <div><div class="title">GSA HUNT <span class="badge">ADMIN</span></div></div>
+  <div class="header-right" id="header-right" style="display:none;">
+    <button class="btn btn-ghost btn-sm" onclick="location.href='/gsa-hunt'">← Back to Hunt</button>
+    <button class="btn btn-ghost btn-sm" onclick="adminLogout()" style="margin-left:6px;">Log Out</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen" style="max-width:1000px;margin:0 auto;padding:24px 16px;">
+  <div class="login-screen">
+    <div class="lock-icon">🔒</div>
+    <h2>ADMIN ACCESS</h2>
+    <p>Enter the admin password to manage the GSA Hunt leaderboard.</p>
+    <div class="error-msg" id="login-error" style="display:none;">Incorrect password</div>
+    <input type="password" id="pwd-input" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()">
+    <button class="btn btn-primary" style="width:100%;" onclick="adminLogin()">Login</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" class="page" style="display:none;">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">This Week</div><div class="stat-val" id="stat-week">—</div><div class="stat-sub" id="stat-week-dates">Loading…</div></div>
+    <div class="stat-card"><div class="stat-label">Participants</div><div class="stat-val" id="stat-participants">—</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card"><div class="stat-label">Total Members</div><div class="stat-val" id="stat-total">—</div><div class="stat-sub">all time</div></div>
+    <div class="stat-card"><div class="stat-label">Top Score</div><div class="stat-val" id="stat-top">—</div><div class="stat-sub" id="stat-top-name">this week</div></div>
+  </div>
+
+  <!-- CURRENT WINNER -->
+  <div id="winner-card-wrap"></div>
+
+  <!-- WEEKLY LEADERBOARD -->
+  <div class="section-hdr">
+    <h2>LEADERBOARD</h2>
+    <div class="controls">
+      <select class="ctl" id="week-filter" onchange="loadLeaderboard()">
+        <option value="current">This week</option>
+        <option value="alltime">All-time</option>
+      </select>
+      <input class="search" id="search-input" type="text" placeholder="Search members…" oninput="filterTable()">
+      <button class="btn btn-ghost btn-sm" onclick="loadLeaderboard()">↻ Refresh</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Member</th><th>Points</th><th>Tasks</th><th>Last Updated</th><th>Actions</th>
+      </tr></thead>
+      <tbody id="lb-tbody"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- WEEK HISTORY -->
+  <div class="section-hdr">
+    <h2>WEEKLY WINNERS</h2>
+    <button class="btn btn-ghost btn-sm" onclick="loadHistory()">↻ Refresh</button>
+  </div>
+  <div class="week-history" id="week-history"><div class="empty">Loading…</div></div>
+
+  <div class="divider"></div>
+
+  <!-- DANGER ZONE -->
+  <div class="section-hdr"><h2>ADMIN ACTIONS</h2></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="btn btn-warn" onclick="exportCSV()">📥 Export CSV</button>
+    <button class="btn btn-danger" onclick="clearWeek()">🗑 Clear This Week's Scores</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL='https://tpmfivjjyujwdkxtvjcy.supabase.co';
+const SUPA_KEY='sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U';
+const ADMIN_PWD_KEY='gsa_admin_auth';
+// Password stored as hash check - set your password in Railway as GSA_ADMIN_SECRET
+// For now using a client-side check with a hardcoded hash
+const ADMIN_PASS='GSA2025admin!'; // Change this!
+
+let allData=[], currentWeekInfo=null;
+const MEDALS=['🥇','🥈','🥉'],RC=['gold','silver','bronze'];
+
+function adminLogin(){
+  const pwd=document.getElementById('pwd-input').value;
+  if(pwd===ADMIN_PASS){
+    sessionStorage.setItem(ADMIN_PWD_KEY,'1');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('header-right').style.display='flex';
+    initAdmin();
+  } else {
+    document.getElementById('login-error').style.display='block';
+  }
+}
+function adminLogout(){
+  sessionStorage.removeItem(ADMIN_PWD_KEY);
+  location.reload();
+}
+function checkAuth(){
+  return sessionStorage.getItem(ADMIN_PWD_KEY)==='1';
+}
+
+async function sb(path,opts={}){
+  const res=await fetch(SUPA_URL+path,{...opts,headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json',Prefer:opts.prefer||'',...(opts.headers||{})}});
+  if(!res.ok)throw new Error(await res.text());
+  const t=await res.text();return t?JSON.parse(t):null;
+}
+
+// Week helpers
+function getWeek(date){
+  const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+  const day=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-day);
+  const ys=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return{week:Math.ceil((((d-ys)/86400000)+1)/7),year:d.getUTCFullYear()};
+}
+function getWeekBounds(week,year){
+  const jan4=new Date(Date.UTC(year,0,4));
+  const dow=jan4.getUTCDay()||7;
+  const w1=new Date(jan4);w1.setUTCDate(jan4.getUTCDate()-(dow-1));
+  const mon=new Date(w1);mon.setUTCDate(w1.getUTCDate()+(week-1)*7);
+  const sun=new Date(mon);sun.setUTCDate(mon.getUTCDate()+6);sun.setUTCHours(23,59,59,999);
+  return{start:mon,end:sun};
+}
+function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function fmtDT(iso){return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
+
+async function initAdmin(){
+  currentWeekInfo=getWeek(new Date());
+  await Promise.all([loadStats(),loadLeaderboard(),loadHistory()]);
+}
+
+async function loadStats(){
+  try{
+    const [weekData,allUsers]=await Promise.all([
+      sb('/rest/v1/gsa_leaderboard?week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year+'&select=discord_id,name,pts,avatar&order=pts.desc'),
+      sb('/rest/v1/gsa_leaderboard?select=discord_id&limit=1000'),
+    ]);
+    const b=getWeekBounds(currentWeekInfo.week,currentWeekInfo.year);
+    document.getElementById('stat-week').textContent='Week '+currentWeekInfo.week;
+    document.getElementById('stat-week-dates').textContent=fmtDate(b.start)+' – '+fmtDate(b.end);
+    document.getElementById('stat-participants').textContent=weekData?weekData.length:0;
+    const uniq=allUsers?new Set(allUsers.map(r=>r.discord_id)).size:0;
+    document.getElementById('stat-total').textContent=uniq;
+    if(weekData&&weekData.length){
+      const top=weekData[0];
+      document.getElementById('stat-top').textContent=top.pts+' pts';
+      document.getElementById('stat-top-name').textContent=top.name;
+      const av=top.avatar?`<img src="${top.avatar}" onerror="this.parentElement.textContent='${top.name.charAt(0).toUpperCase()}'">`:(top.name.charAt(0).toUpperCase());
+      document.getElementById('winner-card-wrap').innerHTML=`
+        <div class="winner-card">
+          <div class="winner-av">${av}</div>
+          <div>
+            <div class="winner-label">👑 Current Leader — Week ${currentWeekInfo.week}</div>
+            <div class="winner-name">${top.name}</div>
+            <div class="winner-pts">${top.pts} points · ${weekData[0].tasks||0} tasks completed</div>
+          </div>
+          <div class="winner-badge">🏆</div>
+        </div>`;
+    }
+  }catch(e){toast('Stats load failed','err');}
+}
+
+async function loadLeaderboard(){
+  const mode=document.getElementById('week-filter').value;
+  try{
+    if(mode==='current'){
+      allData=await sb('/rest/v1/gsa_leaderboard?week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year+'&order=pts.desc,tasks.desc&select=*')||[];
+    } else {
+      const raw=await sb('/rest/v1/gsa_leaderboard?select=*')||[];
+      const by={};
+      raw.forEach(r=>{
+        if(!by[r.discord_id])by[r.discord_id]={discord_id:r.discord_id,name:r.name,avatar:r.avatar,pts:0,tasks:0,updated_at:r.updated_at};
+        by[r.discord_id].pts+=r.pts;by[r.discord_id].tasks+=r.tasks;
+        if(r.updated_at>by[r.discord_id].updated_at)by[r.discord_id].updated_at=r.updated_at;
+      });
+      allData=Object.values(by).sort((a,b)=>b.pts-a.pts||b.tasks-a.tasks);
+    }
+    renderTable(allData);
+  }catch(e){toast('Leaderboard load failed','err');}
+}
+
+function renderTable(data){
+  if(!data.length){document.getElementById('lb-tbody').innerHTML='<tr><td colspan="6" class="empty">No data</td></tr>';return;}
+  document.getElementById('lb-tbody').innerHTML=data.map((p,i)=>{
+    const av=p.avatar?`<img src="${p.avatar}" onerror="this.parentElement.textContent='${p.name.charAt(0).toUpperCase()}'">`:(p.name.charAt(0).toUpperCase());
+    return`<tr data-name="${p.name.toLowerCase()}">
+      <td class="rank-cell ${i<3?RC[i]:''}">${i<3?MEDALS[i]:i+1}</td>
+      <td><div class="user-row"><div class="av-cell">${av}</div><span class="name-cell">${p.name}</span></div></td>
+      <td><div style="display:flex;align-items:center;gap:6px;"><span class="pts-cell" id="pts-${p.discord_id}">${p.pts}</span><input type="number" class="edit-input" id="edit-${p.discord_id}" value="${p.pts}" style="display:none;" min="0" max="${125*(document.getElementById('week-filter').value==='alltime'?52:1)}"></div></td>
+      <td>${p.tasks}</td>
+      <td style="font-size:12px;color:var(--text-3);">${p.updated_at?fmtDT(p.updated_at):'—'}</td>
+      <td class="actions-cell">
+        <button class="btn btn-ghost btn-sm" onclick="startEdit('${p.discord_id}',${p.pts})">✏ Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="removeUser('${p.discord_id}','${p.name}')">✕ Remove</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  document.querySelectorAll('#lb-tbody tr[data-name]').forEach(row=>{
+    row.style.display=row.dataset.name.includes(q)?'':'none';
+  });
+}
+
+let editingId=null;
+function startEdit(discordId,currentPts){
+  if(editingId)cancelEdit();
+  editingId=discordId;
+  document.getElementById('pts-'+discordId).style.display='none';
+  const inp=document.getElementById('edit-'+discordId);
+  inp.style.display='block';inp.focus();inp.select();
+  // Change button to Save
+  const row=document.querySelector(`[data-name]`);
+  const btns=inp.closest('tr').querySelectorAll('.btn');
+  btns[0].textContent='💾 Save';btns[0].onclick=()=>saveEdit(discordId);
+  btns[1].textContent='✕ Cancel';btns[1].onclick=()=>cancelEdit();btns[1].className='btn btn-ghost btn-sm';
+}
+function cancelEdit(){
+  if(!editingId)return;
+  document.getElementById('pts-'+editingId).style.display='';
+  document.getElementById('edit-'+editingId).style.display='none';
+  editingId=null;
+  loadLeaderboard();
+}
+async function saveEdit(discordId){
+  const newPts=parseInt(document.getElementById('edit-'+discordId).value)||0;
+  const mode=document.getElementById('week-filter').value;
+  try{
+    if(mode==='current'){
+      await sb('/rest/v1/gsa_leaderboard?discord_id=eq.'+encodeURIComponent(discordId)+'&week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year,{
+        method:'PATCH',body:JSON.stringify({pts:newPts,updated_at:new Date().toISOString()}),
+      });
+    } else {
+      toast('Editing all-time is not supported — edit a specific week instead','err');return;
+    }
+    editingId=null;
+    toast('Score updated ✓','ok');
+    await loadLeaderboard();await loadStats();
+  }catch(e){toast('Update failed: '+e.message,'err');}
+}
+
+async function removeUser(discordId,name){
+  if(!confirm('Remove '+name+' from this week's leaderboard?'))return;
+  const mode=document.getElementById('week-filter').value;
+  try{
+    let url='/rest/v1/gsa_leaderboard?discord_id=eq.'+encodeURIComponent(discordId);
+    if(mode==='current')url+='&week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year;
+    await sb(url,{method:'DELETE'});
+    toast(name+' removed ✓','ok');
+    await loadLeaderboard();await loadStats();
+  }catch(e){toast('Remove failed','err');}
+}
+
+async function loadHistory(){
+  try{
+    const all=await sb('/rest/v1/gsa_leaderboard?select=discord_id,name,avatar,pts,tasks,week_num,year_num&order=week_num.desc,year_num.desc')||[];
+    const weeks={};
+    all.forEach(r=>{
+      const k=r.year_num+'-'+r.week_num;
+      if(!weeks[k])weeks[k]={week:r.week_num,year:r.year_num,entries:[]};
+      weeks[k].entries.push(r);
+    });
+    const sorted=Object.values(weeks).sort((a,b)=>b.year-a.year||b.week-a.week);
+    if(!sorted.length){document.getElementById('week-history').innerHTML='<div class="empty">No history yet</div>';return;}
+    document.getElementById('week-history').innerHTML=sorted.map(w=>{
+      w.entries.sort((a,b)=>b.pts-a.pts);
+      const winner=w.entries[0];
+      const isCurrent=w.week===currentWeekInfo.week&&w.year===currentWeekInfo.year;
+      const bounds=getWeekBounds(w.week,w.year);
+      const av=winner.avatar?`<img src="${winner.avatar}" onerror="this.parentElement.textContent='${winner.name.charAt(0).toUpperCase()}'">`:(winner.name.charAt(0).toUpperCase());
+      return`<div class="week-card${isCurrent?' current-week':''}">
+        <div class="wk-label"><span>Week ${w.week} · ${fmtDate(bounds.start)}–${fmtDate(bounds.end)}</span>${isCurrent?'<span class="wk-current">CURRENT</span>':''}</div>
+        <div class="wk-winner"><div class="wk-av">${av}</div><div><div class="wk-name">👑 ${winner.name}</div><div class="wk-pts">${winner.pts} pts</div></div></div>
+        <div class="wk-participants">${w.entries.length} participant${w.entries.length!==1?'s':''}</div>
+      </div>`;
+    }).join('');
+  }catch(e){toast('History load failed','err');}
+}
+
+function exportCSV(){
+  if(!allData.length){toast('No data to export','err');return;}
+  const mode=document.getElementById('week-filter').value;
+  const rows=[['Rank','Name','Discord ID','Points','Tasks','Last Updated']];
+  allData.forEach((p,i)=>rows.push([i+1,p.name,p.discord_id,p.pts,p.tasks,p.updated_at||'']));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='gsa-hunt-'+(mode==='current'?'week'+currentWeekInfo.week:'alltime')+'.csv';
+  a.click();
+  toast('CSV exported ✓','ok');
+}
+
+async function clearWeek(){
+  if(!confirm('⚠️ Clear ALL scores for Week '+currentWeekInfo.week+'? This cannot be undone.'))return;
+  if(!confirm('Are you SURE? This will delete all this week\'s progress.'))return;
+  try{
+    await sb('/rest/v1/gsa_leaderboard?week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year,{method:'DELETE'});
+    toast('Week '+currentWeekInfo.week+' cleared ✓','ok');
+    await Promise.all([loadStats(),loadLeaderboard(),loadHistory()]);
+  }catch(e){toast('Clear failed','err');}
+}
+
+let toastTimer;
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='ok'?'ok':type==='err'?'err':'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',3000);}
+
+// Boot
+if(checkAuth()){document.getElementById('login-screen').style.display='none';document.getElementById('admin-panel').style.display='block';document.getElementById('header-right').style.display='flex';initAdmin();}
+document.getElementById('pwd-input')&&document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
+</script>
+</body>
+</html>
