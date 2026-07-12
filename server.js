@@ -219,25 +219,55 @@ app.get('/api/:sessionId/status', (req, res) => {
   res.json({ connected: session.connected, username: session.username, theme: session.theme, likers: getTopLikers(session, 8), totalLikes: session.totalLikes, likeMeterGoal: session.likeMeterGoal });
 });
 
-// ── GSA Scavenger Hunt Leaderboard ───────────────────────────
-const gsaLeaderboard = new Map(); // key: username -> { name, pts, tasks, ts }
+// ── GSA Hunt — Discord OAuth callback ─────────────────────────
+app.get('/gsa-hunt/callback', async (req, res) => {
+  const { code } = req.query;
+  if (!code) return res.redirect('/gsa-hunt?error=no_code');
 
-app.post('/api/gsa/submit', (req, res) => {
-  const { name, pts, tasks } = req.body;
-  if (!name || typeof pts !== 'number') return res.status(400).json({ error: 'name and pts required' });
-  gsaLeaderboard.set(name.toLowerCase(), { name, pts, tasks: tasks || 0, ts: Date.now() });
-  res.json({ ok: true });
+  const CLIENT_ID     = process.env.DISCORD_CLIENT_ID;
+  const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+  const REDIRECT_URI  = process.env.DISCORD_REDIRECT_URI || 'https://mintoverlays.com/gsa-hunt/callback';
+
+  if (!CLIENT_ID || !CLIENT_SECRET) {
+    return res.redirect('/gsa-hunt?error=discord_not_configured');
+  }
+
+  try {
+    const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID, client_secret: CLIENT_SECRET,
+        grant_type: 'authorization_code', code,
+        redirect_uri: REDIRECT_URI,
+      }),
+    });
+    const tokenData = await tokenRes.json();
+    if (!tokenData.access_token) throw new Error('No access token received');
+
+    const userRes = await fetch('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${tokenData.access_token}` },
+    });
+    const user = await userRes.json();
+    const avatar = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+      : null;
+
+    const params = new URLSearchParams({
+      discordId: user.id,
+      name: user.global_name || user.username,
+      avatar: avatar || '',
+    });
+    res.redirect(`/gsa-hunt?${params}`);
+  } catch(e) {
+    console.error('[GSA OAuth]', e.message);
+    res.redirect('/gsa-hunt?error=oauth_failed');
+  }
 });
 
-app.get('/api/gsa/leaderboard', (req, res) => {
-  const entries = [...gsaLeaderboard.values()]
-    .sort((a, b) => b.pts - a.pts || b.tasks - a.tasks);
-  res.json(entries);
-});
-
-app.delete('/api/gsa/reset', (req, res) => {
-  gsaLeaderboard.clear();
-  res.json({ ok: true });
+// ── GSA Admin page ────────────────────────────────────────────
+app.get('/gsa-hunt/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'gsa-hunt', 'admin.html'));
 });
 
 // Clean up old sessions every hour
