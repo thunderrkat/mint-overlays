@@ -414,7 +414,7 @@ function exportCSV(){
 
 async function clearWeek(){
   if(!confirm('⚠️ Clear ALL scores for Week '+currentWeekInfo.week+'? This cannot be undone.'))return;
-  if(!confirm('Are you SURE? This will delete all this week\'s progress.'))return;
+  if(!confirm('Are you SURE? This will delete all this weeks progress.'))return;
   try{
     await sb('/rest/v1/gsa_leaderboard?week_num=eq.'+currentWeekInfo.week+'&year_num=eq.'+currentWeekInfo.year,{method:'DELETE'});
     toast('Week '+currentWeekInfo.week+' cleared ✓','ok');
