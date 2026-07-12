@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF2D8B;--pink-hot:#FF69B4;--pink-deep:#A0005A;
+  --orange:#FF6B00;--orange-warm:#FF8C42;--gold:#FFD700;
+  --ink:#0D0008;--ink-2:#160010;--ink-3:#1F0018;
+  --text:#FFFFFF;--text-dim:#FFD4EE;--text-muted:#AA6688;
+  --panel:rgba(16,0,10,.92);--panel-line:rgba(255,45,139,.45);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:344px;height:340px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+
+.leaderboard{
+  width:344px;height:340px;
+  background:transparent;border:none;
+  border-radius:14px;padding:14px 16px;
+  
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+}
+.leaderboard::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--ink),var(--pink-deep) 20%,var(--pink) 40%,var(--orange) 60%,var(--pink) 80%,var(--ink));
+  box-shadow:0 0 10px rgba(255,45,139,.7);
+}
+
+.lb-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;padding-bottom:9px;
+  border-bottom:1px solid rgba(255,45,139,.18);flex-shrink:0;
+}
+.lb-title{
+  font-family:var(--font-cond);font-weight:800;font-size:17px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--pink-hot);
+}
+.lb-subtitle{
+  font-family:var(--font-cond);font-size:11px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--text-muted);
+}
+
+.lb-list{display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden;}
+
+.lb-row{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 10px;border-radius:8px;
+  background:rgba(255,45,139,.04);
+  border:1px solid rgba(255,45,139,.08);
+  transition:border-color .2s;
+}
+.lb-row:hover{border-color:rgba(255,45,139,.2);}
+.lb-row.r1{border-color:rgba(255,45,139,.35);background:rgba(255,45,139,.08);box-shadow:0 0 12px rgba(255,45,139,.1);}
+.lb-row.r2{border-color:rgba(255,107,0,.25);background:rgba(255,107,0,.05);}
+.lb-row.r3{border-color:rgba(160,0,90,.25);background:rgba(160,0,90,.05);}
+
+.lb-rank{
+  font-family:var(--font-display);font-size:22px;
+  width:28px;text-align:center;flex-shrink:0;line-height:1;
+}
+
+.lb-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.lb-name{
+  font-family:var(--font-display);font-size:18px;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1;
+}
+.lb-count{
+  font-family:var(--font-cond);font-size:13px;font-weight:800;
+  letter-spacing:1px;
+}
+
+.empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;flex:1;gap:8px;color:var(--text-muted);text-align:center;
+}
+.empty .e-icon{font-size:32px;opacity:.4;}
+.empty .e-label{font-family:var(--font-cond);font-size:13px;letter-spacing:2px;text-transform:uppercase;}
+.empty .e-sub{font-size:12px;opacity:.6;}
+</style>
+</head>
+<body>
+<div class="leaderboard">
+  <div class="lb-head">
+    <div class="lb-title">❤️ Top Likers</div>
+    <div class="lb-subtitle">Live · Sorted by likes</div>
+  </div>
+  <div class="lb-list" id="list">
+    <div class="empty">
+      <div class="e-icon">❤️</div>
+      <div class="e-label">No likers yet</div>
+      <div class="e-sub">Connect your stream to begin</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION = "whatachingona-f5p8";
+const RANK_COLORS = ["#FF2D8B","#FF6B00","#A0005A","#AA6688","#AA6688"];
+const RANK_EMOJIS = ["👑","✨","💕","💖","💗"];
+
+let likers = [];
+
+function render() {
+  const list = document.getElementById("list");
+  if (likers.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="e-icon">❤️</div><div class="e-label">No likers yet</div><div class="e-sub">Connect your stream to begin</div></div>';
+    return;
+  }
+  list.innerHTML = likers.slice(0, 5).map((r, i) => `
+    <div class="lb-row ${i < 3 ? "r" + (i+1) : ""}">
+      <span class="lb-rank" style="color:${RANK_COLORS[i]}">${RANK_EMOJIS[i]}</span>
+      <div class="lb-info">
+        <div class="lb-name">@${r.nickname || r.id}</div>
+        <div class="lb-count" style="color:${RANK_COLORS[i]}">${r.count.toLocaleString()} likes</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function connectSSE() {
+  const es = new EventSource("/events/" + SESSION);
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    if (d.type === "state" && d.likers !== undefined) {
+      likers = [...d.likers].sort((a, b) => b.count - a.count);
+      render();
+    }
+  };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 3000); };
+}
+
+connectSSE();
+render();
+</script>
+</body>
+</html>

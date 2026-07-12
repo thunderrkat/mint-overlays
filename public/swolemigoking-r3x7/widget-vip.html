@@ -3,24 +3,58 @@
 <style>*{margin:0;padding:0;}body{width:1px;height:1px;background:transparent;overflow:hidden;}</style>
 </head><body>
 <script>
+const SUPA_URL="https://tpmfivjjyujwdkxtvjcy.supabase.co";
+const SUPA_KEY="sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U";
 const SESSION="swolemigoking-r3x7";
-const STORAGE_KEY="swole_vip_sounds_v1";
 let vips=[],queue=[],playing=false;
-function loadVips(){try{const r=localStorage.getItem(STORAGE_KEY);if(r)vips=JSON.parse(r);}catch(e){vips=[];}}
-function findVip(u){if(!u)return null;const n=u.toLowerCase().replace(/^@/,"");return vips.find(v=>v.username.toLowerCase()===n)||null;}
+
+async function loadVips(){
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&order=position.asc",{
+      headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY},
+    });
+    if(res.ok)vips=await res.json();
+  }catch(e){}
+}
+
+function findVip(u){
+  if(!u)return null;
+  const n=u.toLowerCase().replace(/^@/,"");
+  return vips.find(v=>v.username===n)||null;
+}
+
 function playSound(vip){queue.push(vip);if(!playing)nextSound();}
 function nextSound(){
-  if(queue.length===0){playing=false;return;}playing=true;
+  if(!queue.length){playing=false;return;}
+  playing=true;
   const vip=queue.shift();
-  try{const a=new Audio(vip.soundData);a.play().catch(()=>{playing=false;nextSound();});a.onended=()=>{playing=false;nextSound();};a.onerror=()=>{playing=false;nextSound();};}
-  catch(e){playing=false;nextSound();}
+  try{
+    const a=new Audio(vip.sound_data);
+    a.play().catch(()=>{playing=false;nextSound();});
+    a.onended=()=>{playing=false;nextSound();};
+    a.onerror=()=>{playing=false;nextSound();};
+  }catch(e){playing=false;nextSound();}
 }
-loadVips();setInterval(loadVips,30000);
-const es=new EventSource("/events/"+SESSION);
-es.onmessage=e=>{
-  const d=JSON.parse(e.data);
-  if(d.type==="join"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
-  if(d.type==="chat"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
-  if(d.type==="state"&&d.gifters){d.gifters.forEach(g=>{const v=findVip(g.nickname||g.id);if(v){const k="vip_"+( g.nickname||g.id);if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");playSound(v);}}});}
-};
-</script></body></html>
+
+// Load on start, reload every 30s to pick up changes
+loadVips();
+setInterval(loadVips,30000);
+
+function connectSSE(){
+  const es=new EventSource("/events/"+SESSION);
+  es.onmessage=e=>{
+    const d=JSON.parse(e.data);
+    if(d.type==="join"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
+    if(d.type==="chat"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
+    if(d.type==="state"&&d.gifters){
+      d.gifters.forEach(g=>{
+        const v=findVip(g.nickname||g.id);
+        if(v){const k="vip_p_"+(g.nickname||g.id);if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");playSound(v);}}
+      });
+    }
+  };
+  es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
+}
+connectSSE();
+</script>
+</body></html>

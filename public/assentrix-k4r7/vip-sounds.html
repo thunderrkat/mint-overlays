@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIP Sound Board — Assentrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;500;600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#CC0000;--accent-lo:#8B0000;--accent-hi:#FF2222;--gold:#888888;
+  --ink:#0A0000;--ink-2:#110000;--panel-line:rgba(204,0,0,.45);
+  --text:#FFFFFF;--text-dim:#D4D4F0;--text-muted:#888899;
+  --panel:rgba(10,8,20,.92);
+  --font-d:"Anton",sans-serif;--font-c:"Saira Condensed",sans-serif;--font-b:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:radial-gradient(120% 80% at 50% 0%,var(--ink-2),var(--ink));color:var(--text);font-family:var(--font-b);min-height:100vh;padding-bottom:60px;}
+.page{max-width:840px;margin:0 auto;padding:36px 20px;}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.title{font-family:var(--font-d);font-size:32px;transform:skewX(-3deg);}.title span{color:var(--accent);}
+.sub{font-size:12px;color:var(--text-muted);margin-top:3px;font-family:var(--font-c);letter-spacing:1px;text-transform:uppercase;}
+.back{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid var(--panel-line);border-radius:7px;padding:7px 14px;color:var(--text-dim);text-decoration:none;font-size:12px;font-weight:700;font-family:var(--font-c);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.back:hover{border-color:var(--accent);color:var(--text);}
+.status-bar{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--panel-line);border-radius:8px;padding:8px 14px;margin-bottom:20px;font-size:13px;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0;}
+.status-dot.ok{background:#10B981;box-shadow:0 0 6px #10B981;}
+.status-dot.err{background:#EF4444;}
+.status-dot.loading{background:var(--gold);animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.add-card{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:14px;padding:22px 26px;margin-bottom:24px;position:relative;overflow:hidden;}
+.add-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-lo),var(--accent),var(--accent-hi));box-shadow:0 0 10px var(--accent);}
+.add-card h2{font-family:var(--font-c);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:170px;}
+.fg label{font-family:var(--font-c);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);}
+.fg input{background:rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.1);border-radius:7px;padding:9px 12px;color:var(--text);font-size:14px;font-weight:600;font-family:var(--font-b);outline:none;transition:border-color .2s;width:100%;}
+.fg input:focus{border-color:var(--accent);}
+.fg input::placeholder{color:var(--text-muted);font-weight:400;}
+.upload-area{border:2px dashed rgba(255,255,255,.12);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:rgba(0,0,0,.3);}
+.upload-area:hover,.upload-area.drag{border-color:var(--accent);background:rgba(255,255,255,.04);}
+.upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-icon{font-size:24px;margin-bottom:4px;}
+.upload-text{font-size:12px;color:var(--text-muted);}.upload-text strong{color:var(--accent);}
+.file-name{font-size:12px;color:var(--gold);margin-top:4px;font-weight:700;display:none;}
+.btn-add{background:linear-gradient(135deg,var(--accent-lo),var(--accent));border:none;border-radius:8px;padding:10px 24px;color:#fff;font-size:13px;font-weight:800;font-family:var(--font-c);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.4);}
+.btn-add:hover{opacity:.9;transform:translateY(-1px);}
+.btn-add:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.section-title{font-family:var(--font-c);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:"";flex:1;height:1px;background:var(--panel-line);}
+.count-badge{background:rgba(255,255,255,.08);color:var(--text-dim);font-size:11px;padding:2px 8px;border-radius:8px;}
+.vip-list{display:flex;flex-direction:column;gap:8px;}
+.vip-card{background:var(--panel);border:1.5px solid var(--panel-line);border-radius:11px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s;}
+.vip-card:hover{border-color:var(--accent);}
+.vip-card.playing{border-color:var(--gold);box-shadow:0 0 16px rgba(255,215,0,.15);}
+.drag-handle{cursor:grab;color:var(--text-muted);font-size:16px;opacity:.5;flex-shrink:0;}
+.drag-handle:hover{opacity:1;}
+.vip-card.dragging{opacity:.4;border-style:dashed;}
+.vip-num{font-family:var(--font-d);font-size:18px;color:var(--accent);width:24px;text-align:center;flex-shrink:0;}
+.vip-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent-lo),var(--accent));display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:16px;color:#fff;border:2px solid rgba(255,255,255,.1);}
+.vip-info{flex:1;min-width:0;}
+.vip-username{font-family:var(--font-d);font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px;}
+.vip-username-edit{font-family:var(--font-d);font-size:16px;background:rgba(0,0,0,.5);border:1.5px solid var(--accent);border-radius:5px;padding:2px 8px;color:var(--text);width:100%;outline:none;display:none;}
+.vip-sound{font-size:11px;color:var(--text-muted);font-weight:600;}
+.vip-sound .si{color:var(--gold);margin-right:3px;}
+.vip-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.vbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:5px 10px;font-size:10px;font-weight:800;font-family:var(--font-c);letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.vbtn:hover{background:rgba(255,255,255,.14);color:var(--text);}
+.vbtn.preview{border-color:rgba(255,215,0,.3);color:var(--gold);}
+.vbtn.preview:hover{background:rgba(255,215,0,.1);}
+.vbtn.preview.playing{background:rgba(255,215,0,.15);animation:pulse .8s infinite;}
+.vbtn.rename{border-color:rgba(255,255,255,.2);}
+.vbtn.delete{border-color:rgba(239,68,68,.3);color:#f87171;}
+.vbtn.delete:hover{background:rgba(239,68,68,.12);}
+.empty{text-align:center;padding:40px 20px;background:var(--panel);border:1.5px dashed var(--panel-line);border-radius:12px;}
+.empty-icon{font-size:36px;margin-bottom:8px;opacity:.4;}
+.empty-title{font-family:var(--font-c);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.empty-sub{font-size:12px;color:rgba(255,255,255,.2);}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,8,20,.97);border:1px solid var(--panel-line);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:200;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:rgba(16,185,129,.5);color:#10B981;}
+.toast.err{border-color:rgba(239,68,68,.4);color:#f87171;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hdr">
+    <div>
+      <div class="title">VIP <span>Sounds</span></div>
+      <div class="sub">Assentrix · Saved to cloud ☁</div>
+    </div>
+    <a class="back" href="index.html">← Back to Hub</a>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot loading" id="status-dot"></div>
+    <span id="status-text">Connecting to cloud storage…</span>
+  </div>
+
+  <div class="add-card">
+    <h2>Add VIP</h2>
+    <div class="form-row">
+      <div class="fg" style="max-width:240px;">
+        <label>TikTok Username</label>
+        <input type="text" id="add-username" placeholder="@username" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="fg">
+        <label>Sound File (MP3 / WAV / OGG)</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="add-file" accept=".mp3,.wav,.ogg,audio/*">
+          <div class="upload-icon">🎵</div>
+          <div class="upload-text">Drop a file or <strong>click to browse</strong></div>
+          <div class="file-name" id="file-name"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-add" id="add-btn" onclick="addVip()">Add to VIP List</button>
+  </div>
+
+  <div class="section-title">VIP List <span class="count-badge" id="count-badge">0 VIPs</span></div>
+  <div class="vip-list" id="vip-list">
+    <div class="empty"><div class="empty-icon">🎵</div><div class="empty-title">No VIPs yet</div><div class="empty-sub">Add a username and sound above</div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL="https://tpmfivjjyujwdkxtvjcy.supabase.co";
+const SUPA_KEY="sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U";
+const SESSION="assentrix-k4r7";
+
+async function sb(path,opts={}){
+  const res=await fetch(SUPA_URL+path,{
+    ...opts,
+    headers:{
+      apikey:SUPA_KEY,
+      Authorization:"Bearer "+SUPA_KEY,
+      "Content-Type":"application/json",
+      Prefer:opts.prefer||"",
+      ...(opts.headers||{}),
+    },
+  });
+  if(!res.ok)throw new Error(await res.text());
+  const t=await res.text();return t?JSON.parse(t):null;
+}
+
+let vips=[],currentAudio=null,dragSrc=null;
+
+async function loadVips(){
+  setStatus("loading","Loading from cloud…");
+  try{
+    vips=await sb("/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&order=position.asc")||[];
+    setStatus("ok","Cloud connected ☁ "+vips.length+" VIPs loaded");
+    render();
+  }catch(e){setStatus("err","Could not connect: "+e.message);}
+}
+
+async function addVip(){
+  const uRaw=document.getElementById("add-username").value.trim();
+  const file=document.getElementById("add-file").files[0];
+  if(!uRaw){toast("Enter a username","err");return;}
+  if(!file){toast("Choose a sound file","err");return;}
+  const username=uRaw.replace(/^@/,"").toLowerCase();
+  if(vips.find(v=>v.username===username)){toast("@"+username+" already in list","err");return;}
+  const btn=document.getElementById("add-btn");
+  btn.disabled=true;btn.textContent="Saving to cloud…";
+  try{
+    const soundData=await fileToB64(file);
+    await sb("/rest/v1/vip_sounds",{
+      method:"POST",prefer:"resolution=merge-duplicates",
+      body:JSON.stringify({session_id:SESSION,username,sound_name:file.name,sound_data:soundData,position:vips.length}),
+    });
+    document.getElementById("add-username").value="";
+    document.getElementById("add-file").value="";
+    document.getElementById("file-name").style.display="none";
+    toast("@"+username+" added ✓","ok");
+    await loadVips();
+  }catch(e){toast("Save failed: "+e.message,"err");}
+  finally{btn.disabled=false;btn.textContent="Add to VIP List";}
+}
+
+function fileToB64(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});
+}
+
+async function deleteVip(username){
+  if(!confirm("Remove @"+username+" from VIP list?"))return;
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  try{
+    await sb("/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&username=eq."+encodeURIComponent(username),{method:"DELETE"});
+    toast("@"+username+" removed","ok");
+    await loadVips();
+  }catch(e){toast("Delete failed","err");}
+}
+
+function previewSound(username){
+  const vip=vips.find(v=>v.username===username);if(!vip)return;
+  if(currentAudio){currentAudio.pause();currentAudio=null;document.querySelectorAll(".vbtn.preview").forEach(b=>{b.classList.remove("playing");b.textContent="▶ Preview";});document.querySelectorAll(".vip-card").forEach(c=>c.classList.remove("playing"));}
+  const btn=document.querySelector("[data-preview=\""+username+"\"]");
+  const card=document.querySelector("[data-id=\""+username+"\"]");
+  const audio=new Audio(vip.sound_data);currentAudio=audio;
+  btn.classList.add("playing");btn.textContent="⏹ Stop";card.classList.add("playing");
+  audio.play().catch(()=>toast("Could not play","err"));
+  audio.onended=()=>{btn.classList.remove("playing");btn.textContent="▶ Preview";card.classList.remove("playing");currentAudio=null;};
+  btn.onclick=()=>{if(currentAudio===audio){audio.pause();btn.classList.remove("playing");btn.textContent="▶ Preview";card.classList.remove("playing");currentAudio=null;btn.onclick=()=>previewSound(username);}};
+}
+
+function startRename(username){
+  const card=document.querySelector("[data-id=\""+username+"\"]");
+  const ne=card.querySelector(".vip-username"),ee=card.querySelector(".vip-username-edit"),rb=card.querySelector(".vbtn.rename");
+  ne.style.display="none";ee.style.display="block";ee.value=username;ee.focus();ee.select();
+  rb.textContent="Save";rb.onclick=()=>saveRename(username);
+  ee.onkeydown=e=>{if(e.key==="Enter")saveRename(username);if(e.key==="Escape"){ne.style.display="";ee.style.display="none";rb.textContent="✏ Rename";rb.onclick=()=>startRename(username);}};
+}
+
+async function saveRename(oldUsername){
+  const card=document.querySelector("[data-id=\""+oldUsername+"\"]");
+  const newName=card.querySelector(".vip-username-edit").value.trim().replace(/^@/,"").toLowerCase();
+  if(!newName){toast("Username cannot be empty","err");return;}
+  try{
+    await sb("/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&username=eq."+encodeURIComponent(oldUsername),{
+      method:"PATCH",body:JSON.stringify({username:newName}),
+    });
+    toast("Renamed to @"+newName,"ok");
+    await loadVips();
+  }catch(e){toast("Rename failed","err");}
+}
+
+function initDrag(){
+  document.querySelectorAll(".vip-card").forEach(card=>{
+    card.addEventListener("dragstart",e=>{dragSrc=card;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";});
+    card.addEventListener("dragend",()=>{card.classList.remove("dragging");dragSrc=null;});
+    card.addEventListener("dragover",e=>{e.preventDefault();e.dataTransfer.dropEffect="move";});
+    card.addEventListener("drop",async e=>{
+      e.preventDefault();
+      if(dragSrc&&dragSrc!==card){
+        const all=[...document.querySelectorAll(".vip-card")];
+        const fi=all.indexOf(dragSrc),ti=all.indexOf(card);
+        const moved=vips.splice(fi,1)[0];vips.splice(ti,0,moved);
+        render();
+        // Save new positions
+        for(let i=0;i<vips.length;i++){
+          await sb("/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&username=eq."+encodeURIComponent(vips[i].username),{
+            method:"PATCH",body:JSON.stringify({position:i}),
+          }).catch(()=>{});
+        }
+      }
+    });
+  });
+}
+
+function render(){
+  document.getElementById("count-badge").textContent=vips.length+" VIP"+(vips.length!==1?"s":"");
+  const list=document.getElementById("vip-list");
+  if(!vips.length){list.innerHTML="<div class=\"empty\"><div class=\"empty-icon\">🎵</div><div class=\"empty-title\">No VIPs yet</div><div class=\"empty-sub\">Add a username and sound above</div></div>";return;}
+  list.innerHTML=vips.map((v,i)=>`
+    <div class="vip-card" data-id="${v.username}" draggable="true">
+      <div class="drag-handle">⠿</div>
+      <div class="vip-num">${i+1}</div>
+      <div class="vip-av">${v.username.charAt(0).toUpperCase()}</div>
+      <div class="vip-info">
+        <div class="vip-username">@${v.username}</div>
+        <input class="vip-username-edit">
+        <div class="vip-sound"><span class="si">🎵</span>${v.sound_name}</div>
+      </div>
+      <div class="vip-actions">
+        <button class="vbtn preview" data-preview="${v.username}" onclick="previewSound('${v.username}')">▶ Preview</button>
+        <button class="vbtn rename" onclick="startRename('${v.username}')">✏ Rename</button>
+        <button class="vbtn delete" onclick="deleteVip('${v.username}')">✕ Delete</button>
+      </div>
+    </div>`).join("");
+  initDrag();
+}
+
+function setStatus(type,msg){
+  const d=document.getElementById("status-dot");
+  const t=document.getElementById("status-text");
+  d.className="status-dot "+(type==="ok"?"ok":type==="err"?"err":"loading");
+  t.textContent=msg;
+}
+
+let toastTimer;
+function toast(msg,type=""){
+  const t=document.getElementById("toast");t.textContent=msg;t.className="toast show "+(type==="ok"?"ok":type==="err"?"err":"");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className="toast",3000);
+}
+
+document.getElementById("add-file").addEventListener("change",()=>{
+  const f=document.getElementById("add-file").files[0];
+  const fn=document.getElementById("file-name");
+  if(f){fn.textContent="✓ "+f.name;fn.style.display="block";}
+});
+const ua=document.getElementById("upload-area");
+ua.addEventListener("dragover",e=>{e.preventDefault();ua.classList.add("drag");});
+ua.addEventListener("dragleave",()=>ua.classList.remove("drag"));
+ua.addEventListener("drop",()=>ua.classList.remove("drag"));
+document.getElementById("add-username").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-file").click();});
+
+loadVips();
+</script>
+</body>
+</html>

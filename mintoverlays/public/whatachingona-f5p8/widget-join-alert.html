@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@600;700;800&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF2D8B;--pink-hot:#FF69B4;--pink-deep:#A0005A;
+  --orange:#FF6B00;--orange-warm:#FF8C42;--gold:#FFD700;
+  --ink:#0D0008;--ink-2:#160010;--ink-3:#1F0018;
+  --text:#FFFFFF;--text-dim:#FFD4EE;--text-muted:#AA6688;
+  --panel:rgba(16,0,10,.92);--panel-line:rgba(255,45,139,.45);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:420px;height:100px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+.wrap{width:420px;height:100px;display:flex;align-items:center;}
+.frame{position:relative;border-radius:10px;padding:3px;width:100%;background:linear-gradient(135deg,var(--ink-3),var(--pink-deep),var(--pink),var(--orange));box-shadow:0 6px 24px rgba(255,45,139,.5);opacity:0;transform:translateX(-24px);transition:opacity .3s ease,transform .3s cubic-bezier(.2,1,.3,1);}
+.frame.show{opacity:1;transform:translateX(0);}
+.frame.hide{opacity:0;transform:translateX(24px);transition:opacity .22s ease-in,transform .22s ease-in;}
+.body{border-radius:8px;background:linear-gradient(135deg,var(--ink-3),var(--ink-2));padding:11px 15px;display:flex;align-items:center;gap:13px;}
+.av{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:var(--pink-deep);border:2px solid var(--pink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:22px;color:var(--text);overflow:hidden;box-shadow:0 0 12px rgba(255,45,139,.5);}
+.av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.text{flex:1;min-width:0;}
+.join-tag{font-family:var(--font-cond);font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--pink-hot);margin-bottom:2px;}
+.join-name{font-family:var(--font-display);font-size:24px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 16px rgba(255,45,139,.4);}
+.join-sub{font-size:12px;font-weight:600;color:var(--text-muted);margin-top:1px;}
+.crown-icon{flex-shrink:0;font-size:28px;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));animation:crown-bounce .8s ease-in-out infinite alternate;}
+@keyframes crown-bounce{0%{transform:translateY(0);}100%{transform:translateY(-3px);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame" id="jf">
+    <div class="body">
+      <div class="av" id="av"><span id="av-init">?</span><img id="av-img" src="" style="display:none"></div>
+      <div class="text">
+        <div class="join-tag">✨ Joined the Stream</div>
+        <div class="join-name" id="join-name">@viewer</div>
+        <div class="join-sub">Welcome, babe! 💕</div>
+      </div>
+      <div class="crown-icon">👑</div>
+    </div>
+  </div>
+</div>
+<script>
+const SESSION="whatachingona-f5p8";
+const jf=document.getElementById("jf");
+let queue=[],showing=false;
+function getInit(n){return(n||"?").replace("@","").charAt(0).toUpperCase();}
+function showJoin(d){
+  const name="@"+(d.nickname||d.uniqueId||"viewer");
+  document.getElementById("join-name").textContent=name;
+  document.getElementById("av-init").textContent=getInit(d.nickname||d.uniqueId);
+  const img=document.getElementById("av-img"),init=document.getElementById("av-init");
+  if(d.profilePicture&&d.profilePicture!==""){img.src=d.profilePicture;img.style.display="block";init.style.display="none";img.onerror=()=>{img.style.display="none";init.style.display="block";};}
+  else{img.style.display="none";init.style.display="block";}
+  jf.classList.remove("hide");jf.classList.add("show");showing=true;
+  setTimeout(()=>{jf.classList.remove("show");jf.classList.add("hide");showing=false;setTimeout(next,320);},3500);
+}
+function next(){if(queue.length>0&&!showing)showJoin(queue.shift());}
+function push(d){queue.push(d);if(!showing)next();}
+function connectSSE(){
+  const es=new EventSource("/events/"+SESSION);
+  es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="join")push(d);};
+  es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
+}
+connectSSE();
+</script>
+</body>
+</html>
