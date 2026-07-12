@@ -1,458 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harvest Lightwell Church — Sow into the Kingdom</title>
-<meta name="description" content="An online church community rooted in scripture, powered by generosity. Daily devotionals, scripture texts, and prayer for those hungry for the Word.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GSA Support Scavenger Hunt</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --navy:#08111f;
-  --navy2:#0d1a30;
-  --navy3:#112040;
-  --navy4:#162850;
-  --gold:#c9a84c;
-  --gold2:#dfc068;
-  --gold3:#f0d68a;
-  --golddark:#7a6228;
-  --white:#ffffff;
-  --offwhite:#f4f0e6;
-  --muted:rgba(244,240,230,0.6);
-  --border:rgba(201,168,76,0.3);
+  --bg:#080B14;--bg-card:#0E1220;--bg-raised:#141928;
+  --border:rgba(255,255,255,.07);--border-hi:rgba(109,40,217,.5);
+  --violet:#6D28D9;--violet-lo:#4C1D95;--violet-hi:#8B5CF6;
+  --cyan:#06B6D4;--gold:#F59E0B;--green:#10B981;--red:#EF4444;
+  --discord:#5865F2;--discord-hi:#7289DA;
+  --text:#F1F5F9;--text-2:#94A3B8;--text-3:#475569;
+  --font-d:'Anton',sans-serif;--font-b:'Inter',sans-serif;--r:10px;
 }
-
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--navy);color:var(--offwhite);overflow-x:hidden;line-height:1.6}
-
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--navy)}
-::-webkit-scrollbar-thumb{background:var(--golddark);border-radius:2px}
-
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(8,17,31,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
-.nav-logo{font-size:20px;font-weight:700;color:var(--white);text-decoration:none;letter-spacing:0.5px}
-.nav-logo span{color:var(--gold)}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{font-size:13px;font-weight:400;letter-spacing:0.5px;color:var(--muted);text-decoration:none;transition:color 0.2s}
-.nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--gold)!important;color:var(--navy)!important;padding:9px 22px;border-radius:50px;font-weight:600!important}
-.nav-cta:hover{background:var(--gold2)!important}
-@media(max-width:700px){nav{padding:16px 20px}.nav-links{display:none}}
-
-/* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden;background:var(--navy)}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(201,168,76,0.12) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(13,26,48,0.8) 0%,transparent 100%)}
-.hero-eyebrow{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;position:relative}
-.hero h1{font-size:clamp(48px,8vw,100px);font-weight:800;line-height:1.05;color:var(--white);margin-bottom:16px;position:relative;letter-spacing:-1px}
-.hero h1 span{color:var(--gold)}
-.hero-tagline{font-size:clamp(18px,2.5vw,24px);font-weight:300;font-style:italic;color:var(--muted);margin-bottom:20px;position:relative;font-family:Georgia,serif}
-.hero-verse{font-size:14px;color:var(--golddark);letter-spacing:1px;margin-bottom:48px;position:relative}
-.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;position:relative}
-.btn-gold{background:var(--gold);color:var(--navy);border:none;padding:16px 40px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;letter-spacing:0.3px;transition:background 0.2s,transform 0.2s}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-2px)}
-.btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.3);padding:16px 40px;border-radius:50px;font-size:15px;font-weight:400;cursor:pointer;text-decoration:none;display:inline-block;transition:border-color 0.2s,transform 0.2s}
-.btn-outline:hover{border-color:var(--white);transform:translateY(-2px)}
-.hero-cross{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:400px;color:var(--gold);opacity:0.03;line-height:1;pointer-events:none;user-select:none}
-
-/* ── STATS ── */
-.stats-bar{background:var(--navy3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:52px 24px}
-.stats-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
-.stat-n{font-size:48px;font-weight:700;color:var(--gold2);line-height:1;margin-bottom:8px}
-.stat-l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-@media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr)}}
-
-/* ── SECTION BASE ── */
-section{padding:100px 24px}
-.container{max-width:1100px;margin:0 auto}
-.container-sm{max-width:720px;margin:0 auto}
-.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block}
-.section-title{font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.1;color:var(--white);margin-bottom:20px;letter-spacing:-0.5px}
-.section-title span{color:var(--gold)}
-.section-body{font-size:16px;font-weight:400;line-height:1.8;color:var(--muted);max-width:520px}
-.gold-line{width:48px;height:3px;background:var(--gold);margin:24px 0;border-radius:2px}
-
-/* ── MISSION ── */
-.mission{background:var(--navy2)}
-.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-@media(max-width:768px){.mission-grid{grid-template-columns:1fr;gap:48px}}
-.quote-block{border-left:3px solid var(--gold);padding-left:28px}
-.quote-block blockquote{font-family:Georgia,serif;font-size:clamp(22px,2.8vw,32px);font-weight:400;font-style:italic;line-height:1.5;color:var(--offwhite);margin-bottom:16px}
-.quote-block cite{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-style:normal}
-.beliefs{margin-top:36px;display:flex;flex-direction:column;gap:14px}
-.belief{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--muted);line-height:1.6}
-.belief-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:8px}
-
-/* ── GIFTS ── */
-.gifts{background:var(--navy)}
-.gifts-header{text-align:center;margin-bottom:64px}
-.gifts-header .section-body{margin:0 auto}
-.gifts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border)}
-.gift-card{background:var(--navy2);padding:40px 32px;transition:background 0.2s}
-.gift-card:hover{background:var(--navy3)}
-.gift-num{font-size:52px;font-weight:800;color:var(--gold);opacity:0.25;line-height:1;margin-bottom:20px}
-.gift-title{font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px}
-.gift-desc{font-size:14px;line-height:1.75;color:var(--muted)}
-
-/* ── TESTIMONY ── */
-.testimony{background:var(--navy2)}
-.testi-header{text-align:center;margin-bottom:56px}
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-@media(max-width:900px){.testi-grid{grid-template-columns:1fr}}
-.testi-card{background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:36px;position:relative}
-.testi-quote-mark{position:absolute;top:16px;left:24px;font-size:72px;font-family:Georgia,serif;color:var(--gold);opacity:0.15;line-height:1}
-.testi-text{font-family:Georgia,serif;font-size:16px;font-style:italic;line-height:1.75;color:var(--offwhite);margin-bottom:24px;position:relative;z-index:1}
-.testi-name{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
-.testi-loc{font-size:12px;color:var(--muted);margin-top:3px}
-
-/* ── GIVE ── */
-.give{background:var(--navy);text-align:center;position:relative;overflow:hidden}
-.give-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(201,168,76,0.06) 0%,transparent 70%)}
-.give-card{max-width:600px;margin:0 auto;background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:52px 48px;position:relative;z-index:1}
-@media(max-width:600px){.give-card{padding:32px 20px}}
-.give-toggle{display:flex;background:var(--navy3);border:1px solid var(--border);border-radius:50px;padding:4px;margin:0 auto 32px;width:fit-content}
-.tog-btn{padding:10px 28px;border-radius:50px;border:none;background:transparent;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
-.tog-btn.active{background:var(--gold);color:var(--navy);font-weight:700}
-.amounts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:8px}
-.amt{padding:11px 20px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
-.amt:hover{border-color:var(--gold);color:var(--offwhite)}
-.amt.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.1)}
-.hint{font-size:12px;color:var(--muted);margin-bottom:24px;letter-spacing:0.3px}
-.give-fields{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-.give-input{width:100%;padding:14px 18px;background:var(--navy3);border:1px solid var(--border);border-radius:6px;color:var(--offwhite);font-size:15px;outline:none;transition:border-color 0.2s}
-.give-input::placeholder{color:rgba(244,240,230,0.3)}
-.give-input:focus{border-color:var(--gold)}
-.give-btn{width:100%;padding:17px;background:var(--gold);color:var(--navy);border:none;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.3px;transition:background 0.2s,transform 0.2s}
-.give-btn:hover{background:var(--gold2);transform:translateY(-1px)}
-.give-secure{font-size:11px;color:var(--muted);margin-top:14px;letter-spacing:0.5px}
-.give-perks{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
-.perk{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.perk::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
-
-/* ── PRAYER ── */
-.prayer{background:var(--navy2);text-align:center}
-.prayer-inner{max-width:560px;margin:0 auto}
-.prayer-textarea{width:100%;min-height:130px;padding:16px 18px;background:var(--navy3);border:1px solid var(--border);border-radius:6px;color:var(--offwhite);font-size:15px;font-style:italic;font-family:Georgia,serif;outline:none;resize:vertical;line-height:1.7;transition:border-color 0.2s;margin-bottom:12px}
-.prayer-textarea::placeholder{color:rgba(244,240,230,0.25)}
-.prayer-textarea:focus{border-color:var(--gold)}
-.prayer-success{display:none;text-align:center;padding:32px}
-.prayer-success .icon{font-size:40px;margin-bottom:12px}
-
-/* ── FOOTER ── */
-footer{background:var(--navy);border-top:1px solid var(--border);padding:64px 24px 32px}
-.footer-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
-@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
-.footer-logo{font-size:22px;font-weight:800;color:var(--white);margin-bottom:12px}
-.footer-logo span{color:var(--gold)}
-.footer-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:260px}
-.footer-501{font-size:11px;color:var(--golddark);letter-spacing:1px}
-.footer-col h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
-.footer-col a{display:block;font-size:14px;color:var(--muted);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
-.footer-col a:hover{color:var(--white)}
-.footer-bottom{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid rgba(201,168,76,0.1);font-size:11px;color:rgba(244,240,230,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;padding-bottom:60px;}
+.site-header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo-mark{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:18px;color:#fff;flex-shrink:0;}
+.site-title{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.site-sub{font-size:11px;color:var(--text-2);letter-spacing:.5px;margin-top:1px;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.week-chip{background:var(--bg-raised);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--text-2);font-weight:600;}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--bg-raised);border:1px solid var(--border);border-radius:20px;padding:5px 12px 5px 6px;font-size:13px;color:var(--text-2);cursor:pointer;transition:border-color .2s;}
+.user-chip:hover{border-color:var(--violet-hi);}
+.chip-av{width:24px;height:24px;border-radius:50%;background:var(--violet-lo);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;flex-shrink:0;overflow:hidden;}
+.chip-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);transition:background .3s;}
+.sync-dot.saving{background:var(--gold);animation:pdot 1s infinite;}
+.sync-dot.err{background:var(--red);}
+@keyframes pdot{0%,100%{opacity:1;}50%{opacity:.3;}}
+.page{max-width:760px;margin:0 auto;padding:24px 16px 0;}
+.join-screen{max-width:420px;margin:50px auto 0;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px 28px;text-align:center;}
+.join-icon{font-size:44px;margin-bottom:14px;}
+.join-screen h2{font-family:var(--font-d);font-size:26px;letter-spacing:1px;margin-bottom:8px;}
+.join-screen p{font-size:14px;color:var(--text-2);line-height:1.6;margin-bottom:22px;}
+.btn-discord{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--discord);border:none;border-radius:var(--r);padding:13px 20px;color:#fff;font-size:15px;font-weight:700;font-family:var(--font-b);cursor:pointer;transition:all .15s;letter-spacing:.3px;}
+.btn-discord:hover{background:var(--discord-hi);transform:translateY(-1px);}
+.discord-icon{width:22px;height:22px;flex-shrink:0;}
+.join-note{font-size:11px;color:var(--text-3);margin-top:14px;line-height:1.5;}
+.score-hero{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;margin-bottom:18px;}
+.rank-badge{width:68px;height:68px;border-radius:50%;border:2px solid var(--violet-hi);background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(109,40,217,.3);}
+.rank-lbl{font-size:8px;letter-spacing:2px;color:var(--text-3);text-transform:uppercase;}
+.rank-name{font-family:var(--font-d);font-size:11px;color:var(--violet-hi);text-align:center;line-height:1.1;padding:0 4px;}
+.score-pts{font-family:var(--font-d);font-size:48px;line-height:1;letter-spacing:1px;}
+.score-pts span{font-size:18px;color:var(--text-2);margin-left:3px;}
+.score-meta{font-size:13px;color:var(--text-2);margin-top:3px;}
+.prog-wrap{margin-top:12px;}
+.prog-track{height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:3px;transition:width .6s cubic-bezier(.25,.46,.45,.94);}
+.prog-lbls{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-top:4px;}
+.tasks-frac{font-family:var(--font-d);font-size:26px;color:var(--cyan);text-align:right;}
+.tasks-lbl{font-size:10px;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;margin-top:1px;text-align:right;}
+.week-info{background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:10px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;font-size:13px;flex-wrap:wrap;gap:6px;}
+.week-label{color:var(--text-2);}
+.week-label strong{color:var(--text);}
+.week-ends{font-size:12px;color:var(--text-3);}
+.tabs{display:flex;gap:3px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;}
+.tab{flex:1;padding:8px 10px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-2);border-radius:7px;transition:all .15s;}
+.tab.active{background:var(--bg-raised);color:var(--text);border:1px solid var(--border-hi);}
+.panel{display:none;}.panel.active{display:block;}
+.section-lbl{font-size:11px;letter-spacing:2px;color:var(--text-3);text-transform:uppercase;margin:0 0 10px 4px;}
+.task-list{display:flex;flex-direction:column;gap:6px;}
+.task{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid transparent;border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;user-select:none;}
+.task:hover{border-color:rgba(255,255,255,.12);border-left-color:var(--violet);background:var(--bg-raised);}
+.task.done{border-color:rgba(16,185,129,.15);border-left-color:var(--green);background:rgba(16,185,129,.04);}
+.chk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--text-3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .15s;}
+.task.done .chk{background:var(--green);border-color:var(--green);color:#fff;}
+.task-text{flex:1;font-size:14px;color:var(--text);line-height:1.4;}
+.task.done .task-text{color:var(--text-3);text-decoration:line-through;}
+.task-pts{font-family:var(--font-d);font-size:16px;color:var(--violet-hi);flex-shrink:0;}
+.task.done .task-pts{color:var(--green);}
+.bonus-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;background:rgba(245,158,11,.1);color:var(--gold);border:1px solid rgba(245,158,11,.25);margin-left:8px;vertical-align:middle;}
+.lb-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap;}
+.lb-hdr h3{font-family:var(--font-d);font-size:19px;letter-spacing:1px;}
+.lb-controls{display:flex;gap:6px;align-items:center;}
+.week-select{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text-2);cursor:pointer;font-family:var(--font-b);outline:none;}
+.refresh-btn{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--text-2);cursor:pointer;transition:all .15s;font-family:var(--font-b);}
+.refresh-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.lb-list{display:flex;flex-direction:column;gap:5px;}
+.lb-row{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:12px;}
+.lb-row.me{border-color:var(--violet);background:rgba(109,40,217,.07);}
+.lb-rank{font-family:var(--font-d);font-size:17px;width:30px;text-align:center;flex-shrink:0;color:var(--text-3);}
+.lb-rank.gold{color:var(--gold);}.lb-rank.silver{color:var(--text-2);}.lb-rank.bronze{color:#b45309;}
+.lb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:var(--violet-lo);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;overflow:hidden;}
+.lb-av img{width:100%;height:100%;object-fit:cover;}
+.lb-info{flex:1;min-width:0;}
+.lb-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lb-name.me{color:var(--violet-hi);}
+.lb-sub{font-size:12px;color:var(--text-3);margin-top:1px;}
+.lb-pts{font-family:var(--font-d);font-size:20px;color:var(--text);flex-shrink:0;}
+.lb-empty{text-align:center;padding:2.5rem;color:var(--text-3);font-size:14px;}
+.winner-banner{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(109,40,217,.12));border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:14px;}
+.winner-icon{font-size:22px;flex-shrink:0;}
+.winner-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.reward-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.reward-card.full{grid-column:1/-1;border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.05);}
+.r-icon{font-size:26px;margin-bottom:8px;}
+.r-title{font-weight:700;font-size:14px;margin-bottom:4px;}
+.r-desc{font-size:13px;color:var(--text-2);line-height:1.55;}
+.reward-card.full .r-title{color:var(--violet-hi);}
+.hint{font-size:12px;color:var(--text-3);text-align:center;margin-top:12px;line-height:1.6;}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="nav">
-  <a href="#" class="nav-logo">Harvest <span>Lightwell</span></a>
-  <div class="nav-links">
-    <a href="#mission">Mission</a>
-    <a href="#gifts">What You Receive</a>
-    <a href="#prayer">Prayer</a>
-    <a href="#give" class="nav-cta">Give Now</a>
+<header class="site-header">
+  <div class="logo-mark">G</div>
+  <div><div class="site-title">GSA HUNT</div><div class="site-sub">SUPPORT SCAVENGER HUNT</div></div>
+  <div class="header-right" id="header-right" style="display:none;">
+    <div class="week-chip" id="header-week">Week —</div>
+    <div class="user-chip" onclick="logout()">
+      <div class="chip-av" id="chip-av">?</div>
+      <span id="chip-name">—</span>
+    </div>
+    <div class="sync-dot" id="sync-dot"></div>
   </div>
-</nav>
+</header>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-eyebrow">✦ &nbsp; Harvestlightwell.com &nbsp; ✦</div>
-  <h1>Sow into<br>the <span>Kingdom.</span></h1>
-  <p class="hero-tagline">Reap in every season.</p>
-  <p class="hero-verse">"Give, and it will be given to you." — Luke 6:38</p>
-  <div class="hero-btns">
-    <a href="#give" class="btn-gold">Give Today</a>
-    <a href="#mission" class="btn-outline">Our Mission</a>
+<div id="join-screen" class="page">
+  <div class="join-screen">
+    <div class="join-icon">🎯</div>
+    <h2>JOIN THE HUNT</h2>
+    <p>Log in with Discord to track your weekly progress on the shared community leaderboard. Works across all your devices.</p>
+    <button class="btn-discord" onclick="discordLogin()">
+      <svg class="discord-icon" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.077.077 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      Login with Discord
+    </button>
+    <p class="join-note">Your Discord identity is used to track weekly progress across all devices. No password needed.</p>
   </div>
-  <div class="hero-cross">✝</div>
-</section>
+</div>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
+<div id="main-screen" class="page" style="display:none;">
+  <div class="week-info">
+    <div class="week-label"><strong id="week-label-text">Week —</strong> <span id="week-dates" style="color:var(--text-3);font-size:12px;"></span></div>
+    <div class="week-ends" id="week-ends"></div>
+  </div>
+  <div class="score-hero">
+    <div class="rank-badge"><div class="rank-lbl">RANK</div><div class="rank-name" id="rank-name">—</div></div>
     <div>
-      <div class="stat-n" id="s1">4,200+</div>
-      <div class="stat-l">Souls Reached</div>
+      <div class="score-pts"><span id="score-num">0</span><span>pts</span></div>
+      <div class="score-meta" id="score-meta">Start completing tasks</div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="prog-lbls"><span id="prog-l">0 pts</span><span>125 pts max</span></div>
+      </div>
     </div>
-    <div>
-      <div class="stat-n">318</div>
-      <div class="stat-l">Daily Scripture Texts</div>
+    <div><div class="tasks-frac" id="tasks-frac">0/11</div><div class="tasks-lbl">tasks done</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tasks')">Tasks</button>
+    <button class="tab" onclick="showTab('board')">Leaderboard</button>
+    <button class="tab" onclick="showTab('rewards')">Rewards</button>
+  </div>
+  <div id="p-tasks" class="panel active">
+    <div class="section-lbl">This week's tasks — tap to complete</div>
+    <div class="task-list" id="task-list"></div>
+    <p class="hint">Scores reset every Monday at midnight. Progress syncs across your devices via Discord login.</p>
+  </div>
+  <div id="p-board" class="panel">
+    <div class="lb-hdr">
+      <h3>LEADERBOARD</h3>
+      <div class="lb-controls">
+        <select class="week-select" id="week-select" onchange="loadBoard()">
+          <option value="current">This week</option>
+          <option value="alltime">All-time</option>
+        </select>
+        <button class="refresh-btn" onclick="loadBoard()">↻ Refresh</button>
+      </div>
     </div>
-    <div>
-      <div class="stat-n">1,800+</div>
-      <div class="stat-l">Prayers Answered</div>
-    </div>
-    <div>
-      <div class="stat-n">81</div>
-      <div class="stat-l">Monthly Partners</div>
+    <div id="winner-wrap"></div>
+    <div id="lb-content"><div class="lb-empty">Loading…</div></div>
+    <p class="hint">Weekly scores reset every Monday. All-time shows cumulative points across all weeks.</p>
+  </div>
+  <div id="p-rewards" class="panel">
+    <div class="reward-grid">
+      <div class="reward-card"><div class="r-icon">🥇</div><div class="r-title">Weekly winner</div><div class="r-desc">Highest points each week earns special GSA recognition or a prize.</div></div>
+      <div class="reward-card"><div class="r-icon">🎁</div><div class="r-title">Giveaway entry</div><div class="r-desc">Complete the hunt each week to enter the community giveaway.</div></div>
+      <div class="reward-card"><div class="r-icon">🎉</div><div class="r-title">Surprise challenges</div><div class="r-desc">Bonus tasks may drop throughout the week — stay alert.</div></div>
+      <div class="reward-card full"><div class="r-icon">💜</div><div class="r-title">The mission</div><div class="r-desc">No Streamer Left Behind isn't just a motto — it's our mission. Every task helps a creator grow.</div></div>
     </div>
   </div>
 </div>
 
-<!-- MISSION -->
-<section class="mission" id="mission">
-  <div class="container">
-    <div class="mission-grid">
-      <div>
-        <span class="eyebrow">Our Mission</span>
-        <h2 class="section-title">A well that never<br><span>runs dry.</span></h2>
-        <div class="gold-line"></div>
-        <p class="section-body">Harvest Lightwell is an online church ministry built on one conviction: the Word of God is a well that every thirsty soul deserves access to.</p>
-        <p class="section-body" style="margin-top:16px">We deliver daily scripture, weekly devotionals, and personal prayer to thousands of believers — wherever they are, whenever they need it. No dress code. No commute. Just the living water.</p>
-        <a href="#give" class="btn-gold" style="margin-top:36px;display:inline-block">Join the Community</a>
-      </div>
-      <div>
-        <div class="quote-block">
-          <blockquote>"With joy you will draw water from the wells of salvation."</blockquote>
-          <cite>Isaiah 12:3</cite>
-        </div>
-        <div style="margin-top:40px;padding:28px;border:1px solid var(--border);border-radius:8px;background:var(--navy3)">
-          <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:18px">What We Believe</div>
-          <div class="beliefs">
-            <div class="belief"><div class="belief-dot"></div>The Bible is living, active, and sufficient</div>
-            <div class="belief"><div class="belief-dot"></div>Generosity is an act of worship, not obligation</div>
-            <div class="belief"><div class="belief-dot"></div>Every believer deserves a community to grow in</div>
-            <div class="belief"><div class="belief-dot"></div>Prayer is the foundation of everything we do</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GIFTS -->
-<section class="gifts" id="gifts">
-  <div class="container">
-    <div class="gifts-header">
-      <span class="eyebrow">When You Give</span>
-      <h2 class="section-title">You receive <span>in return.</span></h2>
-      <p class="section-body">Every donor receives these digital gifts — delivered to your inbox and phone the moment your gift is received.</p>
-    </div>
-    <div class="gifts-grid">
-      <div class="gift-card">
-        <div class="gift-num">01</div>
-        <div class="gift-title">7-Day Devotional Series</div>
-        <div class="gift-desc">A hand-crafted email devotional from Pastor James delivered daily for a week — scripture, reflection, and a personal practice for each day.</div>
-      </div>
-      <div class="gift-card">
-        <div class="gift-num">02</div>
-        <div class="gift-title">Daily Scripture SMS</div>
-        <div class="gift-desc">A fresh Bible verse and 2-line reflection sent to your phone every morning at 7 AM — 30 rotating verses to anchor your day in the Word.</div>
-      </div>
-      <div class="gift-card">
-        <div class="gift-num">03</div>
-        <div class="gift-title">Sermon Downloads</div>
-        <div class="gift-desc">Exclusive audio teachings from Pastor James — available on demand, covering scripture, faith, and practical Christian living.</div>
-      </div>
-      <div class="gift-card">
-        <div class="gift-num">04</div>
-        <div class="gift-title">Personal Prayer Access</div>
-        <div class="gift-desc">Submit a prayer request and our intercession team will pray over it every week. You will receive a personal response within 48 hours.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONY -->
-<section class="testimony" id="testimony">
-  <div class="container">
-    <div class="testi-header">
-      <span class="eyebrow">Community Voices</span>
-      <h2 class="section-title">Changed by <span>the Word.</span></h2>
-    </div>
-    <div class="testi-grid">
-      <div class="testi-card">
-        <div class="testi-quote-mark">"</div>
-        <p class="testi-text">The morning scripture texts completely changed how I start my day. I feel connected to God before I even get out of bed. This community is a true gift.</p>
-        <div class="testi-name">Darnell W.</div>
-        <div class="testi-loc">Houston, TX</div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-quote-mark">"</div>
-        <p class="testi-text">I was skeptical at first, but the 7-day devotional series genuinely brought me back to my faith after years away. Pastor James writes like he knows your story.</p>
-        <div class="testi-name">Maria S.</div>
-        <div class="testi-loc">Atlanta, GA</div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-quote-mark">"</div>
-        <p class="testi-text">Being a monthly partner feels like I am part of something bigger than myself. The prayer team responded to my request personally. That meant everything.</p>
-        <div class="testi-name">Pastor Ray T.</div>
-        <div class="testi-loc">Memphis, TN</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GIVE -->
-<section class="give" id="give">
-  <div class="give-bg"></div>
-  <div class="container" style="position:relative;z-index:1">
-    <div style="text-align:center;max-width:500px;margin:0 auto 52px">
-      <span class="eyebrow">Make Your Gift</span>
-      <h2 class="section-title">Sow a seed <span>today.</span></h2>
-      <p style="font-size:15px;color:var(--muted);line-height:1.8">"Honor the Lord with your wealth, with the firstfruits of all your crops." — Proverbs 3:9</p>
-    </div>
-    <div class="give-card">
-      <div class="give-toggle">
-        <button class="tog-btn active" onclick="setType('offering',this)">One-time Gift</button>
-        <button class="tog-btn" onclick="setType('monthly',this)">Monthly Tithe</button>
-      </div>
-
-      <!-- One-time -->
-      <div id="offeringSection">
-        <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6">Give any amount you feel led — you will set it on the Stripe checkout page.</p>
-      </div>
-
-      <!-- Monthly tiers -->
-      <div id="monthlySection" style="display:none">
-        <div class="amounts">
-          <button class="amt" onclick="pickMonthly(this,'5','https://buy.stripe.com/3cI5kF50N3GU3kN7ZcbII03')">$5 / mo</button>
-          <button class="amt" onclick="pickMonthly(this,'10','https://buy.stripe.com/dRm00lbpbdhu8F7djwbII02')">$10 / mo</button>
-          <button class="amt active" onclick="pickMonthly(this,'25','https://buy.stripe.com/6oU8wReBn7Xa1cFfrEbII05')">$25 / mo</button>
-          <button class="amt" onclick="pickMonthly(this,'50','https://buy.stripe.com/eVqfZjbpb6T6cVnfrEbII01')">$50 / mo</button>
-          <button class="amt" onclick="pickMonthly(this,'100','https://buy.stripe.com/6oU3cx1OB0uI3kNdjwbII04')">$100 / mo</button>
-        </div>
-        <p class="hint" style="margin-top:8px">Select a monthly giving level above</p>
-      </div>
-
-      <div class="give-fields">
-        <input type="text" id="gName" class="give-input" placeholder="Full name" autocomplete="name">
-        <input type="email" id="gEmail" class="give-input" placeholder="Email address" autocomplete="email">
-        <input type="tel" id="gPhone" class="give-input" placeholder="Mobile number — for daily scripture SMS (optional)">
-      </div>
-
-      <button class="give-btn" id="giveBtn" onclick="handleGive()">
-        Give <span id="amtDisplay">Now</span><span id="typeDisplay"></span> →
-      </button>
-      <p class="give-secure">🔒 Powered by Stripe &nbsp;·&nbsp; SSL encrypted &nbsp;·&nbsp; Cancel anytime</p>
-
-      <div class="give-perks">
-        <div class="perk">7-day devotional emails</div>
-        <div class="perk">Daily scripture SMS</div>
-        <div class="perk">Sermon downloads</div>
-        <div class="perk">Prayer access</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRAYER -->
-<section class="prayer" id="prayer">
-  <div class="prayer-inner">
-    <span class="eyebrow">Prayer Requests</span>
-    <h2 class="section-title" style="margin-bottom:12px">Tell us what you're <span>carrying.</span></h2>
-    <p style="font-size:15px;color:var(--muted);margin-bottom:40px">"The prayer of a righteous person is powerful and effective." — James 5:16</p>
-
-    <div id="prayerForm">
-      <textarea id="prayerText" class="prayer-textarea" placeholder="Write your prayer request here. We read every one and pray over each one personally…"></textarea>
-      <input type="email" id="prayerEmail" class="give-input" placeholder="Your email — we will respond personally" style="margin-bottom:14px">
-      <button class="give-btn" onclick="submitPrayer()">Submit Prayer Request</button>
-    </div>
-    <div class="prayer-success" id="prayerDone">
-      <div class="icon">🙏</div>
-      <h3 style="font-size:22px;font-weight:700;color:var(--white);margin-bottom:8px">We received your request.</h3>
-      <p style="font-size:15px;color:var(--muted)">Our team will pray over this and respond personally within 48 hours.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-logo">Harvest <span>Lightwell</span></div>
-      <p class="footer-desc">Sow into the Kingdom. Reap in every season. An online church rooted in scripture and powered by generosity.</p>
-      <div class="footer-501">✦ A 501(c)(3) nonprofit ministry</div>
-    </div>
-    <div class="footer-col">
-      <h4>Ministry</h4>
-      <a href="#mission">Our Mission</a>
-      <a href="#gifts">What You Receive</a>
-      <a href="#testimony">Community</a>
-      <a href="#prayer">Prayer</a>
-    </div>
-    <div class="footer-col">
-      <h4>Give</h4>
-      <a href="#give">One-time Gift</a>
-      <a href="#give">Monthly Tithe</a>
-      <a href="#give">Become a Partner</a>
-    </div>
-    <div class="footer-col">
-      <h4>Contact</h4>
-      <a href="mailto:pastor@harvestlightwell.com">pastor@harvestlightwell.com</a>
-      <a href="#prayer">Prayer Requests</a>
-      <a href="#">Privacy Policy</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 Harvest Lightwell Church · EIN 00-0000000 · All donations tax-deductible</span>
-    <span>harvestlightwell.com</span>
-  </div>
-</footer>
-
 <script>
-// Nav scroll effect
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').style.boxShadow = window.scrollY > 40 ? '0 2px 20px rgba(0,0,0,0.5)' : '';
-});
+const DISCORD_CLIENT_ID='1524593290551361657';
+const SUPA_URL='https://tpmfivjjyujwdkxtvjcy.supabase.co';
+const SUPA_KEY='sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U';
+const TASKS=[
+  {id:'t1',text:"Tap 5,000 likes in a GSA member's LIVE",pts:5},
+  {id:'t2',text:'Share 5 different GSA LIVE streams to outside GSA community members',pts:10},
+  {id:'t3',text:'Welcome 10 new viewers in chat',pts:10},
+  {id:'t4',text:'Follow 3 new GSA creators',pts:5},
+  {id:'t5',text:'Stay in a LIVE for at least 20 minutes',pts:10},
+  {id:'t6',text:"Invite a friend to a GSA creator's LIVE (they must follow)",pts:15},
+  {id:'t7',text:'Send a 1-coin gift to a creator (optional)',pts:5},
+  {id:'t8',text:'Comment on 5 TikTok videos from GSA creators (GSA TikTok page)',pts:10},
+  {id:'t9',text:'Screenshot yourself supporting 3 different creators',pts:15},
+  {id:'t10',text:'Help a creator reach a goal (likes, shares, Community Fans, etc.)',pts:20},
+  {id:'t11',text:'Be recognized by a streamer for your support during their LIVE',pts:20,bonus:true},
+];
+const MAX=TASKS.reduce((s,t)=>s+t.pts,0);
+const RANKS=[{min:0,name:'ROOKIE'},{min:10,name:'SUPPORTER'},{min:30,name:'HYPE MAN'},{min:55,name:'COMMUNITY PRO'},{min:80,name:'GSA ELITE'},{min:MAX,name:'LEGEND'}];
+const MEDALS=['🥇','🥈','🥉'],RC=['gold','silver','bronze'];
+let user='',discordId='',avatar='',done=[],currentWeek=null,syncTimer=null;
 
-// Give form state
-const OFFERING_URL = 'https://buy.stripe.com/6oU3cx1OBdhu6wZ7ZcbII00';
-let giftType = 'offering';
-let monthlyUrl = 'https://buy.stripe.com/6oU8wReBn7Xa1cFfrEbII05';
+// Week helpers - Monday start, Sunday end (ISO)
+function getWeek(date){
+  const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+  const day=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-day);
+  const ys=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return{week:Math.ceil((((d-ys)/86400000)+1)/7),year:d.getUTCFullYear()};
+}
+function getWeekBounds(week,year){
+  const jan4=new Date(Date.UTC(year,0,4));
+  const dow=jan4.getUTCDay()||7;
+  const w1mon=new Date(jan4);
+  w1mon.setUTCDate(jan4.getUTCDate()-(dow-1));
+  const mon=new Date(w1mon);
+  mon.setUTCDate(w1mon.getUTCDate()+(week-1)*7);
+  const sun=new Date(mon);
+  sun.setUTCDate(mon.getUTCDate()+6);
+  sun.setUTCHours(23,59,59,999);
+  return{start:mon,end:sun};
+}
+function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 
-function setType(type, btn) {
-  giftType = type;
-  document.querySelectorAll('.tog-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('offeringSection').style.display = type === 'offering' ? 'block' : 'none';
-  document.getElementById('monthlySection').style.display  = type === 'monthly'  ? 'block' : 'none';
-  document.getElementById('typeDisplay').textContent = type === 'monthly' ? ' / month' : '';
-  document.getElementById('amtDisplay').textContent  = type === 'monthly' ? '$25' : 'Now';
+// Supabase
+async function sb(path,opts={}){
+  const res=await fetch(SUPA_URL+path,{...opts,headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json',Prefer:opts.prefer||'',...(opts.headers||{})}});
+  if(!res.ok)throw new Error(await res.text());
+  const t=await res.text();return t?JSON.parse(t):null;
 }
 
-function pickMonthly(btn, amt, url) {
-  document.querySelectorAll('.amt').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  monthlyUrl = url;
-  document.getElementById('amtDisplay').textContent = '$' + amt;
+// Discord
+function discordLogin(){
+  const p=new URLSearchParams({client_id:DISCORD_CLIENT_ID,response_type:'code',scope:'identify',redirect_uri:location.origin+'/gsa-hunt/callback'});
+  location.href='https://discord.com/oauth2/authorize?'+p;
+}
+function handleCallback(){
+  const p=new URLSearchParams(location.search);
+  if(p.get('discordId')){
+    discordId=p.get('discordId');user=p.get('name')||'Unknown';avatar=p.get('avatar')||'';
+    localStorage.setItem('gsa4_auth',JSON.stringify({discordId,user,avatar}));
+    history.replaceState(null,'','/gsa-hunt');initUser();
+  } else if(p.get('error')){history.replaceState(null,'','/gsa-hunt');}
+}
+function loadAuth(){
+  try{const d=JSON.parse(localStorage.getItem('gsa4_auth')||'null');if(d&&d.discordId){discordId=d.discordId;user=d.user;avatar=d.avatar||'';return true;}}catch(e){}return false;
+}
+function logout(){
+  if(!confirm('Log out?'))return;
+  localStorage.removeItem('gsa4_auth');discordId='';user='';avatar='';done=[];
+  document.getElementById('join-screen').style.display='block';
+  document.getElementById('main-screen').style.display='none';
+  document.getElementById('header-right').style.display='none';
 }
 
-function handleGive() {
-  const name  = document.getElementById('gName').value.trim();
-  const email = document.getElementById('gEmail').value.trim();
-  if (!name)  { alert('Please enter your name.'); return; }
-  if (!email) { alert('Please enter your email address.'); return; }
-  const btn = document.getElementById('giveBtn');
-  btn.textContent = 'Redirecting to Stripe…';
-  btn.style.opacity = '0.75';
-  const base = giftType === 'monthly' ? monthlyUrl : OFFERING_URL;
-  const dest = base + '?prefilled_email=' + encodeURIComponent(email);
-  setTimeout(() => { window.location.href = dest; }, 700);
+// Init
+async function initUser(){
+  currentWeek=getWeek(new Date());
+  updateWeekUI();
+
+  // Always load local cache first so UI is instant
+  const localKey='gsa4_done_'+discordId+'_w'+currentWeek.week+'_'+currentWeek.year;
+  const localDone=JSON.parse(localStorage.getItem(localKey)||'[]');
+  done=localDone;
+
+  // Then try to merge with server data
+  try{
+    const rows=await sb('/rest/v1/gsa_leaderboard?discord_id=eq.'+encodeURIComponent(discordId)+'&week_num=eq.'+currentWeek.week+'&year_num=eq.'+currentWeek.year+'&select=done,pts');
+    if(rows&&rows.length&&rows[0].done&&rows[0].done.length>0){
+      // Merge server + local — take union, never lose progress
+      const merged=[...new Set([...rows[0].done,...localDone])];
+      done=merged;
+      localStorage.setItem(localKey,JSON.stringify(done));
+    }
+  }catch(e){
+    // Server failed - use local cache
+    console.warn('Server load failed, using local cache');
+  }
+  showMain();
 }
 
-function submitPrayer() {
-  const text  = document.getElementById('prayerText').value.trim();
-  const email = document.getElementById('prayerEmail').value.trim();
-  if (!text)  { alert('Please write your prayer request.'); return; }
-  if (!email) { alert('Please enter your email so we can respond.'); return; }
-  document.getElementById('prayerForm').style.display = 'none';
-  document.getElementById('prayerDone').style.display = 'block';
+function updateWeekUI(){
+  if(!currentWeek)return;
+  const b=getWeekBounds(currentWeek.week,currentWeek.year);
+  const label='Week '+currentWeek.week;
+  const dates=fmtDate(b.start)+' – '+fmtDate(b.end);
+  const days=Math.ceil((b.end-Date.now())/86400000);
+  const ends=days<=0?'Ended':days===1?'Ends tonight':'Ends in '+days+' days';
+  document.getElementById('header-week').textContent=label;
+  document.getElementById('week-label-text').textContent=label;
+  document.getElementById('week-dates').textContent='('+dates+')';
+  document.getElementById('week-ends').textContent=ends;
 }
+
+function showMain(){
+  document.getElementById('join-screen').style.display='none';
+  document.getElementById('main-screen').style.display='block';
+  document.getElementById('header-right').style.display='flex';
+  document.getElementById('chip-name').textContent=user;
+  const ca=document.getElementById('chip-av');
+  if(avatar){ca.innerHTML='<img src="'+avatar+'" onerror="this.parentElement.textContent=\''+user.charAt(0).toUpperCase()+'\'">'}
+  else{ca.textContent=user.charAt(0).toUpperCase();}
+  render();push();
+}
+
+// Score
+function calcPts(){return TASKS.filter(t=>done.includes(t.id)).reduce((s,t)=>s+t.pts,0);}
+function getRank(pts){let r=RANKS[0];for(const rk of RANKS)if(pts>=rk.min)r=rk;return r;}
+function render(){
+  const pts=calcPts(),pct=Math.round((pts/MAX)*100);
+  document.getElementById('score-num').textContent=pts;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-l').textContent=pts+' pts earned';
+  document.getElementById('tasks-frac').textContent=done.length+'/11';
+  document.getElementById('rank-name').textContent=getRank(pts).name;
+  document.getElementById('score-meta').textContent=done.length===0?'Start completing tasks below!':done.length===TASKS.length?'🎉 All tasks done — LEGEND!':(TASKS.length-done.length)+' tasks remaining this week';
+  document.getElementById('task-list').innerHTML=TASKS.map(t=>`<div class="task${done.includes(t.id)?' done':''}" onclick="toggle('${t.id}')"><div class="chk">${done.includes(t.id)?'✓':''}</div><div class="task-text">${t.text}${t.bonus?'<span class="bonus-tag">BONUS</span>':''}</div><div class="task-pts">${t.pts}pt</div></div>`).join('');
+}
+function toggle(id){
+  if(done.includes(id))done=done.filter(d=>d!==id);else done.push(id);
+  render();setSyncDot('saving');clearTimeout(syncTimer);syncTimer=setTimeout(push,900);
+}
+async function push(){
+  if(!discordId||!currentWeek)return;
+  // Always save locally first
+  const localKey='gsa4_done_'+discordId+'_w'+currentWeek.week+'_'+currentWeek.year;
+  localStorage.setItem(localKey,JSON.stringify(done));
+  // Then sync to Supabase
+  try{
+    await sb('/rest/v1/gsa_leaderboard',{method:'POST',prefer:'resolution=merge-duplicates',
+      body:JSON.stringify({discord_id:discordId,name:user,avatar:avatar||null,week_num:currentWeek.week,year_num:currentWeek.year,pts:calcPts(),tasks:done.length,done,updated_at:new Date().toISOString()})});
+    setSyncDot('ok');
+  }catch(e){setSyncDot('err');}
+}
+function setSyncDot(s){const d=document.getElementById('sync-dot');if(d)d.className='sync-dot '+(s==='ok'?'':s);}
+
+// Leaderboard
+async function loadBoard(){
+  document.getElementById('lb-content').innerHTML='<div class="lb-empty">Loading…</div>';
+  document.getElementById('winner-wrap').innerHTML='';
+  const mode=document.getElementById('week-select').value;
+  try{
+    let entries=[];
+    if(mode==='current'){
+      entries=await sb('/rest/v1/gsa_leaderboard?week_num=eq.'+currentWeek.week+'&year_num=eq.'+currentWeek.year+'&order=pts.desc,tasks.desc&select=*')||[];
+    } else {
+      const all=await sb('/rest/v1/gsa_leaderboard?select=discord_id,name,avatar,pts,tasks')||[];
+      const by={};
+      all.forEach(r=>{if(!by[r.discord_id])by[r.discord_id]={discord_id:r.discord_id,name:r.name,avatar:r.avatar,pts:0,tasks:0};by[r.discord_id].pts+=r.pts;by[r.discord_id].tasks+=r.tasks;});
+      entries=Object.values(by).sort((a,b)=>b.pts-a.pts||b.tasks-a.tasks);
+    }
+    if(mode==='current'&&entries[0]){
+      const w=entries[0];
+      document.getElementById('winner-wrap').innerHTML=`<div class="winner-banner"><div class="winner-icon">👑</div><div><div style="font-size:14px;">Current leader: <strong style="color:var(--gold)">${w.name}</strong> with ${w.pts} pts</div><div class="winner-sub">Week ends Sunday at midnight — can you catch up?</div></div></div>`;
+    }
+    if(!entries.length){document.getElementById('lb-content').innerHTML='<div class="lb-empty">No entries yet — be first!</div>';return;}
+    document.getElementById('lb-content').innerHTML='<div class="lb-list">'+entries.map((p,i)=>{
+      const isMe=p.discord_id===discordId;
+      const av=p.avatar?`<img src="${p.avatar}" onerror="this.style.display='none'">`:(p.name.charAt(0).toUpperCase());
+      return`<div class="lb-row${isMe?' me':''}"><div class="lb-rank${i<3?' '+RC[i]:''}">${i<3?MEDALS[i]:i+1}</div><div class="lb-av">${av}</div><div class="lb-info"><div class="lb-name${isMe?' me':''}">${p.name}${isMe?' · you':''}</div><div class="lb-sub">${p.tasks} tasks</div></div><div class="lb-pts">${p.pts}pts</div></div>`;
+    }).join('')+'</div>';
+  }catch(e){document.getElementById('lb-content').innerHTML='<div class="lb-empty">Could not load — try refreshing.</div>';}
+}
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['tasks','board','rewards'][i]===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p-'+t).classList.add('active');
+  if(t==='board')loadBoard();
+}
+
+// Boot
+handleCallback();
+if(!discordId&&loadAuth())initUser();
 </script>
 </body>
 </html>
