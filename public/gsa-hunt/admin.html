@@ -362,7 +362,7 @@ async function saveEdit(discordId){
 }
 
 async function removeUser(discordId,name){
-  if(!confirm('Remove '+name+' from this week's leaderboard?'))return;
+  if(!confirm('Remove '+name+' from the leaderboard?'))return;
   const mode=document.getElementById('week-filter').value;
   try{
     let url='/rest/v1/gsa_leaderboard?discord_id=eq.'+encodeURIComponent(discordId);
