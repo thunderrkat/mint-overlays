@@ -7,6 +7,7 @@ const SUPA_URL="https://tpmfivjjyujwdkxtvjcy.supabase.co";
 const SUPA_KEY="sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U";
 const SESSION="assentrix-k4r7";
 let vips=[],queue=[],playing=false;
+const playedThisSession=new Set(); // reset on page reload = stream restart
 
 async function loadVips(){
   try{
@@ -23,7 +24,14 @@ function findVip(u){
   return vips.find(v=>v.username===n)||null;
 }
 
-function playSound(vip){queue.push(vip);if(!playing)nextSound();}
+function playSound(vip){
+  // Only play once per session per VIP
+  if(playedThisSession.has(vip.username))return;
+  playedThisSession.add(vip.username);
+  queue.push(vip);
+  if(!playing)nextSound();
+}
+
 function nextSound(){
   if(!queue.length){playing=false;return;}
   playing=true;
@@ -36,7 +44,6 @@ function nextSound(){
   }catch(e){playing=false;nextSound();}
 }
 
-// Load on start, reload every 30s to pick up changes
 loadVips();
 setInterval(loadVips,30000);
 
@@ -44,13 +51,10 @@ function connectSSE(){
   const es=new EventSource("/events/"+SESSION);
   es.onmessage=e=>{
     const d=JSON.parse(e.data);
-    if(d.type==="join"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
-    if(d.type==="chat"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}
-    if(d.type==="state"&&d.gifters){
-      d.gifters.forEach(g=>{
-        const v=findVip(g.nickname||g.id);
-        if(v){const k="vip_p_"+(g.nickname||g.id);if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");playSound(v);}}
-      });
+    // Only trigger on JOIN — not on every chat message
+    if(d.type==="join"){
+      const v=findVip(d.nickname||d.uniqueId);
+      if(v)playSound(v);
     }
   };
   es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
