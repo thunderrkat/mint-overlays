@@ -186,7 +186,7 @@ async function connect(){
   try{
     const r=await fetch("/api/"+SESSION+"/connect",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u})});
     const d=await r.json();
-    if(d.success){connected=true;setStatus("connected","LIVE — @"+u);btn.textContent="Disconnect";btn.className="connect-btn disconnect";btn.disabled=false;}
+    if(d.success||d.ok){connected=true;setStatus("connected","LIVE — @"+u);btn.textContent="Disconnect";btn.className="connect-btn disconnect";btn.disabled=false;}
     else{setStatus("disconnected","Connection failed");btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;document.getElementById("username-input").disabled=false;toast(d.error||"Connection failed");}
   }catch(e){setStatus("disconnected","Error");btn.textContent="Go Live";btn.className="connect-btn go";btn.disabled=false;document.getElementById("username-input").disabled=false;}
 }
