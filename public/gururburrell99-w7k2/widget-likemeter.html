@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@700;800;900&family=Saira+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6B21A8;--purple-hi:#A855F7;--purple-lo:#3B0764;
+  --green:#00FF88;--green-lo:#00CC66;--green-dim:#004D33;
+  --orange:#F97316;--orange-hi:#FB923C;
+  --ink:#030712;--ink-2:#0B0F1A;--ink-3:#111827;
+  --text:#F0F4FF;--text-dim:#C4B5FD;--text-muted:#6D5A8A;
+  --panel:rgba(11,15,26,.93);--panel-line:rgba(107,33,168,.5);
+  --font-display:"Anton",sans-serif;--font-cond:"Saira Condensed",sans-serif;--font-body:"Outfit",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:460px;height:130px;background:transparent;overflow:hidden;font-family:var(--font-body);}
+.meter{width:460px;height:130px;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:12px;padding:14px 20px;
+  box-shadow:0 8px 28px rgba(0,0,0,.8),0 0 16px rgba(0,255,136,.08);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
+.meter::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--ink),var(--purple-lo) 20%,var(--purple-hi) 40%,var(--green) 60%,var(--purple-hi) 80%,var(--ink));
+  box-shadow:0 0 10px rgba(0,255,136,.5);}
+.top-row{display:flex;align-items:center;justify-content:space-between;}
+.title{font-family:var(--font-cond);font-weight:800;font-size:16px;letter-spacing:3px;color:var(--green);text-transform:uppercase;}
+.like-count{font-family:var(--font-display);font-size:28px;color:var(--text);display:flex;align-items:baseline;gap:6px;text-shadow:0 0 20px rgba(0,255,136,.4);}
+.like-label{font-family:var(--font-cond);font-size:12px;color:var(--text-muted);letter-spacing:2px;}
+.bar-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);}
+.bar-meta .power{color:var(--green);font-weight:800;font-family:var(--font-cond);letter-spacing:2px;font-size:13px;text-shadow:0 0 8px rgba(0,255,136,.6);}
+.bar-bg{height:20px;border-radius:4px;background:rgba(3,7,18,.9);overflow:hidden;border:1px solid rgba(0,255,136,.2);position:relative;}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple-lo) 0%,var(--purple-hi) 40%,var(--green) 80%,#00FFAA 100%);
+  box-shadow:0 0 16px rgba(0,255,136,.5);transition:width .8s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden;}
+.bar-fill::after{content:"";position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s ease-in-out infinite;}
+.bar-gloss{position:absolute;inset:0;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none;}
+.bar-marks{position:absolute;inset:0;display:flex;}
+.bar-mark{flex:1;border-right:1px solid rgba(0,0,0,.3);}
+@keyframes shimmer{to{left:200%;}}
+.milestone{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-family:var(--font-cond);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;color:var(--green);opacity:0;transition:opacity .4s;text-shadow:0 0 10px rgba(0,255,136,.7);}
+.milestone.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="meter">
+  <div class="top-row">
+    <div class="title">❤️ LIKE-O-METER</div>
+    <div class="like-count"><span id="like-num">0</span><span class="like-label">LIKES</span></div>
+  </div>
+  <div class="bar-meta">
+    <span id="next-label">Be first to like!</span>
+    <span class="power" id="power">EARTHLING</span>
+  </div>
+  <div class="bar-bg">
+    <div class="bar-fill" id="bar" style="width:0%"></div>
+    <div class="bar-gloss"></div>
+    <div class="bar-marks"><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div><div class='bar-mark'></div></div>
+  </div>
+  <div class="milestone" id="milestone"></div>
+</div>
+<script>
+const SESSION="gururburrell99-w7k2";
+const T=[1000,2500,5000,10000,20000,40000,75000];
+const PWR=["EARTHLING","ABDUCTEE","CONTACTEE","BELIEVER","ALIEN ALLY","SPACE MONK","UFO GURU","GURU OF THE COSMOS"];
+const MS=["","1K — ABDUCTEE!","2.5K — CONTACTEE!","5K — BELIEVER!","10K — ALIEN ALLY!","20K — SPACE MONK!","40K — UFO GURU!","75K — GURU OF THE COSMOS! 👽"];
+let likes=0,lastLv=-1;
+function update(n){
+  likes=Math.max(0,n);document.getElementById("like-num").textContent=likes.toLocaleString();
+  let lv=0;for(let i=0;i<7;i++){if(likes>=T[i])lv=i+1;}
+  const prev=lv===0?0:T[lv-1],next=lv<7?T[lv]:T[6];
+  const pct=lv<7?((likes-prev)/(next-prev))*100:100;
+  document.getElementById("bar").style.width=Math.min(pct,100)+"%";
+  document.getElementById("next-label").textContent=lv<7?(next-likes).toLocaleString()+" to next rank":"GURU OF THE COSMOS — MAX LEVEL 👽";
+  document.getElementById("power").textContent=PWR[lv];
+  if(lv>lastLv&&lv>0){lastLv=lv;const m=document.getElementById("milestone");m.textContent=MS[lv];m.classList.add("show");setTimeout(()=>m.classList.remove("show"),3500);}
+}
+update(0);
+function connectSSE(){
+  const es=new EventSource("/events/"+SESSION);
+  es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="likeMeter")update(d.total||0);};
+  es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
+}
+connectSSE();
+</script>
+</body>
+</html>
