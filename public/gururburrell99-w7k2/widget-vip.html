@@ -8,21 +8,69 @@ const SUPA_KEY="sb_publishable_Y9TB29NDQSOmv7p57dX-lg_WIMMOL-U";
 const SESSION="gururburrell99-w7k2";
 let vips=[],queue=[],playing=false;
 const playedThisSession=new Set();
+
+// Unlock audio context on page load
+let audioUnlocked=false;
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+function unlockAudio(){
+  if(audioUnlocked)return;
+  audioCtx.resume().then(()=>{
+    const buf=audioCtx.createBuffer(1,1,22050);
+    const src=audioCtx.createBufferSource();
+    src.buffer=buf;src.connect(audioCtx.destination);src.start(0);
+    audioUnlocked=true;
+  });
+}
+// Try to unlock immediately and on any interaction
+unlockAudio();
+document.addEventListener('click',unlockAudio);
+document.addEventListener('keydown',unlockAudio);
+
 async function loadVips(){
-  try{const res=await fetch(SUPA_URL+"/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&order=position.asc",{headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY}});if(res.ok)vips=await res.json();}catch(e){}
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/vip_sounds?session_id=eq."+encodeURIComponent(SESSION)+"&order=position.asc",
+      {headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY}});
+    if(res.ok)vips=await res.json();
+  }catch(e){}
 }
-function findVip(u){if(!u)return null;const n=u.toLowerCase().replace(/^@/,"");return vips.find(v=>v.username===n)||null;}
-function playSound(vip){if(playedThisSession.has(vip.username))return;playedThisSession.add(vip.username);queue.push(vip);if(!playing)nextSound();}
+function findVip(u){
+  if(!u)return null;
+  const n=u.toLowerCase().replace(/^@/,"");
+  return vips.find(v=>v.username.toLowerCase()===n)||null;
+}
+function playSound(vip){
+  if(playedThisSession.has(vip.username.toLowerCase()))return;
+  playedThisSession.add(vip.username.toLowerCase());
+  queue.push(vip);
+  if(!playing)nextSound();
+}
 function nextSound(){
-  if(!queue.length){playing=false;return;}playing=true;
+  if(!queue.length){playing=false;return;}
+  playing=true;
   const vip=queue.shift();
-  try{const a=new Audio(vip.sound_data);a.play().catch(()=>{playing=false;nextSound();});a.onended=()=>{playing=false;nextSound();};a.onerror=()=>{playing=false;nextSound();};}
-  catch(e){playing=false;nextSound();}
+  try{
+    audioCtx.resume().then(()=>{
+      const a=new Audio(vip.sound_data);
+      a.play().catch(()=>{playing=false;nextSound();});
+      a.onended=()=>{playing=false;nextSound();};
+      a.onerror=()=>{playing=false;nextSound();};
+    });
+  }catch(e){playing=false;nextSound();}
 }
-loadVips();setInterval(loadVips,30000);
+
+loadVips();
+setInterval(loadVips,30000);
+
 function connectSSE(){
   const es=new EventSource("/events/"+SESSION);
-  es.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==="join"){const v=findVip(d.nickname||d.uniqueId);if(v)playSound(v);}};
+  es.onmessage=e=>{
+    unlockAudio();
+    const d=JSON.parse(e.data);
+    if(d.type==="join"){
+      const v=findVip(d.nickname||d.uniqueId||"");
+      if(v)playSound(v);
+    }
+  };
   es.onerror=()=>{es.close();setTimeout(connectSSE,3000);};
 }
 connectSSE();
