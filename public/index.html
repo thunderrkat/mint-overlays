@@ -3,274 +3,541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mint Overlays V2 — Multi-Platform Stream Overlays &amp; Widgets</title>
+<title>Mint Overlays — Overlays, voices, games and automation for live streamers</title>
+<meta name="description" content="Mint Overlays is a Windows app for live streamers: animated alerts, gift jars, video and sound triggers, AI voices, chat games, a 3D dance party and automation. Works with TikTok LIVE Studio and OBS. 7-day free trial.">
+<meta property="og:title" content="Mint Overlays — Bring your chat to life">
+<meta property="og:description" content="Alerts, overlays, voices, chat games and automation for live streamers. One Windows app, one link into TikTok LIVE Studio or OBS.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mintoverlays.com/">
+<meta property="og:image" content="https://mintoverlays.com/v3/hero-montage.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#07090a">
+<link rel="icon" type="image/png" href="/v3/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --mint:#1FDFBC;--mint-2:#5CFFDF;--mint-dim:#12A88C;
-  --bg:#07090a;--bg-2:#0b0f10;--glass:rgba(255,255,255,0.045);--glass-2:rgba(255,255,255,0.07);
-  --line:rgba(31,223,188,0.22);--line-soft:rgba(255,255,255,0.08);
-  --text:#F2F5F4;--text-dim:#B9C4C1;--text-mute:#71807D;
-  --font:"Inter",sans-serif;--font-d:"Bebas Neue",sans-serif;
+  --mint:#1FDFBC;--mint-2:#5CFFDF;--mint-dim:#12A88C;--violet:#b99bff;
+  --bg:#07090a;--bg-2:#0b0f10;--card:rgba(255,255,255,.04);--card-2:rgba(255,255,255,.07);
+  --line:rgba(31,223,188,.24);--line-soft:rgba(255,255,255,.09);
+  --text:#F2F5F4;--text-dim:#B9C4C1;--text-mute:#7d8c88;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
 a{color:inherit;text-decoration:none}
-img,svg{display:block}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+img,svg{display:block;max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.glow{position:fixed;top:-320px;left:50%;width:1200px;height:760px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(31,223,188,.11),transparent 65%);pointer-events:none;z-index:0}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* backdrop glow */
-body::before{content:"";position:fixed;top:-300px;left:50%;width:1100px;height:700px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(31,223,188,.10),transparent 65%);pointer-events:none;z-index:0}
-
-/* ── Nav ─────────────────────────────────────────────── */
-.nav{position:sticky;top:0;z-index:100;background:rgba(7,9,10,.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--line-soft)}
-.nav-inner{max-width:1180px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:32px}
-.logo{display:flex;align-items:center;gap:9px;margin-right:auto}
-.logo-badge{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--mint),var(--mint-dim));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#04211c;flex-shrink:0}
-.logo-text{font-weight:800;font-size:16px}
-.logo-text span{color:var(--mint)}
+/* nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(7,9,10,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line-soft)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;font-weight:800;font-size:16px;letter-spacing:-.01em}
+.brand img{width:32px;height:32px;border-radius:9px}
+.brand .bn span{color:var(--mint)}
 .nav-links{display:flex;gap:26px;font-size:14px;font-weight:600;color:var(--text-dim)}
 .nav-links a:hover{color:var(--text)}
-.nav-actions{display:flex;align-items:center;gap:14px}
-.btn{font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:all .18s}
-.btn-mint{background:linear-gradient(135deg,var(--mint-2),var(--mint-dim));color:#04211c;box-shadow:0 8px 24px rgba(31,223,188,.28)}
+.btn{font:inherit;font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;transition:transform .16s,filter .16s,background .16s}
+.btn-mint{background:linear-gradient(135deg,var(--mint-2),var(--mint-dim));color:#04211c;box-shadow:0 8px 26px rgba(31,223,188,.26)}
 .btn-mint:hover{filter:brightness(1.07);transform:translateY(-1px)}
-.btn-ghost{background:transparent;border:1px solid var(--line-soft);color:var(--text)}
-.btn-lg{padding:14px 26px;font-size:15px}
+.btn-ghost{background:rgba(255,255,255,.03);border-color:var(--line-soft);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.btn-lg{padding:15px 28px;font-size:15px}
 
-/* ── Hero ────────────────────────────────────────────── */
-.hero{position:relative;padding:64px 0 40px;z-index:1}
-.hero-grid{display:grid;grid-template-columns:1fr 1.08fr;gap:50px;align-items:center}
-.pill{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);border:1px solid var(--line);background:rgba(31,223,188,.06);padding:6px 13px;border-radius:20px;margin-bottom:20px}
-.hero h1{font-weight:900;font-size:48px;line-height:1.06;letter-spacing:-.02em;margin-bottom:18px}
+/* hero */
+.hero{position:relative;z-index:1;padding:72px 0 28px}
+.hero-grid{display:grid;grid-template-columns:1fr 1.12fr;gap:52px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mint);border:1px solid var(--line);background:rgba(31,223,188,.06);padding:6px 14px;border-radius:999px;margin-bottom:22px}
+.hero h1{font-weight:900;font-size:clamp(40px,5.6vw,66px);line-height:1.02;letter-spacing:-.035em;margin-bottom:20px}
 .hero h1 .g{color:var(--mint)}
-.hero-sub{color:var(--text-dim);font-size:16px;line-height:1.6;max-width:460px;margin-bottom:26px}
-.trial-note{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-mute);margin-top:14px}
-.trial-note b{color:var(--mint)}
-.win-note{font-size:11.5px;color:var(--text-mute);margin-top:6px}
+.hero-sub{color:var(--text-dim);font-size:17px;line-height:1.65;max-width:480px;margin-bottom:30px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.hero-note{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:20px;font-size:13px;color:var(--text-mute)}
+.hero-note b{color:var(--mint);font-weight:700}
+.frame{border-radius:16px;padding:1.5px;background:linear-gradient(140deg,rgba(31,223,188,.55),rgba(31,223,188,.04) 62%);box-shadow:0 34px 80px rgba(0,0,0,.6)}
+.frame img{width:100%;height:auto;border-radius:14.5px;background:#0b0f10}
+.frame.small{box-shadow:0 22px 56px rgba(0,0,0,.5)}
 
-/* Real app screenshot frame */
-.app-frame{border-radius:16px;padding:1.5px;background:linear-gradient(140deg,rgba(31,223,188,.5),rgba(31,223,188,.05) 60%);box-shadow:0 30px 70px rgba(0,0,0,.55)}
-.app-frame img{width:100%;height:auto;display:block;border-radius:15px}
-.shot-frame{border-radius:14px;padding:1.5px;background:linear-gradient(140deg,rgba(31,223,188,.4),rgba(31,223,188,.04) 60%);box-shadow:0 20px 50px rgba(0,0,0,.45);overflow:hidden}
-.shot-frame img{width:100%;height:auto;display:block;border-radius:13px}
+/* proof strip */
+.strip{position:relative;z-index:1;margin-top:56px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.015)}
+.strip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.strip-item{padding:22px 18px;display:flex;gap:13px;align-items:flex-start}
+.strip-item .ico{color:var(--mint);margin-top:2px;flex-shrink:0}
+.strip-item b{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
+.strip-item span{font-size:12.5px;color:var(--text-mute);line-height:1.5}
 
-/* ── Section shell ───────────────────────────────────── */
-.section{padding:64px 0;position:relative;z-index:1}
-.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:10px}
-.h2{font-weight:800;font-size:30px;line-height:1.15;margin-bottom:10px}
-.section-sub{color:var(--text-mute);font-size:14.5px;max-width:540px;line-height:1.6;margin-bottom:34px}
+/* section shell */
+.section{position:relative;z-index:1;padding:88px 0}
+.section.alt{background:var(--bg-2)}
+.eyebrow{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);margin-bottom:12px}
+.h2{font-weight:850;font-size:clamp(28px,3.6vw,42px);line-height:1.1;letter-spacing:-.025em;margin-bottom:14px;text-wrap:balance}
+.lede{color:var(--text-dim);font-size:16.5px;line-height:1.65;max-width:600px}
+.center{text-align:center}
+.center .lede{margin-left:auto;margin-right:auto}
+
+/* showcase rows */
+.show{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center;margin-top:84px}
+.show:first-of-type{margin-top:54px}
+.show.rev .show-text{order:2}
+.tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mint);background:rgba(31,223,188,.08);border:1px solid var(--line);padding:5px 11px;border-radius:7px;margin-bottom:14px}
+.tag.beta{color:#ffd166;background:rgba(255,209,102,.08);border-color:rgba(255,209,102,.3)}
+.show-text h3{font-size:clamp(24px,2.8vw,32px);font-weight:850;letter-spacing:-.02em;line-height:1.15;margin-bottom:12px}
+.show-text p{font-size:15.5px;color:var(--text-dim);line-height:1.7;margin-bottom:18px}
+.ticks{list-style:none;display:grid;gap:10px}
+.ticks li{display:flex;gap:11px;font-size:14.5px;color:var(--text-dim);line-height:1.55}
+.ticks li::before{content:"";flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:rgba(31,223,188,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231FDFBC' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 12.5 10.5 17 18 8'/%3E%3C/svg%3E") center/12px no-repeat;border:1px solid var(--line)}
+.ticks b{color:var(--text);font-weight:600}
+.phone-wrap{display:flex;justify-content:center}
+.phone-wrap .frame{max-width:300px;border-radius:26px;padding:2px}
+.phone-wrap .frame img{border-radius:24px}
 
 /* feature grid */
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.feat-card{background:var(--glass);border:1px solid var(--line-soft);border-radius:14px;padding:20px}
-.feat-card .ic{width:38px;height:38px;border-radius:10px;background:rgba(31,223,188,.1);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px}
-.feat-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
-.feat-card p{font-size:12.5px;color:var(--text-mute);line-height:1.55}
+.cats{display:grid;gap:44px;margin-top:50px}
+.cat h3{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute);margin-bottom:16px}
+.cat h3::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+.grid{display:flex;flex-wrap:wrap;gap:14px}
+.card{flex:1 1 250px;background:var(--card);border:1px solid var(--line-soft);border-radius:14px;padding:20px;transition:border-color .2s,background .2s}
+.card:hover{border-color:var(--line);background:var(--card-2)}
+.card .ic{width:38px;height:38px;border-radius:10px;background:rgba(31,223,188,.1);border:1px solid var(--line);color:var(--mint);display:flex;align-items:center;justify-content:center;margin-bottom:13px}
+.card h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.5px;color:var(--text-mute);line-height:1.6}
+.badge{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;color:#04211c;background:var(--mint)}
+.badge.beta{background:#ffd166}
 
-/* two-col visual sections */
-.visual-row{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:70px}
-.visual-row.rev .visual-text{order:2}
-.visual-text .tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);background:rgba(31,223,188,.08);border:1px solid var(--line);padding:4px 10px;border-radius:6px;margin-bottom:12px}
-.visual-text h3{font-size:24px;font-weight:800;margin-bottom:10px}
-.visual-text p{font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:14px}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:26px;counter-increment:s}
+.step::before{content:counter(s);display:flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#04211c;background:linear-gradient(135deg,var(--mint-2),var(--mint-dim));margin-bottom:16px}
+.step h4{font-size:17px;font-weight:750;margin-bottom:8px}
+.step p{font-size:14px;color:var(--text-dim);line-height:1.65}
 
-/* ── Pricing ─────────────────────────────────────────── */
-.pricing-wrap{display:flex;justify-content:center}
-.price-card{max-width:420px;width:100%;background:linear-gradient(160deg,rgba(31,223,188,.08),transparent 65%);border:1px solid var(--line);border-radius:20px;padding:36px;text-align:center;position:relative}
-.price-card::before{content:"";position:absolute;top:0;left:12%;right:12%;height:2px;background:linear-gradient(90deg,transparent,var(--mint),transparent)}
-.price-badge{display:inline-flex;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);background:rgba(31,223,188,.1);border:1px solid var(--line);padding:5px 14px;border-radius:20px;margin-bottom:18px}
-.price-amt{font-weight:900;font-size:52px;margin-bottom:2px}
-.price-amt span{font-size:16px;font-weight:700;color:var(--text-mute)}
-.price-trial{font-size:13px;color:var(--text-dim);margin-bottom:22px}
-.price-list{text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
-.price-list .pi{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--text-dim)}
-.price-list .pi .ck{color:var(--mint);font-weight:800}
-.price-win{margin-top:16px;font-size:11.5px;color:var(--text-mute)}
+/* pricing */
+.price-wrap{display:flex;justify-content:center;margin-top:44px}
+.price-card{max-width:460px;width:100%;background:linear-gradient(160deg,rgba(31,223,188,.09),rgba(255,255,255,.015) 60%);border:1px solid var(--line);border-radius:22px;padding:38px 36px;position:relative}
+.price-card::before{content:"";position:absolute;top:0;left:14%;right:14%;height:2px;background:linear-gradient(90deg,transparent,var(--mint),transparent)}
+.price-badge{display:inline-flex;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mint);background:rgba(31,223,188,.1);border:1px solid var(--line);padding:5px 14px;border-radius:999px;margin-bottom:18px}
+.price-amt{font-weight:900;font-size:64px;letter-spacing:-.04em;line-height:1}
+.price-amt span{font-size:17px;font-weight:700;color:var(--text-mute);letter-spacing:0}
+.price-alt{margin-top:10px;font-size:14px;color:var(--text-dim)}
+.price-alt b{color:var(--mint)}
+.price-list{margin:26px 0 28px;display:grid;gap:11px;text-align:left}
+.price-list li{list-style:none;display:flex;gap:11px;font-size:14.5px;color:var(--text-dim);line-height:1.5}
+.price-list li::before{content:"";flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:rgba(31,223,188,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231FDFBC' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 12.5 10.5 17 18 8'/%3E%3C/svg%3E") center/12px no-repeat;border:1px solid var(--line)}
+.price-card .btn{width:100%}
+.price-lock{margin:18px auto 4px;max-width:34ch;font-size:13.5px;line-height:1.55;color:var(--text);background:rgba(181,138,238,.1);border:1px solid rgba(181,138,238,.4);padding:11px 16px;border-radius:14px}
+.price-lock b{color:#d2bcff}
+.price-fine{margin-top:16px;font-size:12.5px;color:var(--text-mute);line-height:1.6}
+.have-key{margin-top:26px;text-align:center;font-size:14px;color:var(--text-mute)}
+.have-key b{color:var(--text-dim)}
 
-/* ── Footer ──────────────────────────────────────────── */
-.footer{border-top:1px solid var(--line-soft);padding:36px 0 24px;text-align:center;position:relative;z-index:1}
-.footer-logo{font-weight:800;font-size:14px;margin-bottom:10px}
-.footer-logo span{color:var(--mint)}
-.footer-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--text-mute);margin-bottom:14px}
+/* faq */
+.faq{max-width:780px;margin:44px auto 0;display:grid;gap:10px}
+.faq details{background:var(--card);border:1px solid var(--line-soft);border-radius:13px;padding:0 20px}
+.faq details[open]{border-color:var(--line);background:var(--card-2)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:650;font-size:15.5px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;font-weight:400;color:var(--mint);line-height:1;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{padding:0 0 18px;font-size:14.5px;color:var(--text-dim);line-height:1.7}
+.faq a{color:var(--mint);text-decoration:underline;text-underline-offset:3px}
+
+/* closing + footer */
+.closing{position:relative;z-index:1;padding:76px 0;text-align:center;border-top:1px solid var(--line-soft);background:radial-gradient(ellipse at 50% 0%,rgba(31,223,188,.09),transparent 70%)}
+.closing .h2{max-width:640px;margin-left:auto;margin-right:auto}
+.closing .cta-row{justify-content:center;margin-top:26px}
+.footer{position:relative;z-index:1;border-top:1px solid var(--line-soft);padding:38px 0 30px;text-align:center}
+.footer .brand{justify-content:center;margin:0 0 14px}
+.footer-links{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--text-mute);margin-bottom:16px}
 .footer-links a:hover{color:var(--mint)}
-.footer-copy{font-size:11px;color:var(--text-mute);opacity:.6}
+.footer-copy{font-size:12px;color:var(--text-mute);opacity:.75;max-width:640px;margin:0 auto;line-height:1.7}
 
-@media(max-width:960px){
+/* montage, what's-new banner, affiliates */
+.btn-violet{background:linear-gradient(135deg,#d2bcff,#8f6bdc);color:#1b1030;box-shadow:0 8px 26px rgba(143,107,220,.28)}
+.btn-violet:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.montage{position:relative;z-index:1;padding:44px 0 8px}
+.montage-frame{border-radius:22px;overflow:hidden;border:1px solid var(--line-soft);box-shadow:0 34px 80px rgba(0,0,0,.55);background:#090c10}
+.montage-frame img{width:100%;height:auto;object-fit:contain}
+.montage-note{margin-top:12px;text-align:center;font-size:12px;color:var(--text-mute)}
+.newtools-banner{margin-top:44px;border-radius:20px;overflow:hidden;border:1px solid var(--line-soft);box-shadow:0 28px 70px rgba(0,0,0,.5);background:#090c10}
+.newtools-banner img{width:100%;height:auto;object-fit:contain}
+.affiliate-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center}
+.affiliate-text .cta-row{margin-top:26px}
+.affiliate-fine{margin-top:16px;font-size:12.5px;color:var(--text-mute);line-height:1.65;max-width:52ch}
+.affiliate-fine a{color:var(--violet);text-decoration:underline;text-underline-offset:3px}
+.affiliate-art{border-radius:20px}
+.affiliate-art img{border-radius:18.5px}
+@media(max-width:980px){
   .nav-links{display:none}
-  .hero-grid,.visual-row{grid-template-columns:1fr}
-  .visual-row.rev .visual-text{order:0}
-  .feat-grid{grid-template-columns:1fr 1fr}
+  .affiliate-grid{grid-template-columns:1fr;gap:34px}
+  .hero{padding-top:48px}
+  .hero-grid,.show{grid-template-columns:1fr;gap:34px}
+  .show{margin-top:64px}
+  .show.rev .show-text{order:0}
+  .strip-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .section{padding:68px 0}
 }
+@media(max-width:600px){
+  .wrap,.nav-inner{padding-left:16px;padding-right:16px}
+  .nav-inner .btn{padding:9px 16px}
+  .strip-grid{grid-template-columns:1fr}
+  .price-card{padding:30px 22px}
+  .price-amt{font-size:54px}
+  .cta-row .btn{flex:1 1 100%}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
+<div class="glow" aria-hidden="true"></div>
 
-<!-- ── NAV ─────────────────────────────────────────────── -->
-<div class="nav">
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 18l-1-11 5 4 5-8 5 8 5-4-1 11z"/><line x1="3" y1="21" x2="21" y2="21"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <symbol id="i-jar" viewBox="0 0 24 24"><path d="M8 2h8M7 5h10"/><path d="M7 5c-2 2-3 4-3 8v6a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-6c0-4-1-6-3-8"/><circle cx="10" cy="17" r="1.6"/><circle cx="14.5" cy="18" r="1.6"/><circle cx="12" cy="14" r="1.3"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+    <symbol id="i-swords" viewBox="0 0 24 24"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/><path d="M9.5 6.5L21 18v3h-3L6.5 9.5"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></symbol>
+    <symbol id="i-credits" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="9" cy="9" r="7"/><path d="M15.5 6.4A7 7 0 1 1 6.4 15.5"/><path d="M9 6v6M7 8.5h3.2a1.3 1.3 0 0 1 0 2.6H7"/></symbol>
+    <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="10"/><line x1="12" y1="14" x2="12" y2="22"/><line x1="2" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="22" y2="12"/></symbol>
+    <symbol id="i-type" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></symbol>
+    <symbol id="i-party" viewBox="0 0 24 24"><path d="M4 20l5-14 9 9z"/><path d="M14 4v2M20 10h-2M18.5 5.5L17 7M10 3h.01M21 4h.01M20 16h.01"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  </defs>
+</svg>
+
+<!-- NAV -->
+<header class="nav">
   <div class="nav-inner">
-    <div class="logo">
-      <div class="logo-badge">M</div>
-      <div class="logo-text">Mint <span>Overlays</span></div>
-    </div>
-    <div class="nav-links">
+    <a class="brand" href="#top" aria-label="Mint Overlays home"><img src="/v3/icon.png" alt="" width="32" height="32"><span class="bn">Mint <span>Overlays</span></span></a>
+    <nav class="nav-links" aria-label="Main">
       <a href="#features">Features</a>
       <a href="#studio">Overlay Studio</a>
+      <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
-    </div>
-    <div class="nav-actions">
-      <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint">Start Free Trial</a>
-    </div>
+      <a href="#affiliates">Affiliates</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint">Start free trial</a>
   </div>
-</div>
+</header>
 
-<!-- ── HERO ────────────────────────────────────────────── -->
-<div class="hero">
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="pill">🪟 Windows Desktop App</div>
+      <div class="pill"><svg class="ico" style="width:14px;height:14px"><use href="#i-monitor"/></svg> Windows desktop app</div>
       <h1>Bring your <span class="g">chat to life.</span></h1>
-      <p class="hero-sub">Mint Overlays V2 connects TikTok, YouTube, Twitch, and Kick into one desktop app — real-time widgets, AI voices, and a full Overlay Studio to build your entire stream scene in one browser-source URL.</p>
-      <div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg">Start 7-Day Free Trial</a>
-        <a href="#features" class="btn btn-ghost btn-lg">See What's Inside</a>
+      <p class="hero-sub">Mint Overlays turns your live into a show: animated alerts, gift jars, videos and sounds on cue, AI voices, chat games, a 3D dance party and automation that runs while you stream. One app, one link into TikTok LIVE Studio or OBS.</p>
+      <div class="cta-row">
+        <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg">Start 7-day free trial</a>
+        <a href="#features" class="btn btn-ghost btn-lg">See what's inside</a>
       </div>
-      <div class="trial-note">✓ <b>7-day free trial</b> — then just $7/month. Cancel anytime.</div>
-      <div class="win-note">Windows only. No Mac build currently available.</div>
+      <div class="hero-note">
+        <span><b>7 days free</b>, then $10/month</span>
+        <span>Cancel anytime</span>
+        <span>Windows 10 &amp; 11</span>
+      </div>
     </div>
-
-    <div class="app-frame">
-      <img src="v2-screenshots/marketing-connections-dashboard.png" alt="Mint Overlays V2 — Connections dashboard">
-    </div>
-  </div>
-</div>
-
-<!-- ── FEATURE OVERVIEW GRID ─────────────────────────────── -->
-<div class="section" id="features">
-  <div class="wrap">
-    <div class="eyebrow">Everything In V2</div>
-    <div class="h2">One app. Every platform. Every moment.</div>
-    <p class="section-sub">Mint Overlays V2 is a complete rebuild — same streamers, same platforms, an entirely new toolkit built for how you actually run a stream.</p>
-
-    <div class="feat-grid">
-      <div class="feat-card"><div class="ic">🎙️</div><h3>Text-to-Speech</h3><p>Real ElevenLabs AI voices plus system voices, reading chat across TikTok, YouTube, Twitch, and Kick simultaneously.</p></div>
-      <div class="feat-card"><div class="ic">🛡️</div><h3>Chat Moderation</h3><p>Built-in profanity/slur filtering and spam &amp; troll cooldowns for what gets read aloud — without hiding your chat.</p></div>
-      <div class="feat-card"><div class="ic">💬</div><h3>Unified Live Chat</h3><p>Every platform's chat in one shared view, with a frameless pop-out window for a second monitor.</p></div>
-      <div class="feat-card"><div class="ic">🏆</div><h3>Leaderboards</h3><p>Top Likes and Top Gifters leaderboards, live on stream, sorted in real time.</p></div>
-      <div class="feat-card"><div class="ic">📊</div><h3>Goal Bars</h3><p>Follower, Gift, and Like goal bars fully re-skinnable — fonts, colors, shape, and motion, all yours to design.</p></div>
-      <div class="feat-card"><div class="ic">✨</div><h3>Text Alerts</h3><p>Fully custom animated alerts for follows, gifts, and more — build the exact moment you want your chat to see.</p></div>
-      <div class="feat-card"><div class="ic">🎬</div><h3>Video Board &amp; Gift Videos</h3><p>Trigger local video clips on commands or events, or auto-play a unique clip for any gift that lands.</p></div>
-      <div class="feat-card"><div class="ic">🍯</div><h3>Gift Jar</h3><p>Gifts physically drop and stack in a glass jar on screen — one of V2's most eye-catching new widgets.</p></div>
-      <div class="feat-card"><div class="ic">📜</div><h3>Gift Scroll</h3><p>A live ticker of every gift as it lands, each with its own sound.</p></div>
-      <div class="feat-card"><div class="ic">🎮</div><h3>Points Economy</h3><p>A full leveling system with a real-time on-stream leaderboard your community can climb together.</p></div>
-      <div class="feat-card"><div class="ic">🎡</div><h3>Spin Wheel</h3><p>A chat-command-triggered reward wheel your viewers can win from live.</p></div>
-      <div class="feat-card"><div class="ic">🔊</div><h3>Soundboards</h3><p>Gift sound effects, a VIP entrance soundboard for regulars, and a general effects board — all fully custom.</p></div>
+    <div class="frame">
+      <img src="/v3/app-connections.webp" alt="The Mint Overlays app: connect TikTok, Twitch, Kick and YouTube" width="1360" height="900">
     </div>
   </div>
-</div>
 
-<!-- ── VISUAL FEATURE CALLOUTS ────────────────────────────── -->
-<div class="section" style="background:var(--bg-2)">
+  <div class="strip">
+    <div class="wrap strip-grid">
+      <div class="strip-item"><svg class="ico"><use href="#i-monitor"/></svg><div><b>TikTok LIVE Studio &amp; OBS</b><span>Paste a link as a browser source. No plug-ins to install.</span></div></div>
+      <div class="strip-item"><svg class="ico"><use href="#i-chat"/></svg><div><b>Four platforms</b><span>Connect TikTok, Twitch, Kick and YouTube with just a channel name.</span></div></div>
+      <div class="strip-item"><svg class="ico"><use href="#i-shield"/></svg><div><b>Signed installer</b><span>One-step install that Windows recognizes by publisher name.</span></div></div>
+      <div class="strip-item"><svg class="ico"><use href="#i-zap"/></svg><div><b>Light on your PC</b><span>Built to stay quiet in the background through long streams.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MONTAGE -->
+<section class="montage" aria-label="A look at what Mint Overlays can do">
   <div class="wrap">
+    <div class="montage-frame"><img src="/v3/hero-montage.webp" alt="Illustration of Mint Overlays tools: a Word Garden chat game, a stream countdown timer, a gift jar and Overlay Studio, under the words Bring your chat to life." width="1672" height="941" loading="lazy"></div>
+    <p class="montage-note">Illustration. You can connect TikTok, Twitch, YouTube and Kick; some tools, like gifts and battles, are TikTok features.</p>
+  </div>
+</section>
 
-    <div class="visual-row">
-      <div class="visual-text">
-        <span class="tag">Standout Feature</span>
+<!-- SHOWCASE -->
+<section class="section" id="showcase">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">What's new</span>
+      <h2 class="h2">More than overlays. Your stream, on autopilot.</h2>
+      <p class="lede">Mint keeps growing. These are the newest ways to make your live feel alive, without extra apps or extra work mid-stream.</p>
+    </div>
+
+    <div class="newtools-banner"><img src="/v3/whats-new.webp" alt="New tools: a Countdown Timer that viewer activity adds time to, the Word Garden chat game, and Actions and Events that turn live moments into custom reactions." width="1672" height="941" loading="lazy"></div>
+
+    <div class="show" id="actions">
+      <div class="show-text">
+        <span class="tag"><svg class="ico" style="width:13px;height:13px"><use href="#i-bolt"/></svg> New</span>
+        <h3>Actions &amp; Events</h3>
+        <p>Tell Mint what should happen when something happens, then forget about it. A chat command can save a clip. A Rose can play a sound and switch your scene. A raid can thank the crowd out loud.</p>
+        <ul class="ticks">
+          <li><span><b>Triggers:</b> chat commands, gifts, new followers, shares, fan club level-ups, and Twitch cheers, subs, gift subs and raids.</span></li>
+          <li><span><b>Steps:</b> press a keyboard shortcut, show a text alert, play a video or sound, change your voice, read a message aloud, switch your OBS scene, or send a web request.</span></li>
+          <li><span><b>Under your control:</b> choose who can use each command, set cooldowns, and delay any step so things happen in order.</span></li>
+        </ul>
+      </div>
+      <div class="frame"><img src="/v3/app-actions.webp" alt="The Actions and Events page with a chat command that presses a shortcut and shows an alert" width="1095" height="830" loading="lazy"></div>
+    </div>
+
+    <div class="show rev" id="live-party">
+      <div class="show-text">
+        <span class="tag beta">Beta</span>
+        <h3>Live Party</h3>
+        <p>Your viewers become dancers in a 3D club that lives on your stream. Everyone who joins steps onto the floor, big gifts take the main stage, and the room fills with energy until it explodes into a celebration.</p>
+        <ul class="ticks">
+          <li><span><b>Ten dance rooms</b> such as Neon Grove, Latin, Country, Hip-Hop, EDM, R&amp;B and Rock, plus holiday themes.</span></li>
+          <li><span><b>Gifts have impact:</b> wings, headliner moments and a room-energy meter your chat fills together.</span></li>
+          <li><span><b>Easy to run:</b> a simple control room, with the stage added to TikTok LIVE Studio or OBS as one link.</span></li>
+        </ul>
+      </div>
+      <div class="frame"><img src="/v3/live-party.webp" alt="Live Party: viewers dancing in a neon 3D club with a room energy meter" width="1360" height="765" loading="lazy"></div>
+    </div>
+
+    <div class="show" id="word-garden">
+      <div class="show-text">
+        <span class="tag">New</span>
+        <h3>Word Garden</h3>
+        <p>A word game your chat plays together, right on your stream. A keyword appears, viewers type what comes to mind, and every answer blooms on screen with the name and avatar of whoever found it first.</p>
+        <ul class="ticks">
+          <li><span><b>1,000 ready-made prompts</b> with many ways to spell each answer, so guesses count.</span></li>
+          <li><span><b>Rounds, timers and a live leaderboard,</b> with a celebration for the round winner and the top bloomer.</span></li>
+          <li><span><b>Built for phone screens:</b> a tall layout that fits a vertical live, with your own round length.</span></li>
+        </ul>
+      </div>
+      <div class="phone-wrap"><div class="frame"><img src="/v3/word-garden.webp" alt="Word Garden: a chat word game with six answer plates and a leaderboard" width="720" height="1280" loading="lazy"></div></div>
+    </div>
+
+    <div class="show rev" id="countdown">
+      <div class="show-text">
+        <span class="tag"><svg class="ico" style="width:13px;height:13px"><use href="#i-bolt"/></svg> New</span>
+        <h3>Countdown Timer</h3>
+        <p>A clock on your stream that your viewers keep alive. Every gift coin, tap, comment, share, subscription and follow adds time, and you decide what each one is worth.</p>
+        <ul class="ticks">
+          <li><span><b>You set the rules:</b> even 0.2 seconds per coin. Start it at any time you type, like 90 minutes or 1 hour 45.</span></li>
+          <li><span><b>Everyone sees who helped:</b> pop-ups show who added time, with their profile picture and what they did.</span></li>
+          <li><span><b>It is an on-screen clock.</b> It shows how long you have promised to stay on; it does not keep your live open by itself, so you end the live when it reaches zero.</span></li>
+        </ul>
+      </div>
+      <div class="frame"><img src="/v3/app-countdown.webp" alt="The Countdown Timer page: a clock, start time boxes for hours, minutes and seconds, and what each gift, tap and comment adds" width="1100" height="820" loading="lazy"></div>
+    </div>
+
+    <div class="show" id="studio">
+      <div class="show-text">
+        <span class="tag"><svg class="ico" style="width:13px;height:13px"><use href="#i-layers"/></svg> Standout</span>
         <h3>Overlay Studio</h3>
-        <p>Combine any widget — leaderboards, alerts, goal bars, the Gift Jar, anything — into one custom scene, exported as a <strong>single browser-source URL</strong>.</p>
-        <p style="color:var(--text-mute);font-size:12.5px">Most competitors make you add every widget as a separate OBS source. Overlay Studio replaces all of that with one link.</p>
+        <p>Combine any widgets into one scene: leaderboards, goals, alerts, gift scroll, videos. Place them where you want and copy a <b style="color:var(--text)">single link</b> into TikTok LIVE Studio or OBS. Change a font or move a box and your stream updates on its own.</p>
+        <ul class="ticks">
+          <li><span><b>One link</b> instead of a dozen browser sources to add and keep in sync.</span></li>
+          <li><span><b>Vertical and horizontal:</b> save a layout for each, and make a video or alert play only on the shape it was designed for.</span></li>
+          <li><span><b>Transparent by design.</b> The guide frame helps you place things; your stream shows only your widgets.</span></li>
+        </ul>
       </div>
-      <div class="shot-frame" id="studio">
-        <img src="v2-screenshots/marketing-overlay-studio.png" alt="Overlay Studio — widget library">
-      </div>
+      <div class="frame"><img src="/v3/overlay-studio.webp" alt="Overlay Studio with a vertical scene holding Top Likes, Top Gifters and alerts" width="1095" height="830" loading="lazy"></div>
     </div>
-
-    <div class="visual-row rev">
-      <div class="visual-text">
-        <span class="tag">Fan Favorite</span>
-        <h3>Gift Jar</h3>
-        <p>Every gift physically drops and stacks inside a glowing glass jar, live on screen — a satisfying, visual way to show your stream's momentum building in real time.</p>
-      </div>
-      <div class="shot-frame">
-        <img src="v2-screenshots/marketing-gift-jar.png" alt="Gift Jar live preview">
-      </div>
-    </div>
-
-    <div class="visual-row">
-      <div class="visual-text">
-        <span class="tag">Community</span>
-        <h3>Points Economy</h3>
-        <p>A full leveling system your viewers earn into automatically, with a live leaderboard on stream so the whole community can watch the race for the top spot.</p>
-      </div>
-      <div class="shot-frame">
-        <img src="v2-screenshots/marketing-points-leaderboard.png" alt="Points Economy leaderboard">
-      </div>
-    </div>
-
-    <div class="visual-row rev">
-      <div class="visual-text">
-        <span class="tag">Chat Command</span>
-        <h3>Spin Wheel</h3>
-        <p>Let your community spin for rewards straight from chat with <code style="color:var(--mint)">!spin</code> — fully custom slices, colors, and cooldowns.</p>
-      </div>
-      <div class="shot-frame">
-        <img src="v2-screenshots/marketing-spin-wheel.png" alt="Spin Wheel widget">
-      </div>
-    </div>
-
-    <div class="visual-row">
-      <div class="visual-text">
-        <span class="tag">Builder</span>
-        <h3>Text Alerts</h3>
-        <p>Design animated moments that float directly over your stream scene — your own message, font, color, and motion for every trigger.</p>
-      </div>
-      <div class="shot-frame">
-        <img src="v2-screenshots/marketing-text-alerts.png" alt="Text Alerts builder">
-      </div>
-    </div>
-
   </div>
-</div>
+</section>
 
-<!-- ── PRICING ─────────────────────────────────────────── -->
-<div class="section" id="pricing">
+<!-- FEATURES -->
+<section class="section alt" id="features">
   <div class="wrap">
-    <div style="text-align:center">
-      <div class="eyebrow">Pricing</div>
-      <div class="h2">One plan. Everything included.</div>
-      <p class="section-sub" style="margin-left:auto;margin-right:auto">No tiers to compare, no features locked behind an upsell — every widget, every platform, every tool in V2.</p>
+    <div class="center">
+      <span class="eyebrow">Everything included</span>
+      <h2 class="h2">One plan unlocks every tool.</h2>
+      <p class="lede">No tiers, no add-ons, no widgets held back. Every tool below ships in the app and every update is included.</p>
     </div>
-    <div class="pricing-wrap">
-      <div class="price-card">
-        <div class="price-badge">7-Day Free Trial</div>
-        <div class="price-amt">$7<span>/month</span></div>
-        <div class="price-trial">Try everything free for 7 days. Cancel anytime.</div>
-        <div class="price-list">
-          <div class="pi"><span class="ck">✓</span> Every widget &amp; soundboard in V2</div>
-          <div class="pi"><span class="ck">✓</span> TikTok, YouTube, Twitch &amp; Kick — all included</div>
-          <div class="pi"><span class="ck">✓</span> ElevenLabs AI voices for Text-to-Speech</div>
-          <div class="pi"><span class="ck">✓</span> Overlay Studio — unlimited custom scenes</div>
-          <div class="pi"><span class="ck">✓</span> All future updates included</div>
+
+    <div class="cats">
+      <div class="cat">
+        <h3>Voice &amp; sound</h3>
+        <div class="grid">
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-mic"/></svg></div><h4>Text to Speech</h4><p>Reads chat aloud with ElevenLabs AI voices or your system voices. Profanity and slurs are filtered before anything is spoken.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-sliders"/></svg></div><h4>Voicemod</h4><p>Connect the Voicemod app and change your voice when something happens: a gift, a follow, a VIP arriving, a battle moment or a hotkey.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-volume"/></svg></div><h4>Soundboards</h4><p>A sound effects board, sounds for individual gifts, and sound alerts for the moments you choose.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-crown"/></svg></div><h4>VIP Entrances</h4><p>Give your regulars their own entrance sound when they join your live.</p></div>
         </div>
-        <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg" style="width:100%;justify-content:center">Start Free Trial on Gumroad →</a>
-        <div class="price-win">🪟 Windows only. No Mac build currently available.</div>
+      </div>
+
+      <div class="cat">
+        <h3>On-screen effects</h3>
+        <div class="grid">
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-bell"/></svg></div><h4>Text Alerts</h4><p>Animated alerts for follows, gifts and more. Choose the words, font, colors and motion for every trigger.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-jar"/></svg></div><h4>Gift Jar</h4><p>Gifts drop and pile up inside a glowing glass jar with real physics, a satisfying view of your momentum.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-heart"/></svg></div><h4>Like Burst</h4><p>Likes turn into bursts of motion across your scene, so tapping feels rewarding.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-list"/></svg></div><h4>Gift Scroll</h4><p>A live ticker of every gift as it lands, each shown once and the newest in front.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-swords"/></svg></div><h4>Battle Board <span class="badge beta">Beta</span></h4><p>A live scoreboard for TikTok battles: team panel, ranked list or slim strip, with a top-supporters spotlight at the end.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-bars"/></svg></div><h4>Goal Bars</h4><p>Follower, gift and like goals with your own fonts, colors, shape and motion.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-trophy"/></svg></div><h4>Top Likes &amp; Top Gifters</h4><p>Live leaderboards that re-sort in real time and can fit any layout, including tall phone-shaped scenes.</p></div>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Videos &amp; media</h3>
+        <div class="grid">
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-film"/></svg></div><h4>Video Board</h4><p>Play your own videos and pictures on commands, follows, battle moments, Twitch events and when a viewer joins at a certain level.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-gift"/></svg></div><h4>Gift Videos</h4><p>Give any gift its own clip from a catalog of 300 gifts. It plays once per burst instead of spamming your stream.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-play"/></svg></div><h4>Mini Player</h4><p>A small always-on-top window of thumbnails: play any video with one click while you are live.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-credits"/></svg></div><h4>Stream Credits</h4><p>Roll the people who supported your stream at the end of every live.</p></div>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Community &amp; rewards</h3>
+        <div class="grid">
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-coins"/></svg></div><h4>Points Economy</h4><p>A leveling system your viewers earn into automatically, with a live leaderboard to chase.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-wheel"/></svg></div><h4>Spin Wheel</h4><p>Viewers type <code style="color:var(--mint)">!spin</code> to win points. Custom slices, a jackpot, cooldowns and a winner shown on stream.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-type"/></svg></div><h4>Word Garden</h4><p>A chat word game with rounds, timers and a celebration for the winner.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-party"/></svg></div><h4>Live Party <span class="badge beta">Beta</span></h4><p>A 3D dance club where your viewers are the crowd.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-bolt"/></svg></div><h4>Actions &amp; Events <span class="badge">New</span></h4><p>Chat commands, gifts, follows and Twitch events that press keys, play media and switch scenes.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-layers"/></svg></div><h4>Overlay Studio</h4><p>Every widget in one scene, one link, vertical and horizontal.</p></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ── FOOTER ──────────────────────────────────────────── -->
-<div class="footer">
-  <div class="footer-logo">Mint <span>Overlays</span></div>
-  <div class="footer-links">
-    <a href="/legal/privacy-policy.html">Privacy Policy</a>
-    <a href="/legal/terms-of-service.html">Terms of Service</a>
-    <a href="/legal/disclaimer.html">TikTok Disclaimer</a>
-    <a href="/legal/refund-policy.html">Refund Policy</a>
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">How it works</span>
+      <h2 class="h2">Live in about five minutes.</h2>
+      <p class="lede">You do not need to be technical. If you can copy and paste a link, you can use Mint Overlays.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><h4>Install and connect</h4><p>Download the app, type your channel name on the Connections page and press Connect. There is no TikTok login or password to enter.</p></div>
+      <div class="step"><h4>Copy a link</h4><p>Pick a widget, or build a scene in Overlay Studio, and copy its link. Paste it into TikTok LIVE Studio or OBS as a browser source.</p></div>
+      <div class="step"><h4>Go live</h4><p>Gifts, follows, chat and likes now drive your overlays, sounds and actions. A built-in guide and page tours help the first time through.</p></div>
+    </div>
   </div>
-  <div class="footer-copy">Mint Overlays — Built for streamers. Not affiliated with TikTok, YouTube, Twitch, or Kick.</div>
-</div>
+</section>
+
+<!-- PRICING -->
+<!-- AFFILIATES -->
+<section class="section" id="affiliates">
+  <div class="wrap affiliate-grid">
+    <div class="affiliate-text">
+      <span class="eyebrow">Affiliate program</span>
+      <h2 class="h2">Recommend Mint. Earn when creators join.</h2>
+      <p class="lede">Join the Mint Overlays affiliate program and earn 20% commission on subscriptions from creators who sign up through your personal link, for as long as they stay subscribed.</p>
+      <div class="cta-row">
+        <a href="https://mintoverlays.gumroad.com/affiliates" target="_blank" rel="noopener" class="btn btn-violet btn-lg">Join the affiliate program</a>
+      </div>
+      <p class="affiliate-fine">Commissions are tracked and paid by Gumroad. A referral counts only when the person signs up through your affiliate link, so share your link, not just the name. No earnings are guaranteed. Read the <a href="/legal/terms-of-service.html#affiliate">affiliate terms</a>.</p>
+    </div>
+    <div class="frame affiliate-art"><img src="/v3/affiliate.webp" alt="Mint Overlays affiliate program. Love Mint? Spread the word. A glass chain link joins the Mint icon to creators." width="1774" height="887" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="section alt" id="pricing">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="h2">One plan. Everything included.</h2>
+      <p class="lede">Start with 7 days free. If it is not for you, cancel before the trial ends and you pay nothing.</p>
+    </div>
+    <div class="price-wrap">
+      <div class="price-card center">
+        <div class="price-badge">7-day free trial</div>
+        <div class="price-amt">$10<span>/month</span></div>
+        <div class="price-alt">or <b>$99/year</b> and save 17%</div>
+        <div class="price-lock"><b>Subscribe before November 1st and keep $7/month.</b> Your price stays at $7 for as long as your subscription stays active.</div>
+        <ul class="price-list">
+          <li>Every overlay, voice, game and automation tool in the app</li>
+          <li>TikTok, Twitch, Kick and YouTube connections</li>
+          <li>Overlay Studio with unlimited scenes</li>
+          <li>ElevenLabs AI voices for text to speech</li>
+          <li>Every future update, included</li>
+        </ul>
+        <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg">Start free trial</a>
+        <p class="price-fine">Checkout is handled securely by Gumroad. Windows 10 and 11 only; there is no Mac version. If the price ever changes, it applies to new subscribers: anyone already subscribed keeps the price they started at while their subscription stays active.</p>
+      </div>
+    </div>
+    <p class="have-key"><b>Already have a license key?</b> Open <b>Account</b> in the app and paste it. Founders Edition keys keep working.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">Questions</span>
+      <h2 class="h2">Good to know before you start.</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Do I need OBS?</summary><p>No. Every widget gives you a link you can add as a browser source in TikTok LIVE Studio, and the same link works in OBS if you use it. OBS is only needed for the optional scene-switching step in Actions &amp; Events.</p></details>
+      <details><summary>Which platforms does it work with?</summary><p>You can connect TikTok, Twitch, Kick and YouTube. Mint is built around TikTok LIVE, so gifts, battles and likes are TikTok features. Twitch adds cheers, subscriptions, gift subs and raids as triggers.</p></details>
+      <details><summary>Do I have to give you my TikTok login?</summary><p>No. You connect by typing your channel name. Mint Overlays never asks for your TikTok password.</p></details>
+      <details><summary>Does it work on Mac?</summary><p>Not yet. Mint Overlays is a Windows 10 and 11 app.</p></details>
+      <details><summary>Where do I find my license key?</summary><p>After you subscribe, Gumroad emails you a receipt with your license key, and the key is also on your purchase page in your Gumroad library. In the app, open <b>Account</b>, paste the key and press <b>Activate</b>. Can't find it? Email <a href="mailto:mintoverlays@gmail.com">mintoverlays@gmail.com</a> and we will help.</p></details>
+      <details><summary>Will my price ever go up?</summary><p>If we change the price, the new price applies to new subscribers. Anyone who subscribes before November 1st keeps $7 a month. Anyone who is already subscribed keeps the price they started at for as long as their subscription stays active. If you cancel and subscribe again later, the price at that time applies.</p></details>
+      <details><summary>How does the affiliate program work?</summary><p>Join at <a href="https://mintoverlays.gumroad.com/affiliates" target="_blank" rel="noopener">mintoverlays.gumroad.com/affiliates</a> and you get a personal link. You earn 20% commission on subscriptions from creators who sign up through that link, and Gumroad tracks and pays it. A referral is credited only when the person goes through your link, so we cannot add referrals afterwards. See the <a href="/legal/terms-of-service.html#affiliate">affiliate terms</a>.</p></details>
+      <details><summary>How do I cancel or get a refund?</summary><p>You can cancel any time from your Gumroad receipt email, and your access continues until the end of the period you paid for. Refund requests follow the process in our <a href="/legal/refund-policy.html">refund policy</a>.</p></details>
+      <details><summary>Is Mint Overlays affiliated with TikTok?</summary><p>No. Mint Overlays is an independent app and is not affiliated with, endorsed by or sponsored by TikTok, YouTube, Twitch or Kick. Read the <a href="/legal/disclaimer.html">disclaimer</a> for details.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="h2">Give your next live a little more life.</h2>
+    <p class="lede" style="margin:0 auto">Try every tool free for 7 days.</p>
+    <div class="cta-row">
+      <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg">Start 7-day free trial</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand"><img src="/v3/icon.png" alt="" width="28" height="28"><span class="bn">Mint <span>Overlays</span></span></div>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#affiliates">Affiliate program</a>
+      <a href="/legal/privacy-policy.html">Privacy Policy</a>
+      <a href="/legal/terms-of-service.html">Terms of Service</a>
+      <a href="/legal/disclaimer.html">TikTok Disclaimer</a>
+      <a href="/legal/refund-policy.html">Refund Policy</a>
+      <a href="mailto:mintoverlays@gmail.com">Contact</a>
+    </div>
+    <p class="footer-copy">Mint Overlays is an independent product built for streamers. Not affiliated with, endorsed by or sponsored by TikTok, YouTube, Twitch, Kick, Voicemod or ElevenLabs. All product names and trademarks belong to their owners.</p>
+  </div>
+</footer>
 
 </body>
 </html>
