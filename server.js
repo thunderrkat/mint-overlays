@@ -7,6 +7,8 @@ const THEMES = require('./themes');
 const app = express();
 const server = http.createServer(app);
 app.use(express.json());
+// In-app 'Ask Mint Overlays' helper (POST /api/helper/ask). Needs ANTHROPIC_API_KEY set on Railway; without it the route says 'not available'.
+require('./helper/helper').mountHelper(app);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Per-session state (keyed by sessionId) ────────────────────
