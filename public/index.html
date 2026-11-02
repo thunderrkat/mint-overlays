@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mint Overlays — Overlays, voices, games and automation for live streamers</title>
-<meta name="description" content="Mint Overlays is a Windows app for live streamers: animated alerts, gift jars, video and sound triggers, AI voices, chat games, a 3D dance party and automation. Works with TikTok LIVE Studio and OBS. 7-day free trial.">
+<meta name="description" content="Mint Overlays is a Windows app for live streamers: animated alerts, gift jars, video and sound triggers, AI voices, chat games, a 3D dance party and automation, plus Moxy, an AI helper built into the app. Works with TikTok LIVE Studio and OBS. 7-day free trial.">
 <meta property="og:title" content="Mint Overlays — Bring your chat to life">
 <meta property="og:description" content="Alerts, overlays, voices, chat games and automation for live streamers. One Windows app, one link into TikTok LIVE Studio or OBS.">
 <meta property="og:type" content="website">
@@ -252,7 +252,7 @@ img,svg{display:block;max-width:100%}
     <div>
       <div class="pill"><svg class="ico" style="width:14px;height:14px"><use href="#i-monitor"/></svg> Windows desktop app</div>
       <h1>Bring your <span class="g">chat to life.</span></h1>
-      <p class="hero-sub">Mint Overlays turns your live into a show: animated alerts, gift jars, videos and sounds on cue, AI voices, chat games, a 3D dance party and automation that runs while you stream. One app, one link into TikTok LIVE Studio or OBS.</p>
+      <p class="hero-sub">Mint Overlays turns your live into a show: animated alerts, gift jars, videos and sounds on cue, AI voices, chat games, a 3D dance party, spin wheels and automation that runs while you stream, with Moxy, an AI helper, built in. One app, one link into TikTok LIVE Studio or OBS.</p>
       <div class="cta-row">
         <a href="https://mintoverlays.gumroad.com/l/ofshuk" target="_blank" rel="noopener" class="btn btn-mint btn-lg">Start 7-day free trial</a>
         <a href="#features" class="btn btn-ghost btn-lg">See what's inside</a>
@@ -293,6 +293,36 @@ img,svg{display:block;max-width:100%}
       <span class="eyebrow">What's new</span>
       <h2 class="h2">More than overlays. Your stream, on autopilot.</h2>
       <p class="lede">Mint keeps growing. These are the newest ways to make your live feel alive, without extra apps or extra work mid-stream.</p>
+    </div>
+
+    <div class="newtools-banner"><img src="/v3/meet-moxy.webp" alt="Meet Moxy, your AI assistant inside Mint Overlays: Moxy answers your questions, helps you find tools and settings, explains features and updates, and gives setup tips." width="1672" height="941" loading="lazy"></div>
+
+    <div class="show" id="moxy">
+      <div class="show-text">
+        <span class="tag"><svg class="ico" style="width:13px;height:13px"><use href="#i-chat"/></svg> New</span>
+        <h3>Meet Moxy, your AI helper</h3>
+        <p>Stuck, or just not in the mood to read a guide? Press <b style="color:var(--text)">Ask Moxy</b> in the app, type your question in plain words, and Moxy answers with short steps and a button that opens the right page.</p>
+        <ul class="ticks">
+          <li><span><b>Knows Mint Overlays inside out.</b> Moxy answers from the how-to guide, so it is best at "how do I&hellip;" and "why isn't my overlay showing?" questions.</span></li>
+          <li><span><b>Opens the right page for you,</b> so you are one click from the setting you were looking for.</span></li>
+          <li><span><b>Included with your subscription.</b> Up to 30 questions a day. Moxy can make mistakes, so there is always a Report Issue button in the app.</span></li>
+        </ul>
+      </div>
+      <div class="phone-wrap"><div class="frame"><img src="/v3/ask-moxy.webp" alt="The Ask Moxy chat inside Mint Overlays: a question about making a wheel of your own choices, and Moxy's step-by-step answer" width="887" height="1247" loading="lazy"></div></div>
+    </div>
+
+    <div class="show rev" id="choice-wheel">
+      <div class="show-text">
+        <span class="tag"><svg class="ico" style="width:13px;height:13px"><use href="#i-wheel"/></svg> New</span>
+        <h3>Choice Wheel</h3>
+        <p>A spin wheel of <i>your</i> choices, like "Do 10 squats" or "Chat picks the next game". Chat spins it, a gift spins it, or you press a button, and the winning choice can run any of your Actions.</p>
+        <ul class="ticks">
+          <li><span><b>Spins for what you choose:</b> a chat command, a gift, a new follower, a share, or the Spin now button. Spins wait in line so none are lost.</span></li>
+          <li><span><b>Choices that do something:</b> each choice can play a sound or video, show an alert, press a key or switch your OBS scene when it wins.</span></li>
+          <li><span><b>Looks the way you want:</b> your own fonts and text colors, long choices wrap to fit, and the spinner's picture shows in the middle. Spin time is yours to set, from 3 to 15 seconds.</span></li>
+        </ul>
+      </div>
+      <div class="frame"><img src="/v3/app-choice-wheel.webp" alt="The Choice Wheel page: a list of choices, and a live wheel that has just landed on Show your setup" width="1095" height="810" loading="lazy"></div>
     </div>
 
     <div class="newtools-banner"><img src="/v3/whats-new.webp" alt="New tools: a Countdown Timer that viewer activity adds time to, the Word Garden chat game, and Actions and Events that turn live moments into custom reactions." width="1672" height="941" loading="lazy"></div>
@@ -384,7 +414,7 @@ img,svg{display:block;max-width:100%}
         <div class="grid">
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-mic"/></svg></div><h4>Text to Speech</h4><p>Reads chat aloud with ElevenLabs AI voices or your system voices. Profanity and slurs are filtered before anything is spoken.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-sliders"/></svg></div><h4>Voicemod</h4><p>Connect the Voicemod app and change your voice when something happens: a gift, a follow, a VIP arriving, a battle moment or a hotkey.</p></div>
-          <div class="card"><div class="ic"><svg class="ico"><use href="#i-volume"/></svg></div><h4>Soundboards</h4><p>A sound effects board, sounds for individual gifts, and sound alerts for the moments you choose.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-volume"/></svg></div><h4>Soundboards</h4><p>A sound effects board with a Starter pack of 50 ready-made sounds, sounds for individual gifts, and sound alerts for the moments you choose.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-crown"/></svg></div><h4>VIP Entrances</h4><p>Give your regulars their own entrance sound when they join your live.</p></div>
         </div>
       </div>
@@ -396,7 +426,7 @@ img,svg{display:block;max-width:100%}
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-jar"/></svg></div><h4>Gift Jar</h4><p>Gifts drop and pile up inside a glowing glass jar with real physics, a satisfying view of your momentum.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-heart"/></svg></div><h4>Like Burst</h4><p>Likes turn into bursts of motion across your scene, so tapping feels rewarding.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-list"/></svg></div><h4>Gift Scroll</h4><p>A live ticker of every gift as it lands, each shown once and the newest in front.</p></div>
-          <div class="card"><div class="ic"><svg class="ico"><use href="#i-swords"/></svg></div><h4>Battle Board <span class="badge beta">Beta</span></h4><p>A live scoreboard for TikTok battles: team panel, ranked list or slim strip, with a top-supporters spotlight at the end.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-swords"/></svg></div><h4>Battle Board <span class="badge beta">Beta</span></h4><p>A live scoreboard for TikTok battles: team panel, ranked list or slim strip, a power-ups pop-up, and a top-supporters spotlight at the end.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-bars"/></svg></div><h4>Goal Bars</h4><p>Follower, gift and like goals with your own fonts, colors, shape and motion.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-trophy"/></svg></div><h4>Top Likes &amp; Top Gifters</h4><p>Live leaderboards that re-sort in real time and can fit any layout, including tall phone-shaped scenes.</p></div>
         </div>
@@ -407,8 +437,16 @@ img,svg{display:block;max-width:100%}
         <div class="grid">
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-film"/></svg></div><h4>Video Board</h4><p>Play your own videos and pictures on commands, follows, battle moments, Twitch events and when a viewer joins at a certain level.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-gift"/></svg></div><h4>Gift Videos</h4><p>Give any gift its own clip from a catalog of 300 gifts. It plays once per burst instead of spamming your stream.</p></div>
-          <div class="card"><div class="ic"><svg class="ico"><use href="#i-play"/></svg></div><h4>Mini Player</h4><p>A small always-on-top window of thumbnails: play any video with one click while you are live.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-play"/></svg></div><h4>Mini Player</h4><p>A small always-on-top window of thumbnails you can drag anywhere: play any video with one click while you are live.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-credits"/></svg></div><h4>Stream Credits</h4><p>Roll the people who supported your stream at the end of every live.</p></div>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Help, built in</h3>
+        <div class="grid">
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-chat"/></svg></div><h4>Ask Moxy <span class="badge">New</span></h4><p>An AI helper inside the app. Ask a question in plain words and get short steps, with a button to open the right page.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-play"/></svg></div><h4>Guide &amp; page tours</h4><p>A built-in guide, a short tour for every page, and a getting-started checklist, so your first live goes smoothly.</p></div>
         </div>
       </div>
 
@@ -416,7 +454,9 @@ img,svg{display:block;max-width:100%}
         <h3>Community &amp; rewards</h3>
         <div class="grid">
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-coins"/></svg></div><h4>Points Economy</h4><p>A leveling system your viewers earn into automatically, with a live leaderboard to chase.</p></div>
-          <div class="card"><div class="ic"><svg class="ico"><use href="#i-wheel"/></svg></div><h4>Spin Wheel</h4><p>Viewers type <code style="color:var(--mint)">!spin</code> to win points. Custom slices, a jackpot, cooldowns and a winner shown on stream.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-wheel"/></svg></div><h4>Spin Wheel</h4><p>Viewers type <code style="color:var(--mint)">!spin</code> to win points. Custom slices, a jackpot, cooldowns, your own spin time and a winner shown on stream.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-wheel"/></svg></div><h4>Choice Wheel <span class="badge">New</span></h4><p>A wheel of your own choices that spins for chat commands, gifts, follows and shares, and can run an Action when a choice wins.</p></div>
+          <div class="card"><div class="ic"><svg class="ico"><use href="#i-trophy"/></svg></div><h4>Top Gift &amp; Streak <span class="badge">New</span></h4><p>The biggest gift and the longest gift streak of your live, each with who sent it.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-type"/></svg></div><h4>Word Garden</h4><p>A chat word game with rounds, timers and a celebration for the winner.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-party"/></svg></div><h4>Live Party <span class="badge beta">Beta</span></h4><p>A 3D dance club where your viewers are the crowd.</p></div>
           <div class="card"><div class="ic"><svg class="ico"><use href="#i-bolt"/></svg></div><h4>Actions &amp; Events <span class="badge">New</span></h4><p>Chat commands, gifts, follows and Twitch events that press keys, play media and switch scenes.</p></div>
@@ -472,7 +512,6 @@ img,svg{display:block;max-width:100%}
         <div class="price-badge">7-day free trial</div>
         <div class="price-amt">$10<span>/month</span></div>
         <div class="price-alt">or <b>$99/year</b> and save 17%</div>
-        <div class="price-lock"><b>Subscribe before November 1st and keep $7/month.</b> Your price stays at $7 for as long as your subscription stays active.</div>
         <ul class="price-list">
           <li>Every overlay, voice, game and automation tool in the app</li>
           <li>TikTok, Twitch, Kick and YouTube connections</li>
@@ -500,8 +539,10 @@ img,svg{display:block;max-width:100%}
       <details><summary>Which platforms does it work with?</summary><p>You can connect TikTok, Twitch, Kick and YouTube. Mint is built around TikTok LIVE, so gifts, battles and likes are TikTok features. Twitch adds cheers, subscriptions, gift subs and raids as triggers.</p></details>
       <details><summary>Do I have to give you my TikTok login?</summary><p>No. You connect by typing your channel name. Mint Overlays never asks for your TikTok password.</p></details>
       <details><summary>Does it work on Mac?</summary><p>Not yet. Mint Overlays is a Windows 10 and 11 app.</p></details>
+      <details><summary>What is Moxy?</summary><p>Moxy is the AI helper built into Mint Overlays. Press <b>Ask Moxy</b> next to the Guide button, type a question about the app, and Moxy answers in plain steps and can open the right page. Moxy only knows Mint Overlays (it answers from the how-to guide) and can make mistakes, so the app also has a <b>Report Issue</b> button. It is included in your subscription, with up to 30 questions a day.</p></details>
+      <details><summary>Can Moxy see my stream, my files or my TikTok account?</summary><p>No. Moxy cannot see your screen, settings, files or TikTok account. When you ask a question, Mint Overlays sends what you typed, the name of the page you are on, your app version and your license key (so we can check your subscription is active) to our server, and the question is answered by an AI model from Anthropic. Please don't type passwords or personal details into the chat.</p></details>
       <details><summary>Where do I find my license key?</summary><p>After you subscribe, Gumroad emails you a receipt with your license key, and the key is also on your purchase page in your Gumroad library. In the app, open <b>Account</b>, paste the key and press <b>Activate</b>. Can't find it? Email <a href="mailto:mintoverlays@gmail.com">mintoverlays@gmail.com</a> and we will help.</p></details>
-      <details><summary>Will my price ever go up?</summary><p>If we change the price, the new price applies to new subscribers. Anyone who subscribes before November 1st keeps $7 a month. Anyone who is already subscribed keeps the price they started at for as long as their subscription stays active. If you cancel and subscribe again later, the price at that time applies.</p></details>
+      <details><summary>Will my price ever go up?</summary><p>If we change the price, the new price applies to new subscribers. Anyone who is already subscribed keeps the price they started at for as long as their subscription stays active. If you cancel and subscribe again later, the price at that time applies.</p></details>
       <details><summary>How does the affiliate program work?</summary><p>Join at <a href="https://mintoverlays.gumroad.com/affiliates" target="_blank" rel="noopener">mintoverlays.gumroad.com/affiliates</a> and you get a personal link. You earn 20% commission on subscriptions from creators who sign up through that link, and Gumroad tracks and pays it. A referral is credited only when the person goes through your link, so we cannot add referrals afterwards. See the <a href="/legal/terms-of-service.html#affiliate">affiliate terms</a>.</p></details>
       <details><summary>How do I cancel or get a refund?</summary><p>You can cancel any time from your Gumroad receipt email, and your access continues until the end of the period you paid for. Refund requests follow the process in our <a href="/legal/refund-policy.html">refund policy</a>.</p></details>
       <details><summary>Is Mint Overlays affiliated with TikTok?</summary><p>No. Mint Overlays is an independent app and is not affiliated with, endorsed by or sponsored by TikTok, YouTube, Twitch or Kick. Read the <a href="/legal/disclaimer.html">disclaimer</a> for details.</p></details>
