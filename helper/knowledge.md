@@ -552,6 +552,10 @@ If you stream in both shapes with the same overlay link, set Plays on: to Vertic
 
 - Removing the background colour (chroma key) works on videos as well as images. If your PC is busy, the effect scales itself down so the video keeps playing smoothly.
 
+### Moved over from the old Mint Overlays?
+
+Your videos and sounds from the original Mint Overlays come over by themselves the first time you open the new app. If something is missing, open the Video Board page, scroll to the Video library: and press Bring in my old videos and sounds: (the same button is at the bottom of the Soundboard). It looks in every old Mint Overlays folder on your computer, brings over anything that is not here yet, and tells you in plain words how many it found, how many came in, and which ones could not come over and why. It is safe to press more than once. Your old files are never changed or deleted. If it says it cannot find an old app, or some videos could not come over, press Report Issue: so we can help.
+
 ### Where video sound plays
 
 One setting, shared by Video Board and Gift Videos, near the top of each page:
