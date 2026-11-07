@@ -3,14 +3,35 @@
 Mint Overlays is a Windows desktop app for TikTok LIVE hosts. It runs overlays (alerts, goal bars, leaderboards, videos, sounds, games) that the host adds to TikTok LIVE Studio or OBS as a Browser source. Each tool has its own page in the left sidebar. Each overlay tool page shows an Overlay URL and a Copy URL button; that URL is what goes into the Browser source.
 
 ## Where things are in the app
-- The **Guide** button (bottom-right corner) opens short guided tours for each page. The **Ask Moxy** button joined to its left side opens this helper chat (Moxy is the Mint Overlays fox mascot) (up to 30 questions a day per license).
+- The **Guide** button (bottom-right corner) opens short guided tours for each page. The **Ask Moxy** button joined to its left side opens this helper chat (Moxy is the Mint Overlays red panda mascot) (up to 30 questions a day per license).
 - **Report Issue** (bottom-left of the window) is how someone gets help from the developer when something is broken.
 - **Account** (bottom of the sidebar) is where the license key is entered. The key only needs to be entered once: it stays saved on that computer.
 - When a newer version is available, an **Update available** button appears in the top-left corner of the window. Clicking it downloads the update, then it changes to **Restart to update**. If it does not appear, quit Mint Overlays completely (including the tray icon), open it again and wait about 15 seconds; if it still does not appear, download the newest installer from the Mint Overlays download page and run it over the old version (settings are kept).
 - The app only works for people with an active license; the how-to guide covers activation.
 
 ## Page ids (for links)
-connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundboard, sound-alerts, text-alerts, like-burst, gift-jar, gift-scroll, battle-board, video-board, gift-videos, stream-credits, points-economy, spin-wheel, choice-wheel, actions, goal-bars, top-likes, top-gifter, word-garden, live-party, countdown-timer, top-gift, voicemod, account
+connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundboard, sound-alerts, text-alerts, like-burst, gift-jar, gift-scroll, battle-board, video-board, gift-videos, stream-credits, points-economy, spin-wheel, choice-wheel, actions, goal-bars, top-likes, top-gifter, word-garden, live-party, countdown-timer, top-gift, modes, holiday, voicemod, account
+
+## Modes (new in 2.0.24)
+- A mode is a ready-made setup for one kind of live, like Battle or Christmas. Only one mode is on at a time, and each mode has its own color. When there are two or more modes, the app window gets a colored frame and a small badge at the top with the name of the mode that is on. Nothing changes for someone who has not made their own modes.
+- **Modes** is in the menu on the left, right under Overlay Studio (page id modes). The first time, type a name and press **Make it my first mode**: everything already set up (gift videos, gift sounds, Video Board items, Text Alerts, VIP entrances) goes into it. Actions stay in every mode. To add more, type a name in the box and press **Make it**. Up to 12 modes. Deleting a mode does not delete the videos or sounds: things that were only in that mode work in every mode again.
+- To choose what goes in a mode: open a video, gift sound, Video Board item, text alert, VIP entrance or action and pick the mode under **Use this in**. **Every mode** (the default) means it works in all of them. A new item added while a mode is on goes into that mode. Pages with this have a strip at the top saying which mode is on.
+- At the bottom of the Modes page, **What is in each mode** shows small tiles for everything, with a Show list to look at one mode at a time.
+- To switch: press **Switch to it** on the Modes page. Or set **Switch to this mode automatically** on a mode: someone types a chat command, someone sends a specific gift, or someone sends a gift worth at least some coins. This runs as an Action.
+- Use OBS? Tick **Change my OBS scene too** on a mode and pick the scene (and the transition if you like). OBS has to be connected first, on the Actions page. People who stream with TikTok LIVE Studio only should leave it off.
+
+## Holiday Tree (new in 2.0.24)
+- Holiday Tree is a Christmas tree on the stream (page id holiday). It is in the menu on the left, under Games & Activities. Every gift hangs an ornament on the tree with the sender's profile picture. A burst such as 50 Roses is one ornament, and every coin still counts toward the goal. When the tree is full it lights up and celebrates.
+- **Step 1:** copy the link at the top of the page and add it in TikTok LIVE Studio as a Link (a browser source), like the other overlays. Keep Mint Overlays open while streaming.
+- **Step 2** has three tabs. **Look**: pick one of 8 trees and one of 8 toppers (a box picks the matching topper for you) and choose whether the tree lights stay on. **Rules**: gifts to fill the tree, the smallest gift that gets an ornament (smaller gifts still count toward the goal), the most ornaments per person, the wait between one person's ornaments, and sound on or off with a volume and a test sound. **Test**: send a test gift (it comes from a made-up viewer such as pixel_pilot), light up the tree, celebrate, show example top gifters, and **New session**.
+- Changes save by themselves. The tree is remembered, so refreshing the overlay brings it back.
+- Test gifts stay on the tree. Press **New session** (Test tab) before going live to start with an empty tree. The old tree is set aside, not deleted.
+
+## Actions & Events layout (changed in 2.0.24)
+- Each action is a short card. **When this happens** is a drop-down list (a chat command, a gift, a new follower, someone shares, fan club level-ups, a goal bar being reached, and Twitch events). **Who can use it** is a list with tick boxes (Everyone, Moderators, Followers, Subscribers, Fan club); ticking Everyone clears the others. The **Also certain viewers** button adds a box for specific @usernames, shown as small name tags: pick someone from the suggestions or type a name and press Enter. Click the x on a tag to remove that person.
+- For a gift, new follower or share, **Who it is for** picks everybody, certain viewers or fan club members at a level you choose.
+- The two boxes **Wait before it runs again** and **Wait for the same person** replace the old "how often" row. The **Tips** button on a card shows short explanations.
+- The steps are under **What it does**, in the order they run, each with **Starts after** seconds. **Add another step...** is a list under the steps.
 
 # The how-to guide
 
@@ -82,7 +103,7 @@ Inside the Mint Overlays app, the Guide: button sits at the bottom right of ever
 
 ## Ask Moxy (the AI helper)
 
-Stuck, or just do not feel like reading? Meet Moxy, the Mint Overlays fox. The Ask Moxy: button next to the Guide button opens a small chat where you can type a question about the app and get plain steps back.
+Stuck, or just do not feel like reading? Meet Moxy, the Mint Overlays red panda. The Ask Moxy: button next to the Guide button opens a small chat where you can type a question about the app and get plain steps back.
 
 - What it knows.: It answers from this guide, so it is best at "how do I..." and "why is my overlay not showing" questions. If the guide does not cover something it says so, and you can press Report Issue: at the bottom left of the app to reach a person.
 
@@ -99,7 +120,7 @@ Stuck, or just do not feel like reading? Meet Moxy, the Mint Overlays fox. The A
 ## Connect Your App
 
 Advanced · limited support
-An advanced feature for people who build their own programs or scripts. It sends your TikTok gifts, as they happen, to a program you run on the same computer, for example one that changes your OBS scenes. You can safely skip it if that is not you: it is off until you turn it on, and nothing else in Mint needs it. It is provided as is with limited support, so we cannot help write or fix your own program.
+An advanced feature for people who build their own programs or scripts. It sends your TikTok gifts, chat messages and likes, as they happen, to a program you run on the same computer, for example one that changes your OBS scenes or runs your own game. You can safely skip it if that is not you: it is off until you turn it on, and nothing else in Mint needs it. It is provided as is with limited support, so we cannot help write or fix your own program.
 
 ### Set it up
 
@@ -107,13 +128,15 @@ An advanced feature for people who build their own programs or scripts. It sends
 
 - Press Copy address: and give the address to your program. It looks like ws://127.0.0.1:21420/?token=... and only works on this computer. Keep the whole address, token included.
 
-- Press Send a test gift: to see your program react without going live. The page shows how many programs are connected.
+- Under What to send: , tick the events your program wants (gifts, chat, likes) and copy the address again. Gifts only is the default. A program can also add &events=chat,like or &events=all to the address itself.
+
+- Press Send test events: to see your program react without going live. The page shows how many programs are connected.
 
 - Building your own program, or asking an AI assistant to? Press Copy instructions for my developer or AI: . It copies everything they need, including the exact message format.
 
 Mint does not control OBS itself: This feed hands your program the gifts. Your program decides what to do with them, such as switching OBS scenes through OBS's own connection.
 
-### What a gift message contains
+### What a message contains
 
 #### Who
 TikTok's numeric viewer ID, the @handle, the nickname and the picture, plus a cleaned-up display name with rude names replaced.
@@ -125,10 +148,16 @@ TikTok's gift ID, the gift's name and picture, and what one gift is worth in dia
 The repeat count and total diamonds. A gift streak sends messages while it builds, marked final: false, then one last message marked final: true with the total. For one message per gift or streak, use only the final: true ones.
 
 #### No doubles
-Every message has an event ID, plus TikTok's own message ID, so your program can skip one it has already handled, for example after reconnecting.
+Every message has an event ID, plus TikTok's own message ID, so your program can skip one it has already handled, for example after reconnecting. A chat message or like that TikTok sends twice is passed on once, and the same viewer ID is used for gifts, chat and likes.
+
+#### Chat messages
+The exact text the viewer typed, so your program can match commands such as !wheel or votes such as !vote 2, plus whether they are a follower, moderator, subscriber or fan club member.
+
+#### Likes
+Each burst of taps is one message with who sent it, how many taps it holds, that viewer's running total and the room's total.
 
 #### Staying safe
-It only listens on this computer, asks for the token, and turns away web pages. Under Options you can change the port or make a new token. Only gifts are sent for now.
+It only listens on this computer, asks for the token, and turns away web pages. Under Options you can change the port or make a new token. A program only receives the kinds of event it asks for.
 </page>
 
 <page id="tts">
@@ -217,6 +246,8 @@ Your reaction deck — build pages of sounds, each with its own image and keyboa
 
 Mint Overlays comes with a Starter pack: page of 50 ready-made sound effects (Vine Boom, Bruh, Air Horn and more), already named. Click the round play button on any card to hear it, then press Set shortcut: to give it a key. The cards are small on purpose so a long page stays easy to scan; use Find a sound: at the top to narrow a big page down by name. Your own sounds work exactly the same way.
 
+Too loud, or too quiet?: The Volume: slider at the top of the Soundboard turns every sound up or down together. Each card also has its own slider, so one loud sound (an air horn, say) can sit lower than the rest. The two work together, so a sound at 50% with the top slider at 50% plays at 25%. This is the same volume used when a shortcut, a click or an Action plays the sound.
+
 If you delete the Starter pack and want it back, a Restore Starter pack: button appears next to Rename page. Sounds you add yourself are never touched by it.
 
 Real global hotkeys: Shortcuts registered here work even when Mint Overlays isn't the focused window — so you can be tabbed into your game or browser and still trigger a sound.
@@ -249,7 +280,7 @@ Feeds Gift Scroll automatically: Every gift you configure here shows up in the G
 Local audio
 Give your regulars, mods, or subscribers a personal sound the moment they join your live.
 
-- Paste each person's TikTok profile link — Mint extracts the exact username used by live events, so you don't have to type it manually.
+- Type each person's @username: or paste their TikTok profile link. As you type, Mint suggests people already in your Points Economy, and it checks the name with TikTok. A display name is not a username, so if the name is wrong Mint tells you and does not save it until you fix it.
 
 - Attach an entrance sound to each VIP, and set the master VIP volume.
 
@@ -277,6 +308,8 @@ Up to three messages, chosen at random, spoken once per viewer per session when 
 Each viewer has their own like counter. Set how often to celebrate (every N likes) and Mint speaks one of your milestone messages using {name} and {count}.
 
 Use the Preview welcome: / Preview milestone: buttons and the per-message Test: button to hear exactly what will play before you go live.
+
+The Volume: slider at the top right sets how loud these spoken alerts are. It works on top of the Volume on the Text to Speech page, so you can keep chat reading at one level and the alerts at another.
 </page>
 
 <page id="voicemod">
@@ -314,7 +347,7 @@ Plays when a viewer at that Points Economy level or higher joins. Add several le
 Plays when a viewer's TikTok fan club level goes up, for example from 10 to 11. Leave the level at 0 for every level-up, or type a level such as 11 to play only when someone reaches it. TikTok does not announce level-ups, so Mint notices when a level is higher than the last time it saw that viewer, usually the next time they chat, send a gift, like, share or join. Someone Mint has never seen before cannot trigger it the first time; levels are remembered between lives. This is the fan club level, not Points Economy. In an alert, {level} is the new level and {oldlevel} the one before.
 
 #### Specific viewer joins
-Type the viewer's username. Only the first time they join each live: is on by default; turn it off to play every time they join again.
+Type the viewer's @username or paste their profile link (Mint suggests people from your Points Economy and will not save a name TikTok cannot find). Only the first time they join each live: is on by default; turn it off to play every time they join again.
 
 #### Battles
 Battle starts, battle win, battle lose, or a last-second snipe.
@@ -389,7 +422,7 @@ Twitch events, with tokens like {bits}, {count} and {viewers}. See the note belo
 
 Twitch triggers.: Connect Twitch on the Connections page first. For cheers you set a minimum Bits; for subscriptions a minimum months subscribed; for gift subs a minimum subs gifted (a bulk gift counts once); for raids a minimum raiders. Add several alerts at different amounts and only the highest amount reached plays, so a 1,000-Bit cheer won't also play your 100-Bit alert. Bits also count towards points, leaderboards and goals the way gifts do.
 
-Plays on.: If you stream in both vertical and horizontal using the same overlay link, pick Vertical streams only or Horizontal streams only on an alert and it only plays on the browser source that is taller than wide (vertical) or wider than tall (horizontal). Left on Any stream layout, it plays on both.
+Plays on.: If you stream in both vertical and horizontal using the same overlay link, pick Vertical streams only or Horizontal streams only on an alert, and give the same trigger a second alert for the other shape. Each shape then shows its own: vertical is a browser source taller than wide, horizontal is wider than tall. If an alert is the only one for its trigger, it shows on both shapes, so a browser source of the wrong size never makes it disappear.
 
 New-follower alerts pull the follower's real platform avatar automatically, and you can show/hide the avatar and choose its position and size.
 </page>
@@ -540,7 +573,7 @@ Set a minimum amount; the highest amount reached is the one that plays.
 
 ### Plays on: vertical or horizontal
 
-If you stream in both shapes with the same overlay link, set Plays on: to Vertical streams only or Horizontal streams only so each video only plays on the shape it was made for. The default, Any stream layout, plays on both.
+If you stream in both shapes with the same overlay link, set Plays on: to Vertical streams only or Horizontal streams only and add a second video for the other shape, so each shape plays the one made for it. The default, Any stream layout, plays on both. If a video is the only one for its trigger, it plays on every shape, so a browser source of the wrong size never makes it disappear. The Test: button always plays the video, whatever shape the page is.
 
 ### How playback works
 
@@ -551,6 +584,22 @@ If you stream in both shapes with the same overlay link, set Plays on: to Vertic
 - The Stop on stream: button immediately stops whatever is playing on your stream and clears anything queued behind it.
 
 - Removing the background colour (chroma key) works on videos as well as images. If your PC is busy, the effect scales itself down so the video keeps playing smoothly.
+
+### Have your videos in OBS? Bring them in
+
+If your alert videos are set up as sources in OBS, you do not need to add them one by one. Press Bring in from OBS: (on the Video Board, and on Gift Videos too). Mint reads your OBS scene file, so OBS does not have to be open, and lists the videos and pictures in it.
+
+- A source named after a gift: (for example Rose or Galaxy alert) goes to Gift Videos: as that gift's video.
+
+- Everything else that OBS hides until you show it: goes to the Video Board in a folder called From OBS. These play when you click them in the Video Board's pop-out window, or on the keyboard shortcut OBS used if it had a simple one, instead of you showing and hiding them in OBS. They never play by themselves.
+
+- Pictures and videos that are always showing: in a scene are left out, because they are usually part of how the scene looks. You can tick any of them yourself.
+
+- You can change where each one goes, and pick the gift for a Gift Videos one.
+
+- Where it sat in OBS comes across too.: Mint places each video where OBS had it and at the size OBS showed it, as a share of your OBS canvas, and copies the volume and any green-screen filter as Chroma key settings (a close starting point you can fine-tune). Untick Place each one where it was in OBS to use Mint's standard size and position instead. OBS loops are not copied: Mint plays a video once, so raise its Loop count if you want it to repeat.
+
+Mint copies the files into its own library, so your overlays keep working even if you move the originals. Something already there is never replaced, and anything left out says why. Mint plays mp4, webm, mov and m4v videos and gif, png, jpg and webp pictures. Others, and web-address sources, need converting first. If you keep a source in OBS too, remove it once the shortcut works in Mint so it does not play twice.
 
 ### Moved over from the old Mint Overlays?
 
@@ -595,11 +644,11 @@ Assign a local video or image to a specific TikTok gift, so receiving it plays y
 
 Gift Videos plays once per gift burst instead of stacking or spamming your stream when someone sends a gift combo.
 
-- A video for one viewer.: After you choose a gift, type a username or paste a profile link into Only for one viewer: before you press Add. That video plays only when that person sends the gift, and it takes the place of the gift's everyday video for them. Everyone else still gets the everyday one. A gift can have its everyday video plus one for each person you like, and you can change who a video is for later in its editor.
+- A video for one viewer.: After you choose a gift, type an @username or paste a profile link into Only for one viewer: before you press Add. Mint suggests people from your Points Economy as you type and checks the name with TikTok; if it is wrong (for example a display name) it says so and does not add the video. That video plays only when that person sends the gift, and it takes the place of the gift's everyday video for them. Everyone else still gets the everyday one. A gift can have its everyday video plus one for each person you like, and you can change who a video is for later in its editor.
 
 - The gift catalog shows 300 gifts with a button to show more, and a coin-value filter so you can jump to, say, the 1-coin or 10-coin gifts.
 
-- A gift can have two videos — one for vertical streams and one for horizontal. Add the gift a second time after setting the first one's Plays on: to Vertical streams only or Horizontal streams only.
+- A gift can have two videos — one for vertical streams and one for horizontal. Add the gift a second time after setting the first one's Plays on: to Vertical streams only or Horizontal streams only. A gift with just one video always plays it, on any shape, even if you set it to vertical only or horizontal only.
 
 - Video sound follows the Where video sound plays setting.
 
@@ -673,19 +722,33 @@ Name your currency (defaults to "Points"), and configure a leveling curve so vie
 
 ### Managing your community's balances
 
-- The leaderboard tab lists every viewer with their points, level, and last-seen date — filter and search it as your community grows.
+- The leaderboard tab lists every viewer with their total points, the points counted towards their level, their level, and last-seen date — filter and search it as your community grows.
 
 - The transaction tab logs every point change with a timestamp, so you can audit exactly how someone reached their balance.
 
 - Manually adjust any viewer's balance up or down with a note — useful for corrections or one-off rewards.
 
-- Click any column heading (User, Level, Total, First activity, Last activity) to sort the list, and click again to reverse it.
+- Click any column heading (User, Level, Total, Counted towards level, First activity, Last activity) to sort the list, and click again to reverse it.
 
 - Tick boxes next to viewers to delete several at once, edit a viewer's details, and undo a change if you make a mistake.
 
-- Import points: brings your points over from another list: open your old points list, select the rows (usernames, levels and points), copy them and paste them in. Paste more than once if the list is long. Nothing changes until you press Import, and you choose whether to keep whichever total is higher (safe to repeat), use the imported total, or add it to what viewers already have.
+- Total and counted towards level.: Each viewer has two numbers. The total is what they have now. Counted towards level is everything they have ever earned, and their level follows that number. So lowering a total never lowers a level.
+
+- Reset or halve points: starts a new competition: it takes points off everyone's total (reset to zero, halve, keep a percentage you type, or keep only what they earned since a day you pick), either for everyone or only for viewers you ticked. "Since a day" counts what each viewer earned from the start of that day onward and takes off everything earned before it; viewers whose points were imported have no daily history, so they go to zero. Levels do not change. You can undo it right afterwards, but not later.
+
+- Import points: brings your points over from another list: open your old points list, select the rows (usernames, levels, totals and points counted towards level), copy them and paste them in, or choose an exported spreadsheet (.csv) file instead. Paste more than once if the list is long. Each viewer's total and counted points both come over, so a viewer whose total was reset keeps their level. Levels are worked out from your own level settings, so set those first if you want them to match your old list. Nothing changes until you press Import, and you choose whether to keep whichever total is higher (safe to repeat), use the imported total, or add it to what viewers already have.
 
 Points on Stream: Turning on the on-screen leaderboard gives you a separate transparent Overlay URL for a live points leaderboard you can display during your stream — copy it from the same page into OBS or TikTok LIVE Studio.
+
+### Let viewers check their points in chat
+
+At the bottom of the Points Economy page, switch on Let viewers check their points: . When a viewer types !score (or any word you choose) in your TikTok chat, a Text Alert pops up on stream with their own points, level and rank. Mint cannot type back into TikTok chat, so the answer appears on your overlay for everyone to see.
+
+- Change the command word, how long it shows, how long one viewer has to wait before asking again, and what it says (use the buttons to add their name, points, level and rank). Send a test to my overlay shows it with made-up numbers.
+
+- It uses your normal Text Alerts: overlay link. Press Change how it looks to pick the font, colors and position there.
+
+- Only the command on its own counts. Several viewers asking at once line up, up to five waiting.
 </page>
 
 <page id="spin-wheel">
@@ -711,6 +774,8 @@ A transparent, command-driven reward wheel viewers spend points on by typing a c
 When live, Mint listens for your spin command in chat, spends the viewer's points, spins the wheel, and substitutes the real chatter's name and your currency name into the winner text — the Preview spin: button just lets you test the animation without a real entry.
 
 The page has two tabs: Points wheel: (this one) and Choice wheel: , below. Each has its own Overlay URL.
+
+Choosing colors.: On both wheels, click a color box and a small picker opens: drag in the square and the bar to pick a color, or type a hex code such as #1fdfbc. Under it are the last 10 colors you used, so you can reuse them on any slice or on the other wheel with one click.
 </page>
 
 <page id="choice-wheel">
@@ -752,13 +817,17 @@ When something happens, Mint does what you line up. A chat command: like !clip, 
 
 - Under When this happens: , choose a chat command, a gift, a new follower, a share or a fan club level-up. For a chat command, type the word and choose Who can use it: (everyone, moderators, followers, subscribers, your fan club, or named viewers). For a gift, pick the gift (or leave it empty for any) and a minimum number of coins. For a fan club level-up, leave the level at 0 for every level-up or type the level to wait for (messages can use {name}, {level} and {oldlevel}). For a Twitch event, set the minimum (bits, months subscribed, subs gifted or raiders); your Twitch channel needs to be connected.
 
+- For a gift, a new follower or a share, Who it is for: lets you keep it to Everybody: (the default), Only certain viewers: (type their @usernames, the name in their TikTok profile link; as you type, Mint suggests people already in your Points Economy, so typing j lists everyone whose username starts with j) or Fan club members: at or above a level you choose. For example, one action can play a video only when one named viewer sends a Lightning Bolt, while another action answers that gift from everybody else.
+
 - Under What it does: , press Add a step: and add as many as you like. They start together, unless you give a step a Delay: : a step with a delay of 5 starts 5 seconds after the trigger, so an alert can come first and a scene change after it.
 
 - Under How often: , set how long anyone has to wait, and how long the same viewer has to wait, before it can run again.
 
 - Press Test: to try it, then switch the big On: switch at the top. Nothing runs while it is Off.
 
-Each action sits on one line until you open it with the arrow on its left, so a long list stays easy to scan. With four or more actions, a search box and a filter (only On, only Off, TikTok triggers, Twitch triggers) appear above the list, along with Open all: and Close all: . A line shows the action's trigger and a short list of what it does.
+At the top of the page, Show actions for: lets you show TikTok actions, Twitch actions or both. It starts on TikTok only, which also hides the Twitch choices when you build an action. This only changes what you see here: actions you hide still run. If you already have Twitch actions, Twitch starts switched on.
+
+Each action sits on one line until you open it with the arrow on its left, so a long list stays easy to scan. With four or more actions, a search box and a filter (only On, only Off) appear above the list, along with Open all: and Close all: . A line shows the action's trigger and a short list of what it does.
 
 You stay in control: Chat can never type anything of its own. Only the steps you set up can run, shortcuts that close or switch windows (such as Alt+F4 or Alt+Tab) are not allowed, and a chat command has to be the first word of the message: !clip and !clip nice one both work, please !clip does not.
 
@@ -779,15 +848,15 @@ Pick any sound from your Soundboard. It plays in the Mint Overlays window.
 #### Read a message aloud
 Reads your message with your text-to-speech voice. {text} is whatever the viewer typed after the command.
 
-#### Switch the OBS scene
-Pick a scene, and optionally how many seconds before it goes back. Needs the OBS connection below.
+#### Control OBS
+Switch to a scene (pick a transition if you like, and how many seconds before it goes back), or show a source and have it hide itself again, one at a time if you want. Works with sources inside groups. Needs the OBS connection below.
 
 #### Send a web request
 Sends a message to a web address when the action runs, so other tools and services can react. It sends a small standard message, or the text you write. A request that takes longer than 5 seconds is cancelled.
 
 ### Connecting OBS (optional)
 
-Only needed for the Switch the OBS scene: step. In OBS, open Tools > WebSocket Server Settings: and turn the server on. Then in the OBS connection card, enter the same port and password and press Save and connect: . The card shows Connected when it works, and the scene list fills in. The password stays on your computer and is never shown again.
+Only needed for the Control OBS: step. In OBS, open Tools > WebSocket Server Settings: and turn the server on. Then in the OBS connection card, enter the same port and password and press Save and connect: . The card shows Connected when it works, and your scene and source lists fill in. Pick from them rather than typing, and Mint keeps working if you rename something in OBS. The password stays on your computer and is never shown again.
 
 ### Good to know
 
@@ -799,6 +868,9 @@ An action runs in addition to your gift sounds, gift videos and alerts, so it do
 
 #### Followers and subscribers
 Moderators, followers and subscribers are what TikTok tells Mint about each viewer. The activity list tells you why someone was or was not allowed.
+
+#### Key presses and administrator
+If TikTok LIVE Studio is set to run as administrator, Windows will not let a normal program press keys in it, so a shortcut like Ctrl+H does nothing even though the alert shows. Mint notices this and shows a button on the Actions page, Restart Mint as administrator: . Press it and allow the Windows prompt. Mint opens again as administrator and the key presses work. If you would rather not run Mint that way, run Studio normally instead.
 
 #### Mint must be running
 Actions only run while Mint Overlays is open and connected to your live.
@@ -831,6 +903,41 @@ Two cards for your stream: the biggest single gift of your live and the longest 
 - Try it.: Send a test record to my overlay: shows a made-up record for a few seconds so you can see the look and the celebration. It does not touch your real records.
 </page>
 
+<page id="gift-gallery">
+(Section: Community & Rewards)
+
+## Gift Gallery
+
+Browser source
+A collection for your viewers to chase. You choose the gifts you want, they show on your stream, and each one gets checked off with the sender's name when a viewer sends it.
+
+- Copy the Overlay URL into TikTok LIVE Studio or OBS as a browser source, or place Gift Gallery: in an Overlay Studio scene.
+
+- Under Pick your gifts: you see the gifts TikTok's own gallery uses. Click a gift to add it, use the +: and -: to say how many you need, and press Have it?: on the ones you already have in TikTok. Click a gift again to take it out, or press Add all: to start from the full set. If TikTok adds or changes a gift, type its name in Not in the list?: to add it.
+
+- Below the Preview: , Your collection: lists the gifts you chose. Use the arrows to put them in the order you want, or the ×: to take one out.
+
+- Go live. Gifts you have not got yet are dimmed. When a viewer sends one, it lights up with a check mark, their picture and name appear under it, and a pop-up shows who got it.
+
+- Needing more than one.: A gift you need several of shows a count such as 2/5 and is checked off once that many have been sent in total, by anyone. The person who sent the last one is the Title gifter: : they get a crown on their picture and a gold Title gifter label in the pop-up (you can change the wording or switch the label off under Look). A gift you marked Have it? has no name, because Mint cannot see who sent gifts before it was connected.
+
+- Check off by hand.: Have it?: on a gift ticks it yourself, for a gift that was sent before you connected. Press it again to put it back, and Uncheck everything: starts the whole list again.
+
+- Every live or across lives.: By default the list is cleared when you go live again. Turn that off to keep your checks from one live to the next. A dropped connection never clears them.
+
+- Collection complete.: When every gift is checked off the title changes to your own message and shimmers.
+
+- The count stays with the title.: The collected count (like 7/30) sits right next to the title, so it still shows when TikTok trims the right edge of a wide overlay.
+
+- Grid or scrolling strip.: Under Look, How the gifts show: can turn the gallery into a strip that scrolls across your screen like Gift Scroll, with a Scroll speed: and a direction. It repeats the list with no gap, so it works well as a slim banner along the top or bottom of your stream.
+
+- Make it yours.: Choose the title, font, colors, how big each gift is, how many fit in a row, how dim the missing ones are, and whether to show names, coin prices, who got each gift, the progress bar and the pop-up.
+
+- Matched by name.: Gifts are matched by their name, so if TikTok renames a gift you may need to add it again. TikTok gifts only; Twitch bits are not counted.
+
+Try it: Send a test pop-up to my overlay: plays the celebration on your stream without checking anything off.
+</page>
+
 <page id="goal-bars">
 (Section: Community & Rewards)
 
@@ -849,6 +956,18 @@ Follower, Gift, and Like goal bars you can style to match your brand — each is
 
 How the current value is tracked:
 Gift Goal and Like Goal track automatically from your live TikTok activity and reset back to zero every time you connect — there's nothing to type in. Follower Goal is different: TikTok doesn't expose a live follower-count API, so you set a starting follower count manually, and the app rolls that number forward automatically at the end of each session so next time's goal starts from where you left off.
+
+### Play something when a goal is hit
+
+Each goal bar can set things off the moment it reaches its target (the target you set on the Goal Bars page):
+
+- Video Board:: add a video and choose the trigger Gift goal reached: , Like goal reached: or Follower goal reached: .
+
+- Text Alerts:: choose the same triggers. Use {name} for the viewer whose gift, like or follow tipped it over, {count} for the total and {target} (the Goal button) for the goal.
+
+- Actions & Events:: A gift goal is hit, A like goal is hit and A follower goal is hit can press keys, switch your OBS scene, play a sound and more.
+
+Each goal fires once per live, even if it is passed by a big gift. Raise the target after it is hit and you have a new goal to reach. The next live starts the goals again from zero.
 </page>
 
 <page id="leaderboards">
@@ -866,6 +985,10 @@ A live scoreboard celebrating your most active viewers — likes on one widget, 
 - Copy the Overlay URL into OBS or TikTok LIVE Studio.
 
 Both widgets update from real live activity during your stream — actual viewers, actual totals.
+
+Placing it in OBS before anyone has liked or gifted.: The overlay stays empty until real activity arrives. Press Show sample likes on my overlay (or sample gifters) and made-up names appear on your overlay in OBS for 20 seconds, so you can place and size it. Points on Stream has the same button on the Points Economy page.
+
+Protect big gifters.: Tick Hide the coin amounts (Top Gifters) or Hide the like counts (Top Likes) to show only names and ranks, and Hide the coin icon or Hide the heart icon to drop the icon too. That way nobody can see how much a viewer gave, which keeps big gifters from being targeted. Ticking both leaves just the avatar, rank and name.
 </page>
 
 <page id="word-garden">
@@ -1073,6 +1196,32 @@ Mint Overlays needs a license key. Enter it once, on the key screen or under Acc
 - Founders Edition: keys stay active permanently and are never asked for again.
 
 - Can't find your key? Press Report Issue: at the bottom of the app and we'll help.
+</page>
+
+<page id="backup">
+(Section: Reference)
+
+## Back up or move your setup
+
+Getting a new computer, or just want a safety copy? Mint can save everything you have set up into one file and bring it back on any computer. You do not have to rebuild your videos or triggers.
+
+### Save your setup
+
+- Open Account: and find the Back up or move your setup: card.
+
+- Press Export my setup: and choose where to save the file. It ends in .mintbackup. A large video library makes a large file, so a USB drive or cloud storage is a good home for it.
+
+- Wait for the bar to finish. The card tells you what was saved.
+
+### Bring it in on a new computer
+
+- Install Mint Overlays on the new computer and open Account: . Activate your license key there as usual.
+
+- Press Import a setup: and choose your .mintbackup file. Mint shows what is inside it first.
+
+- Press Import and restart: . Mint unpacks the file, restarts, and everything is back: your Video Board and Gift Videos, Actions and triggers, sounds, alerts, wheels, overlay settings, points and levels.
+
+What is and is not included: Your videos and pictures, triggers, settings and points are included. Your license key never is (activate it on the new computer). Your OBS password and ElevenLabs key are left out unless you tick Also include my saved passwords and keys, because anyone who got the file could read them. Importing replaces your current settings with the ones in the file, keeps the videos you already have, and saves a copy of what it replaced in a before-import folder inside Mint's data folder.
 </page>
 
 <page id="performance">
