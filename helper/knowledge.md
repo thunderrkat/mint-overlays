@@ -10,9 +10,9 @@ Mint Overlays is a Windows desktop app for TikTok LIVE hosts. It runs overlays (
 - The app only works for people with an active license; the how-to guide covers activation.
 
 ## Page ids (for links)
-connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundboard, sound-alerts, text-alerts, like-burst, gift-jar, gift-scroll, battle-board, video-board, gift-videos, stream-credits, points-economy, spin-wheel, choice-wheel, actions, goal-bars, top-likes, top-gifter, word-garden, live-party, countdown-timer, top-gift, modes, holiday, voicemod, account
+connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundboard, sound-alerts, text-alerts, like-burst, stickers, gift-jar, gift-scroll, battle-board, video-board, gift-videos, stream-credits, points-economy, spin-wheel, choice-wheel, actions, chatbot, goal-bars, animated-goals, top-likes, top-gifter, word-garden, live-party, countdown-timer, top-gift, gift-gallery, modes, holiday, voicemod, account
 
-## Modes (new in 2.0.24)
+## Modes
 - A mode is a ready-made setup for one kind of live, like Battle or Christmas. Only one mode is on at a time, and each mode has its own color. When there are two or more modes, the app window gets a colored frame and a small badge at the top with the name of the mode that is on. Nothing changes for someone who has not made their own modes.
 - **Modes** is in the menu on the left, right under Overlay Studio (page id modes). The first time, type a name and press **Make it my first mode**: everything already set up (gift videos, gift sounds, Video Board items, Text Alerts, VIP entrances) goes into it. Actions stay in every mode. To add more, type a name in the box and press **Make it**. Up to 12 modes. Deleting a mode does not delete the videos or sounds: things that were only in that mode work in every mode again.
 - To choose what goes in a mode: open a video, gift sound, Video Board item, text alert, VIP entrance or action and pick the mode under **Use this in**. **Every mode** (the default) means it works in all of them. A new item added while a mode is on goes into that mode. Pages with this have a strip at the top saying which mode is on.
@@ -20,18 +20,57 @@ connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundb
 - To switch: press **Switch to it** on the Modes page. Or set **Switch to this mode automatically** on a mode: someone types a chat command, someone sends a specific gift, or someone sends a gift worth at least some coins. This runs as an Action.
 - Use OBS? Tick **Change my OBS scene too** on a mode and pick the scene (and the transition if you like). OBS has to be connected first, on the Actions page. People who stream with TikTok LIVE Studio only should leave it off.
 
-## Holiday Tree (new in 2.0.24)
+## Holiday Tree
 - Holiday Tree is a Christmas tree on the stream (page id holiday). It is in the menu on the left, under Games & Activities. Every gift hangs an ornament on the tree with the sender's profile picture. A burst such as 50 Roses is one ornament, and every coin still counts toward the goal. When the tree is full it lights up and celebrates.
 - **Step 1:** copy the link at the top of the page and add it in TikTok LIVE Studio as a Link (a browser source), like the other overlays. Keep Mint Overlays open while streaming.
 - **Step 2** has three tabs. **Look**: pick one of 8 trees and one of 8 toppers (a box picks the matching topper for you) and choose whether the tree lights stay on. **Rules**: gifts to fill the tree, the smallest gift that gets an ornament (smaller gifts still count toward the goal), the most ornaments per person, the wait between one person's ornaments, and sound on or off with a volume and a test sound. **Test**: send a test gift (it comes from a made-up viewer such as pixel_pilot), light up the tree, celebrate, show example top gifters, and **New session**.
 - Changes save by themselves. The tree is remembered, so refreshing the overlay brings it back.
 - Test gifts stay on the tree. Press **New session** (Test tab) before going live to start with an empty tree. The old tree is set aside, not deleted.
 
-## Actions & Events layout (changed in 2.0.24)
+## Actions & Events layout
 - Each action is a short card. **When this happens** is a drop-down list (a chat command, a gift, a new follower, someone shares, fan club level-ups, a goal bar being reached, and Twitch events). **Who can use it** is a list with tick boxes (Everyone, Moderators, Followers, Subscribers, Fan club); ticking Everyone clears the others. The **Also certain viewers** button adds a box for specific @usernames, shown as small name tags: pick someone from the suggestions or type a name and press Enter. Click the x on a tag to remove that person.
 - For a gift, new follower or share, **Who it is for** picks everybody, certain viewers or fan club members at a level you choose.
 - The two boxes **Wait before it runs again** and **Wait for the same person** replace the old "how often" row. The **Tips** button on a card shows short explanations.
 - The steps are under **What it does**, in the order they run, each with **Starts after** seconds. **Add another step...** is a list under the steps.
+
+## Actions & Events: names, copy and videos
+- An action can have a **name** (for example "John's Lightning Bolt"). It shows on the action's line instead of the trigger, and it is searchable. The **Copy** button makes a copy right under the original with the name box ready.
+- In the step **Play a video or picture**, click a thumbnail to pick any item from the Video Board. Mint then switches that item to **Run by an Action** on the Video Board by itself, so it plays only from the action. A note says what it used to play on and has an **Undo** button.
+- There is also a trigger **A sticker** (page id actions): pick one of the stickers viewers have sent, or Any sticker.
+
+## Chatbot (page id chatbot)
+- Chatbot is under Community & Rewards. Mint types messages in the host's own TikTok chat. It needs a one-time **Sign in to TikTok** inside Mint (a TikTok window opens; Mint never sees the password) and the host has to be live and connected.
+- Everything starts Off. Parts: Score (!score), Top supporters (!top), Your own commands (like !discord, up to 30), Thank people (follows, shares, gifts), Wheel winners, Word Garden news, Reminders. Each has an On/Off switch and a **Send a test** button.
+- Mint sends about one message every 16 seconds; if many things happen at once the oldest are skipped. Messages cannot start with ! or /. It only works while Mint is open. TikTok only, not Twitch.
+- Text to Speech does not read the Chatbot's own messages aloud unless **Read the Chatbot's own messages** is switched on in the Text to Speech Moderation card.
+- If nothing appears in chat: check Sign in is done (the card says Signed in), the host is connected on Connections, the part is switched On, and press Send a test.
+
+## Floating Stickers (page id stickers)
+- Under Visual Effects. When a viewer sends one of the host's stickers, its picture floats, bounces, spins, rains, flies or bursts across the stream. The overlay link goes in as a browser source sized to the whole screen, or in Overlay Studio.
+- Mint only learns a sticker after a viewer sends it. **Find my stickers** (sign in to TikTok first) can read the host's own stickers so they are all there from the start.
+- Limits (per viewer, same sticker, per minute, at once) are enforced by Mint so one viewer cannot flood the screen. For a sound or video on a sticker use an Action with the trigger A sticker.
+
+## Animated Goals (page id animated-goals)
+- Under Community & Rewards, below Goal Bars. Three tabs, each with its own overlay link and goal number: Coin goals (gift coins; a piggy bank), Heart Me goals (counts the gift named Heart Me by how many; 7 designs), Like goals (likes; 6 thumbs-up designs). Pick a design under **Choose a design**.
+- If the words do not fit their plaque, use the **Text size** slider (50% to 140%) under Typography; the title and numbers fonts can also be changed.
+- **When the goal is reached** can be Stay full, Start over from empty, or Make the goal bigger. Goals start again from zero on a new live but keep their number if Mint reconnects after a drop.
+- Make the browser source about 600 by 530 (piggy), 420 by 525 (hearts) or 560 by 420 (like goals).
+
+## Word Garden letters and points
+- The **Reveal letters** rules (taps, gifts, shares, new followers, and the most letters per round) are in the Word Garden **game window's Settings**, not on the Word Garden page. The first letter of each word shows first and the last letter is never shown.
+- Word Garden scores can pay into the Points Economy: switch on **Points per Word Garden point** in Points Economy (it starts Off).
+
+## Text to Speech multi-chat
+- The multi-chat pop-out window shows the real chat as it arrives, even if Text to Speech is off. Sample messages only show until the first real chat. Close the pop-out and press Pop out window again after changing its colors.
+
+## Overlay Studio editor
+- The editor has **Layout** (simple labelled boxes) and **Preview** (the real look) buttons, and **Focus** fades layers you are not working on. Every overlay page has a **Send to Overlay Studio** link under Copy URL. Videos fill the whole screen (edges cropped); **Fill the screen** sets a layer to the whole canvas.
+
+## Gift Gallery from TikTok
+- On the Gift Gallery page, **Fill it from my TikTok gallery** signs in to TikTok once and reads the host's own gallery. Go live and connect first, press **Get my gifts from TikTok**, then **Use these gifts**.
+
+## Connection drops
+- If TikTok drops during a live, Mint connects again by itself and keeps goals and top lists when it is the same live. Pressing Disconnect stops it from reconnecting.
 
 # The how-to guide
 
@@ -223,7 +262,7 @@ Skips repeat TTS from the same person for a while, so one viewer spamming chat o
 
 ### Multi-chat pop-out
 
-The same card lets you build a shared live-chat feed — combining messages from every included platform into one styled window, with your own title, colors, and fonts (upload custom fonts if you like). Use the pop-out button to open it as its own window, which you can then window-capture in OBS if you want chat visible on stream.
+The same card lets you build a shared live-chat feed — combining messages from every included platform into one styled window, with your own title, colors, and fonts (upload custom fonts if you like). Use the pop-out button to open it as its own window, which you can then window-capture in OBS if you want chat visible on stream. The window fills with your real chat as it arrives, even if Text to Speech is switched off. The sample messages only show until the first real chat comes in. Muted platforms, blocked viewers and blocked words are left out.
 
 Not an overlay URL: Text to Speech and the multi-chat window don't use a copyable Overlay URL — the voice plays through your PC's audio, and the chat window is a real pop-out you capture like any other application window.
 </page>
@@ -478,6 +517,35 @@ A scrolling banner that automatically mirrors every gift you've configured a sou
 - Copy the Overlay URL into OBS or TikTok LIVE Studio.
 </page>
 
+<page id="floating-stickers">
+(Section: Visual Effects)
+
+## Floating Stickers
+
+Browser source
+When a viewer sends one of your stickers, its picture moves around your stream: floating up, bouncing across, spinning, raining down, flying past or bursting. Give a favorite sticker its own move, or hide the ones you do not want.
+
+- Open Floating Stickers: under Visual Effects and copy the Overlay URL: . Add it in TikTok LIVE Studio or OBS as a browser source and make it as big as your whole screen. You can also press Send to Overlay Studio: to put it in a scene.
+
+- Under How the stickers move: , pick the move, how big the stickers are, how long they stay, and whether to show the sender's name under the sticker. Press Play a sample here: to watch one. A small preview screen also appears in the corner of the window if you test something lower down the page.
+
+- Press Send one to my overlay: to see a sticker on your real stream scene.
+
+- Under Give each sticker its own move: you see the stickers viewers have sent. Pick a move for one, or choose Do not show it: . Turn off Show every sticker a viewer sends: if you only want the stickers you pick a move for.
+
+### Keep it from being spammed
+
+A viewer can send stickers very fast, so Mint keeps to your limits for you: how many one viewer can show in a few seconds, how often the same sticker can show, how many stickers a minute in total, and how many can be on the screen at once (the oldest leaves first). Anything over a limit is simply not shown. Mint checks the limits itself, so they always hold.
+
+### Find my stickers
+
+Mint can only see a sticker after a viewer sends it. If you press Find my stickers: and sign in to TikTok inside Mint, it can also find the stickers you have made, so they are in the list from the start. Go live and connect first (Connections page). Mint never sees your password.
+
+### Play a sound or a video for a sticker
+
+Floating Stickers only moves the picture. To play a sound or a video when a sticker is sent, make an action on the Actions & Events page with the trigger A sticker: , and pick one of your stickers (or leave it on Any sticker). The Video Board also has a Super Fan sticker trigger.
+</page>
+
 <page id="battle-board">
 (Section: Visual Effects)
 
@@ -718,6 +786,9 @@ Earn points each time someone shares your stream.
 #### Watch time
 Earn points per minute spent watching live.
 
+#### Word Garden (optional)
+Turn on Points per Word Garden point: to pay Word Garden scores into points. A word is worth about 100 to 250 Word Garden points, so the default rate is small (0.25). You can also set the most one viewer can earn from Word Garden in each live (0 means no limit). It starts Off.
+
 Name your currency (defaults to "Points"), and configure a leveling curve so viewers climb levels as they accumulate points.
 
 ### Managing your community's balances
@@ -815,7 +886,7 @@ When something happens, Mint does what you line up. A chat command: like !clip, 
 
 - Open Actions & Events: under Community & Rewards and press Add an action: . The first one comes ready as !clip: , pressing Ctrl+H: , with a text alert, for moderators only. Change anything you like, and add more the same way.
 
-- Under When this happens: , choose a chat command, a gift, a new follower, a share or a fan club level-up. For a chat command, type the word and choose Who can use it: (everyone, moderators, followers, subscribers, your fan club, or named viewers). For a gift, pick the gift (or leave it empty for any) and a minimum number of coins. For a fan club level-up, leave the level at 0 for every level-up or type the level to wait for (messages can use {name}, {level} and {oldlevel}). For a Twitch event, set the minimum (bits, months subscribed, subs gifted or raiders); your Twitch channel needs to be connected.
+- Under When this happens: , choose a chat command, a gift, a new follower, a share, a sticker or a fan club level-up. For a sticker, pick one of the stickers viewers have sent (or leave it on Any sticker). For a chat command, type the word and choose Who can use it: (everyone, moderators, followers, subscribers, your fan club, or named viewers). For a gift, pick the gift (or leave it empty for any) and a minimum number of coins. For a fan club level-up, leave the level at 0 for every level-up or type the level to wait for (messages can use {name}, {level} and {oldlevel}). For a Twitch event, set the minimum (bits, months subscribed, subs gifted or raiders); your Twitch channel needs to be connected.
 
 - For a gift, a new follower or a share, Who it is for: lets you keep it to Everybody: (the default), Only certain viewers: (type their @usernames, the name in their TikTok profile link; as you type, Mint suggests people already in your Points Economy, so typing j lists everyone whose username starts with j) or Fan club members: at or above a level you choose. For example, one action can play a video only when one named viewer sends a Lightning Bolt, while another action answers that gift from everybody else.
 
@@ -824,6 +895,8 @@ When something happens, Mint does what you line up. A chat command: like !clip, 
 - Under How often: , set how long anyone has to wait, and how long the same viewer has to wait, before it can run again.
 
 - Press Test: to try it, then switch the big On: switch at the top. Nothing runs while it is Off.
+
+- Give the action a name: if you like, such as John's Lightning Bolt. The name shows on the line instead of the trigger, in the search, and in the Choice Wheel and Modes lists. Copy: makes a copy right under the original with the name box ready, so you can change just the viewer or the video. A copied chat command starts with no word, so two commands never clash.
 
 At the top of the page, Show actions for: lets you show TikTok actions, Twitch actions or both. It starts on TikTok only, which also hides the Twitch choices when you build an action. This only changes what you see here: actions you hide still run. If you already have Twitch actions, Twitch starts switched on.
 
@@ -839,8 +912,11 @@ Click the box and press the shortcut. Works for shortcuts that work anywhere on 
 #### Show a text alert
 Type the message. Use {name} for the viewer, and {gift}, {coins} and {count} for gifts. Change its look on the Text Alerts page.
 
-#### Play a video or picture, change my voice
-Pick an item from the Video Board or Voicemod page. Only items whose trigger is set to Run by an Action: are listed, so they never also play from their own trigger.
+#### Play a video or picture
+Click a thumbnail to pick any item from your Video Board. Mint then sets that item to Run by an Action: on the Video Board, so it plays only from this action and never a second time from a trigger of its own. A note tells you what it used to play on, and Undo: puts it back.
+
+#### Change my voice
+Pick a voice from the Voicemod page. Only voices whose trigger is set to Run by an Action: are listed.
 
 #### Play a sound
 Pick any sound from your Soundboard. It plays in the Mint Overlays window.
@@ -874,6 +950,52 @@ If TikTok LIVE Studio is set to run as administrator, Windows will not let a nor
 
 #### Mint must be running
 Actions only run while Mint Overlays is open and connected to your live.
+</page>
+
+<page id="chatbot">
+(Section: Community & Rewards)
+
+## Chatbot
+
+TikTok chat
+Mint types messages in your TikTok live chat for you: answers to commands your viewers type, thank-yous, who won the wheel, Word Garden news and reminders. Your viewers see them as coming from you. Open a part to change it, and switch on only what you want. Everything starts Off.
+
+### Set it up
+
+- Open Chatbot: under Community & Rewards. Open Connect your TikTok chat: and press Sign in to TikTok: . A TikTok window opens inside Mint. Sign in there the way you normally do. Mint never sees your password, and the sign-in stays on your computer.
+
+- Go live and connect on the Connections page. Mint needs to know which live to type in.
+
+- Open a part, change its words, and switch it On: . Press Send a test: to see the message in your own chat.
+
+### What it can do
+
+#### Score
+When a viewer types !score (or the word you choose), Mint answers with that viewer's own points. Nobody else's score is shown.
+
+#### Top supporters
+!top lists the viewers with the most points, for example the top 3.
+
+#### Your own commands
+Make a command like !discord or !rules and write what Mint says back. Pick who can use it, and how long anyone has to wait. Write more than one answer and Mint picks one at random. Up to 30 commands.
+
+#### Thank people
+Say a quick thank-you when someone follows, shares or sends a gift. For gifts you set the smallest gift worth a thank-you.
+
+#### Wheel winners
+Says who won each spin of the Spin Wheel and how many points. It works even if you never show the wheel on your stream.
+
+#### Word Garden news
+Tells chat when a round starts, when a word is found and when a round ends.
+
+#### Reminders
+Repeats a message every few minutes while you are live, for example to ask people to follow.
+
+In your messages, {name}, {points}, {currency}, {level} and {rank} are filled in for you. A chat message can be up to 150 letters, and it can never start with ! or /.
+
+It never spams your chat: Mint sends about one message every 16 seconds. If many things happen at once, a few wait in line and the oldest are skipped. Anything Mint says is never taken as a command, so it cannot answer itself. Text to Speech does not read Mint's own messages aloud unless you turn that on in the Moderation card.
+
+TikTok only, and Mint must be running: The Chatbot only types while Mint is open and connected to your TikTok live. If TikTok asks you something in the sign-in window, answer it there. Messages are typed into TikTok's own chat box, so TikTok may sometimes hold a message back; the Chatbot page shows what it sent.
 </page>
 
 <page id="top-gift">
@@ -915,6 +1037,8 @@ A collection for your viewers to chase. You choose the gifts you want, they show
 
 - Under Pick your gifts: you see the gifts TikTok's own gallery uses. Click a gift to add it, use the +: and -: to say how many you need, and press Have it?: on the ones you already have in TikTok. Click a gift again to take it out, or press Add all: to start from the full set. If TikTok adds or changes a gift, type its name in Not in the list?: to add it.
 
+- Or let Mint fill it for you: under Fill it from my TikTok gallery: press Sign in to TikTok: (once), go live and connect, then press Get my gifts from TikTok: . Mint reads your own gallery, shows what it found, and Use these gifts: sets your list. Mint never sees your password.
+
 - Below the Preview: , Your collection: lists the gifts you chose. Use the arrows to put them in the order you want, or the ×: to take one out.
 
 - Go live. Gifts you have not got yet are dimmed. When a viewer sends one, it lights up with a check mark, their picture and name appear under it, and a pop-up shows who got it.
@@ -944,7 +1068,7 @@ Try it: Send a test pop-up to my overlay: plays the celebration on your stream w
 ## Goal Bars
 
 Browser source
-Follower, Gift, and Like goal bars you can style to match your brand — each is its own tab with its own Overlay URL.
+Follower, Gift, and Like goal bars you can style to match your brand — each is its own tab with its own Overlay URL. For goals that fill with moving liquid, see Animated Goals.
 
 - Pick a tab: Followers, Gift value, or Likes.
 
@@ -968,6 +1092,46 @@ Each goal bar can set things off the moment it reaches its target (the target yo
 - Actions & Events:: A gift goal is hit, A like goal is hit and A follower goal is hit can press keys, switch your OBS scene, play a sound and more.
 
 Each goal fires once per live, even if it is passed by a big gift. Raise the target after it is hit and you have a new goal to reach. The next live starts the goals again from zero.
+</page>
+
+<page id="animated-goals">
+(Section: Community & Rewards)
+
+## Animated Goals
+
+Browser source
+Goals that come alive. They fill up with moving liquid and bubbles, and celebrate when you reach them. Pick what to count, pick a design, make it yours, and add its link to your stream. Want a plain bar instead? Use Goal Bars.
+
+- Open Animated Goals: under Community & Rewards and pick a tab: Coin goals: , Heart Me goals: or Like goals: . Each tab has its own Overlay URL and its own goal number. Copy it into TikTok LIVE Studio or OBS, or press Send to Overlay Studio: .
+
+- Under Choose a design: , pick the look you like. Your link and goal number stay the same when you switch designs.
+
+- Under Make it yours: , change the title, the goal number and the settings for that design. It saves by itself. Use Preview fill: to see any amount without going live, and Test the celebration: to see the party.
+
+- If the words do not fit their plaque, use the Text size: slider under Typography to make them smaller (or bigger). You can also pick a different font for the title and for the numbers.
+
+### What each tab counts
+
+#### Coin goals
+Counts every gift coin you get in your live, the same coins as the Gift value goal. Design: a glass piggy bank: with moving liquid, floating gold coins and bubbles. You can change how many coins and bubbles float, how much it moves and how big the waves are.
+
+#### Heart Me goals
+Counts the gift named Heart Me: , by how many you get (not by coins): 7 Heart Me gifts is 7. Seven designs: an armored glass heart, and six decorated hearts (Rose Gold Ribbon, Chrome & Magenta Ribbon, Royal Crystal, Lavender Dream, Black Rose & Gold, Ornate Jewel).
+
+#### Like goals
+Counts every like (tap) you get in your live, the same likes as the Likes goal bar. Six thumbs-up designs: Neon Capsule, Fantasy Crystal Orb, Cyber Reactor, Kawaii Cloud Jar, Rose Gold Wings and Gothic Crimson.
+
+### When the goal is reached
+
+Choose what happens after the celebration: Stay full: (it keeps counting), Start over from empty: (the extra carries into the next goal) or Make the goal bigger: (the goal grows by itself by the amount you choose, so you never have to come back and change it). You can also choose how long the celebration lasts.
+
+The decorated Heart Me and Like designs also let you pick the color, how much the liquid waves, a lettering style, whether the title is in capital letters, and whether to show the percent. A goal starts again from zero each time you go live. If your connection drops and Mint connects again by itself, the goal keeps its number.
+
+### Play something when a goal is hit
+
+Each animated goal can set things off when it reaches its goal number: choose the trigger Your Coin goal is hit, Your Heart Me goal is hit or Your animated Like goal is hit on the Video Board, Text Alerts and Actions & Events.
+
+Size of the box: Make your browser source tall and wide enough for the design: about 600 by 530 for the piggy bank, 420 by 525 for the hearts and 560 by 420 for the like goals. In Overlay Studio, the editor shows the real look in Preview.
 </page>
 
 <page id="leaderboards">
@@ -1017,6 +1181,12 @@ Everything your viewers type is a guess. A word counts if it matches one of the 
 #### Points
 100 points for a find, up to 50 more for speed, and a combo bonus when the same viewer finds words back to back. Scores last for the session.
 
+#### Hidden letters from your crowd
+In the game window, open Settings: and look under Reveal letters: . Switch on what should show a hidden letter: every so many taps, a gift (you can set the smallest gift), a share or a new follower, and choose how many letters each one shows. The first letter of every word shows first, and the very last letter is never shown, so everyone still has to guess. You can also set the most letters your crowd can earn in one round. Letters only appear while a round is running. Your own Reveal: button is never counted.
+
+#### Points for Word Garden
+Word Garden scores can pay into your Points Economy. It starts Off. Turn it on in Points Economy, where you also set how many points one Word Garden point is worth and the most one viewer can earn in a live.
+
 #### Hint and next garden
 Reveal a letter if everyone is stuck. When a round ends the answers are shown; press Next garden: , or choose in Settings to start the next round by itself after 10 seconds. Round length can be 60, 90 or 120 seconds, or choose Your own time: and type any time from 0:15 to 15:00, like 2:30.
 
@@ -1041,16 +1211,14 @@ There are 1,000 prompts, shuffled so none repeats until all have been played. Tr
 <page id="live-party">
 (Section: Games & Activities)
 
-## Live Party Beta
+## Live Party
 
 Browser source
 A 3D dance club where every viewer who joins, comments, likes or sends a gift becomes a dancer with their own profile picture and name above their head. You run it from a control room window while the stage shows on your stream.
 
-Beta — use at your own risk: Live Party is in beta and may have bugs or change. TikTok's rules limit asking viewers for gifts and offering rewards in return for gifting, and hosts are responsible for the tools they use on their LIVE. Putting your biggest gifters on a podium can count as rewarding gifts, and a show that keeps running while you are away can look like automated gift incentives. Be on screen and taking part while you are live, do not tell viewers to send gifts to get on the podium or to trigger effects, and read TikTok's current guidelines yourself. Mint Overlays is not affiliated with TikTok and cannot promise that any use follows its rules. You tick an "I have read this" box on the Live Party page before the stage link and control room unlock.
-
 ### Setting it up
 
-- Open Live Party: under Games & Activities, read the notice, and tick the box.
+- Open Live Party: under Games & Activities.
 
 - Copy the Stage link: and add it to TikTok LIVE Studio or OBS as a browser source, sized to fill the scene. It shows the club only, with no controls, and keeps running whether or not the control room is open.
 
@@ -1099,6 +1267,23 @@ The stage in TikTok LIVE Studio does not follow the control room?: Refresh the L
 Names: Viewer names show exactly as they wrote them. A viewer who goes quiet can step off the dance floor depending on your crowd setting, and pops back when they do something.
 </page>
 
+<page id="holiday-tree">
+(Section: Games & Activities)
+
+## Holiday Tree
+
+Browser source
+A Christmas tree for your stream. Every gift your viewers send hangs an ornament on the tree with their picture, and when the tree is full it lights up and celebrates.
+
+- Open Holiday Tree: in the menu (the decorated link at the bottom) and copy its link into TikTok LIVE Studio as a Link, or into OBS as a browser source.
+
+- Use the Look: tab to pick your tree and topper, and whether the ornaments show your viewers' pictures or the gift's own picture. Use the Rules: tab to set the smallest gift that hangs an ornament and the goal. You can have the tree start again by itself after it celebrates.
+
+- The Test: tab lets you practice: send a test gift, light up the tree, or celebrate. Press New session: before you go live. Your last tree is saved, never deleted.
+
+Sound: Whether the tree can play sound depends on your streaming program. If you hear nothing in TikTok LIVE Studio or OBS, check that the source is not muted.
+</page>
+
 <page id="countdown-timer">
 (Section: Games & Activities)
 
@@ -1143,7 +1328,9 @@ Build a full scene out of multiple widgets — position and layer them together 
 
 - Open Overlay Studio: in the sidebar and press Open editor: on a scene. The editor opens in its own window, so you have the whole screen to work in.
 
-- Open the Add: tab on the left and click any widget to add it as a layer: Text Alerts, Gift Jar, Top Likes, goal bars, videos and more.
+- Open the Add: tab on the left and click any overlay to add it as a layer: Text Alerts, Gift Jar, Top Likes, goal bars, animated goals, stickers, videos and more. A new layer lands in an empty spot if there is one. Every overlay page also has a Send to Overlay Studio: link under its Copy URL button that adds it to your open scene for you.
+
+- The Layout: and Preview: buttons at the top change what you see. Layout: shows each layer as a simple labelled box, which is easiest for placing things. Preview: shows how each layer really looks. Layers that cover the whole screen (like stickers) show as a dashed outline. Focus: fades the layers you are not working on.
 
 - Drag: a layer to move it. Drag a corner: to resize it: everything inside grows or shrinks with the box and keeps its shape. Hold Shift while dragging to change the shape of the box without changing the size of what is inside (you get more or less room around it). Guide lines help you line things up with the canvas and with other layers.
 
@@ -1159,6 +1346,10 @@ Build a full scene out of multiple widgets — position and layer them together 
 
 Edit while you are live: Leave the editor open during your stream. Anything you move, resize, trim, add or hide shows on stream right away, so you can change your scene in the middle of a live without touching TikTok LIVE Studio.
 
+### Full-screen videos
+
+For a full-screen video, select its layer and press Fill the screen: . Videos always fill the screen, with the edges cropped, so there are no empty bands.
+
 ### Vertical and horizontal versions
 
 Every scene has a Vertical: (TikTok, 1080×1920) and a Horizontal: (OBS, 1920×1080) version, each with its own link. Switch between them with the Vertical / Horizontal buttons at the top of the editor, or open either one from the scene list. Each version keeps its own layers.
@@ -1168,6 +1359,25 @@ Every scene has a Vertical: (TikTok, 1080×1920) and a Horizontal: (OBS, 1920×1
 Press + New scene: to start a separate layout (an intermission screen, a "starting soon" screen, and so on). Each scene has its own layers and its own link.
 
 The canvas is a placement guide only: What you see in the editor is for positioning — your actual copied browser source stays fully transparent behind your widgets, so it composites correctly no matter what's behind it in OBS.
+</page>
+
+<page id="modes">
+(Section: Compositing)
+
+## Modes
+
+Optional
+A mode changes what Mint does during your live, with one click. Make a mode for each kind of live, like Battle or Christmas. Only one mode is on at a time. Nothing changes for you until you make your own modes.
+
+- Open Modes: in the menu (under Overlay Studio) and press Make it my first mode: . Everything you have set up now goes into that first mode.
+
+- Make a second mode, like Battle. It starts empty, so you only add what you want for it. Each mode gets its own color, so you always know which one you are in. You can make up to 12.
+
+- Open any video, sound, alert, VIP entrance or action and pick the mode under Use this in: . Anything you leave on Every mode: works in all of them. New things you add start in the mode that is on.
+
+- Press Switch to it: . Or switch automatically: choose a chat command or a gift (and who can use it) that switches to the mode. Use OBS? A mode can also change your OBS scene (connect OBS on the Actions page first). If you stream with TikTok LIVE Studio, leave that off.
+
+When you have two or more modes, the app window gets a thin frame and a badge in the mode's color, and pages show a small strip so you can switch. The bottom of the Modes page shows everything you have, grouped, so you can see what is in each mode.
 </page>
 
 <page id="license">
