@@ -72,6 +72,34 @@ connections, overlay-studio, text-to-speech, soundboard, gift-sounds, vip-soundb
 ## Connection drops
 - If TikTok drops during a live, Mint connects again by itself and keeps goals and top lists when it is the same live. Pressing Disconnect stops it from reconnecting.
 
+## Removing a video or picture background (key color)
+- On Video Board and Gift Videos, turn on **Remove background color**, then click the color square under **Key color** (or press **Pick from the video** / **Pick from the picture**). A still of your clip opens: click the background and a round window zooms in and shows the exact color. Use the slider to move to a frame where the background shows. Along the bottom there are **Green screen**, **Blue screen** and **Pink screen** buttons and a **Color code** box for typing a code like #00ff00. Since 2.0.26 the color square opens this picker; before that it opened the computer's own color box, whose dropper made the pointer disappear. If someone on an older version says the dropper vanishes, tell them to update or use **Pick from the video**.
+- A real green screen is often not pure green, so picking from the clip works better than the Green screen button. Then adjust Similarity and Smoothness.
+- In Overlay Studio, select a picture layer, turn on **Make a color see-through** and click the color square or the dropper button; both open the same picker.
+
+## Video Board: adding and editing videos
+- On the Video Board, press **Add video** (at the top of the Saved media list) to add one. The editor opens in a pop-up over the page, with the preview on the left and the settings on the right. Press **Edit** on any saved video to open the same pop-up, even one far down a long list.
+- **Save video** (top right of the pop-up) saves and closes it. **Close** or Esc closes it too; if you changed something that is not saved, Mint asks **Keep editing** or **Throw them away**.
+- **Test** on a saved video plays it on your stream without opening the pop-up.
+
+## Gift Videos: the editor window, and new-video defaults
+- On Gift Videos, pick a gift in the catalog (or press **Edit**, or click a saved card) and the editor opens in a window over the page, preview on the left and settings on the right. It saves by itself; **Done** (or Esc) closes it. **Test** on a saved card plays it on your stream without opening the window.
+- Ask Moxy and Guide are hidden while one of these editor windows is open, and come back when it closes.
+- A new Video Board video starts as **Click to play** (it never plays by itself) and on **Every mode**. Change the trigger and **Use this in** if you want something else, such as a follow or one mode only.
+
+## Stream Credits (page id stream-credits), since 2.0.26
+- Stream Credits cover only the live you are on now, whether it lasted 15 minutes or 15 hours. A new live starts fresh by itself, and restarting Mint in the middle of a live keeps the same credits. **Clear and start over** on the page (in the This live card) empties them by hand.
+- The roll shows a recap (how long the live was, hearts, coins, new followers, people), a podium for the top three gifters, cards for the top likers, a wall of new followers and the names from chat, then a thank-you. **Scroll speed** is Slower, Normal or Faster; the roll is as long as it needs to be. Switches can hide the recap numbers and the coin and like amounts.
+
+## Gift Videos: each video's own volume
+- In the Gift Videos editor, a video (not a picture) has a **This video's volume** slider under Full screen. Turn a loud clip down without changing the others. 0% is silent. The video volume for all gift videos still applies on top.
+
+## Battles: 2x and 3x videos
+- Video Board videos set to the battle 2x or 3x moment play twice per battle when it happens: when the boost starts at the beginning of a battle (Mint works out x2 or x3 from the first gifts, usually within the first half minute), and when the bonus mission boost starts. If Mint cannot tell for sure whether it is x2 or x3, it plays nothing rather than the wrong one.
+
+## Intro videos for viewers (join videos)
+- Since 2.0.26, a viewer's own intro video plays as soon as they join, also for regulars and Super Fans whom TikTok shows with a "joined" banner. Before, those intros sometimes waited until the viewer typed in chat. One arrival plays the intro once.
+
 # The how-to guide
 
 <page id="connections">
@@ -589,7 +617,7 @@ In a battle, TikTok tells us when viewers earn power-ups and when one is played:
 
 ### Videos for battle moments
 
-The Video Board has battle triggers — battle starts, you win, you lose, the 2x or 3x time (the bonus mission reward), a Boosting Glove, a Magic Mist, a Time Maker, a Stun Hammer, a No. 2 Booster or a No. 3 Booster being played, and a last-second snipe — so you can pop up your own videos during a battle.
+The Video Board has battle triggers — battle starts, you win, you lose, the 2x or 3x time (at the start of the battle, and again for the bonus mission reward), a Boosting Glove, a Magic Mist, a Time Maker, a Stun Hammer, a No. 2 Booster or a No. 3 Booster being played, and a last-second snipe — so you can pop up your own videos during a battle.
 
 Beta: Battle data comes from TikTok's unofficial feed, so details can change and a few battle types may not report every score yet. The app keeps a local record of battle events in a file called battle-capture.jsonl in the Mint Overlays data folder. Nothing is uploaded. If the scoreboard stays empty in a battle you were invited to, or something looks wrong, send that file in with Report Issue.
 </page>
@@ -602,14 +630,14 @@ Beta: Battle data comes from TikTok's unofficial feed, so details can change and
 Browser source
 Play a local video or image alert over your stream, controlled from one Overlay URL — perfect for entrance clips, hype cams, or full-screen celebration moments.
 
-- Add an entry and attach a local video or image file.
+- Press Add video: (above your list of saved videos) and attach a local video or image file. The editor opens in a pop-up window, and Edit: on any saved video opens the same window, wherever it is in a long list.
 
 - Position and size it on the preview canvas (or set it to fill the frame), and set duration, loop count, and volume.
 
 - For image uploads, optionally enable chroma key to remove a background color so it composites cleanly over your scene.
 
-- Choose a trigger and save. Organize clips into folders if your board grows large.
-After you save, a "Saved" message appears and the form clears for the next video; the name fills in from the file name. If something is missing, the message tells you exactly what.
+- Choose a trigger and save. A new video starts as Click to play: (it never plays by itself) and on Every mode: , so change those if you want it to play on a follow or only in one mode. Organize clips into folders if your board grows large.
+Saving closes the pop-up and shows a "Saved" message; the name fills in from the file name. If you close the pop-up with changes that are not saved, Mint asks first. If something is missing, the message tells you exactly what.
 
 ### Triggers
 
@@ -631,7 +659,7 @@ Every multiple of likes, follows or gift coins for the stream, or one viewer's o
 Plays when someone hits the jackpot slice on the Spin Wheel.
 
 #### Battle moments
-Battle starts, you win, you lose, 2x time, 3x time, Boosting Glove, Magic Mist, Time Maker, Stun Hammer, No. 2 Booster and No. 3 Booster played, last-second snipe. 2x time and 3x time: play when TikTok's bonus mission is completed and the 2x or 3x scoring window really begins; the No. 2 and No. 3 boosters viewers can play are separate triggers. The last-second snipe plays only in the final 15 seconds. See Battle Board.
+Battle starts, you win, you lose, 2x time, 3x time, Boosting Glove, Magic Mist, Time Maker, Stun Hammer, No. 2 Booster and No. 3 Booster played, last-second snipe. 2x time and 3x time: play twice in a battle: at the start, when TikTok counts the first gifts double or triple (Mint works out which one from the first gift's coins and the points it scored, so it plays a few seconds after that gift), and again when TikTok's bonus mission is completed and the 2x or 3x scoring window really begins. If a power-up card is played at the start, Mint cannot tell x2 from x3 there, so it skips the start one rather than guess; the No. 2 and No. 3 boosters viewers can play are separate triggers. The last-second snipe plays only in the final 15 seconds. See Battle Board.
 
 #### Super Fan sticker
 Pick one of the stickers your viewers have recently sent.
@@ -651,7 +679,7 @@ If you stream in both shapes with the same overlay link, set Plays on: to Vertic
 
 - The Stop on stream: button immediately stops whatever is playing on your stream and clears anything queued behind it.
 
-- Removing the background colour (chroma key) works on videos as well as images. If your PC is busy, the effect scales itself down so the video keeps playing smoothly.
+- Removing the background colour (chroma key) works on videos as well as images. To choose the colour, click the colour square under Key color (or press Pick from the video: / Pick from the picture: ), then click the background in the still that opens. A round window zooms in and shows the exact colour, and a slider lets you move to a frame where the background shows. A real green screen is often not pure green, so picking it from your own clip works better than the Green screen button. If your PC is busy, the effect scales itself down so the video keeps playing smoothly.
 
 ### Have your videos in OBS? Bring them in
 
@@ -704,7 +732,7 @@ The browser source | The sound plays inside your streaming software's browser so
 Browser source
 Assign a local video or image to a specific TikTok gift, so receiving it plays your clip once — even if a viewer sends the same gift several times in a row.
 
-- Pick the gift from the catalog and attach the video or image that should play when it arrives.
+- Pick the gift from the catalog. A window opens where you attach the video or image that should play when it arrives. It saves by itself, and Edit: on any saved gift opens the same window, wherever it is in a long list.
 
 - Set position/size or full-screen, duration, and chroma key (background removal) if needed.
 
@@ -719,6 +747,8 @@ Gift Videos plays once per gift burst instead of stacking or spamming your strea
 - A gift can have two videos — one for vertical streams and one for horizontal. Add the gift a second time after setting the first one's Plays on: to Vertical streams only or Horizontal streams only. A gift with just one video always plays it, on any shape, even if you set it to vertical only or horizontal only.
 
 - Video sound follows the Where video sound plays setting.
+
+- Some videos louder than others?: Each gift video has its own This video's volume: slider in its editor (under Full screen). Turn a loud one down, or a quiet one up, so they all sound about the same. The Master video volume: slider turns all gift videos up or down together. 0% makes that one video silent.
 
 - Open the Mini Player to play any gift video with one click.
 </page>
@@ -758,13 +788,19 @@ Videos added or changed on the Video Board and Gift Videos pages show up in the 
 ## Stream Credits
 
 Browser source
-A closing thank-you reel for the end of your stream — scrolls through your top gifters and newest followers.
+A closing thank-you reel for the end of your stream. It starts with a recap of your live (how long it lasted, hearts, coins and new followers), then shows your top gifters on a podium, your top likers, your new followers with their pictures, and your chat names.
 
 - Set a title for the credits screen.
 
+- Press Preview Credits: to watch it with sample names and numbers.
+
 - Copy the transparent Overlay URL into OBS or TikTok LIVE Studio and bring it on screen when you're wrapping up.
 
-The list is built from your real session — top gifters and new followers from the stream you just ran, not sample names.
+- Press Start Credits on Stream: when you want them to roll.
+
+The credits are built from your real live, not sample names. They start fresh every time you go live, so they only ever show the live you just did, whether it lasted 15 minutes or 15 hours. If your connection drops and comes back, it is still the same live. You do not need to clear anything. Press Clear and start over: only if you want to throw away what has been collected in the live you are on now.
+
+You can change the order of the sections, rename them, turn any of them off, hide the coin and heart counts, and choose how fast the credits scroll. The credits take as long as they need to show everyone.
 </page>
 
 <page id="points-economy">
@@ -1338,7 +1374,7 @@ Build a full scene out of multiple widgets — position and layer them together 
 
 - Use the Layers: list to drag layers into a new order (the top of the list is the front), hide or show a layer, or lock it. A locked: layer cannot be moved by accident and clicks go straight through it, so you can work on what is behind it. Right-click: a layer for Lock or Unlock, Hide, Duplicate, Bring to front and more.
 
-- In the Add: tab, Add image: puts your own picture in as a layer, and Background: fills the whole canvas with it. If the picture has a green or pink screen, select it and turn on Make a color see-through: : pick the color (the dropper picks it from anywhere on your screen) and adjust How close and Edge softness.
+- In the Add: tab, Add image: puts your own picture in as a layer, and Background: fills the whole canvas with it. If the picture has a green or pink screen, select it and turn on Make a color see-through: : pick the color (the dropper opens your picture, and you click the color you want to remove while a round window zooms in) and adjust How close and Edge softness.
 
 - Hover over any button to see what it does. Ctrl+Z undoes, the arrow keys nudge the selected layer, and L locks it.
 
